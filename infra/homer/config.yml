@@ -118,13 +118,6 @@ services:
   - name: "Helpful Links"
     icon: "fa-fw fas fa-solid fa-arrow-up-right-from-square"
     items:
-      - name: "Zoom"
-        logo: "assets/icons/zoom.png"
-        subtitle: "Meeting"
-        tag: "meeting"
-        keywords: "meeting"
-        url: "https://us06web.zoom.us/j/7809480017"
-        target: "_blank" # optional html a tag target attribute
       - name: "Dockerhub"
         logo: "assets/icons/dockerhub.png"
         subtitle: "images registry"
