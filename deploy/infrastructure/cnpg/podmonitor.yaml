@@ -3,7 +3,7 @@ kind: PodMonitor
 metadata:
   name: todo-db-monitor
   labels: 
-    release: monitoring-prometheus-operator
+    release: kube-prometheus-stack
 spec:
   selector:
     matchLabels:
