@@ -1,0 +1,193 @@
+name: Update ArgoCD Manifests
+
+on:
+  workflow_call:
+    inputs:
+      app:
+        description: 'Workload name'
+        required: true
+        type: string
+      version:
+        description: 'version'
+        required: true
+        type: string
+      
+jobs:
+  update-argocd:
+    runs-on: self-hosted 
+    steps:
+      - name: Acquire ArgoCD Lock
+        run: |
+          TIMEOUT=300  # 5 minutes
+          RETRY_INTERVAL=10
+          elapsed=0
+          current_lock="${{ inputs.app }}-${{ github.run_id }}"
+          
+          echo "Attempting to acquire ArgoCD lock for ${{ inputs.app }}..."
+          
+          while [ $elapsed -lt $TIMEOUT ]; do
+            # Try to get current lock value
+            current_value=$(gh variable get ARGOCD_LOCK --repo curiosinauts/argocd-repo 2>/dev/null || echo "")
+            
+            if [ -z "$current_value" ] || [ "$current_value" = "null" ]; then
+              # Lock is available, try to acquire it
+              if gh variable set ARGOCD_LOCK --body "$current_lock" --repo curiosinauts/argocd-repo; then
+                echo "Lock acquired successfully: $current_lock"
+                break
+              else
+                echo "Failed to acquire lock, retrying..."
+              fi
+            else
+              echo "Lock held by: $current_value"
+              echo "Waiting ${RETRY_INTERVAL}s... (elapsed: ${elapsed}s)"
+              sleep $RETRY_INTERVAL
+              elapsed=$((elapsed + RETRY_INTERVAL))
+            fi
+          done
+          
+          if [ $elapsed -ge $TIMEOUT ]; then
+            echo "Failed to acquire lock within timeout"
+            exit 1
+          fi
+        env:
+          GH_TOKEN: ${{ secrets.GH_ACCESS_TOKEN }}
+
+      - uses: actions/checkout@v4
+        with:
+          repository: 'curiosinauts/argocd-repo'
+          ref: main
+          token: '${{ secrets.GH_ACCESS_TOKEN }}'
+
+      - name: Set Up Git
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Run Kustomize Build
+        run: |
+          cd workloads/${{ inputs.app }}
+
+          kustomize edit set image ${{ inputs.app }}=curiosinauts/${{ inputs.app }}:${{ inputs.version }}
+
+          kustomize build . --enable-helm
+
+      - name: Commit and Push Changes
+        run: |
+          git add .
+          git commit -m "upping ${{ inputs.app }} to version ${{ inputs.version }}" || {
+            echo nothing to commit. check to see the k8s service and compare the version.
+          }
+          git push origin main
+
+      - name: Trigger ArgoCD Sync
+        run: |
+          curl -X POST -H "Authorization: Bearer $ARGOCD_TOKEN" \
+          -H "Content-Type: application/json" \
+          http://argocd-server.argocd.svc.cluster.local/api/v1/applications/${{ inputs.app }}/sync
+        env:
+          ARGOCD_TOKEN: ${{ secrets.ARGOCD_TOKEN }}
+
+      - name: Wait for ArgoCD Sync Completion
+        run: |
+          echo "Waiting for ArgoCD sync to complete for ${{ inputs.app }}..."
+          timeout=300
+          interval=10
+          elapsed=0
+          
+          while [ $elapsed -lt $timeout ]; do
+            sync_status=$(curl -s -H "Authorization: Bearer $ARGOCD_TOKEN" \
+              http://argocd-server.argocd.svc.cluster.local/api/v1/applications/${{ inputs.app }} | \
+              jq -r '.status.operationState.phase // "Unknown"')
+            
+            echo "Current sync status: $sync_status"
+            
+            if [ "$sync_status" = "Succeeded" ]; then
+              echo "ArgoCD sync completed successfully"
+              break
+            elif [ "$sync_status" = "Failed" ] || [ "$sync_status" = "Error" ]; then
+              echo "ArgoCD sync failed with status: $sync_status"
+              exit 1
+            fi
+            
+            sleep $interval
+            elapsed=$((elapsed + interval))
+          done
+          
+          if [ $elapsed -ge $timeout ]; then
+            echo "Timeout waiting for ArgoCD sync to complete"
+            exit 1
+          fi
+        env:
+          ARGOCD_TOKEN: ${{ secrets.ARGOCD_TOKEN }}
+        timeout-minutes: 6
+
+      - name: Wait for Workload Stability
+        run: |
+          echo "Waiting for ${{ inputs.app }} to be stable..."
+          
+          # Debug: List what resources exist
+          echo "Checking for deployments..."
+          kubectl get deployments --namespace=default | grep ${{ inputs.app }} || echo "No deployment found"
+          echo "Checking for statefulsets..."
+          kubectl get statefulsets --namespace=default | grep ${{ inputs.app }} || echo "No statefulset found"
+          
+          # Check if it's a deployment first
+          if kubectl get deployment/${{ inputs.app }} --namespace=default >/dev/null 2>&1; then
+            echo "Found deployment, waiting for availability..."
+            kubectl wait --for=condition=available deployment/${{ inputs.app }} \
+              --namespace=default \
+              --timeout=300s
+          # Check if it's a statefulset
+          elif kubectl get statefulset/${{ inputs.app }} --namespace=default >/dev/null 2>&1; then
+            echo "Found statefulset, waiting for ready replicas..."
+            kubectl wait --for=jsonpath='{.status.readyReplicas}'=1 statefulset/${{ inputs.app }} \
+              --namespace=default \
+              --timeout=300s
+          else
+            echo "No deployment or statefulset found for ${{ inputs.app }}"
+            echo "Available resources:"
+            kubectl get all --namespace=default | grep ${{ inputs.app }}
+            exit 1
+          fi
+        timeout-minutes: 6
+        # NOTE: Self-hosted runner requires k8s API access with permissions to read deployments and statefulsets
+        # If runner is in-cluster: ensure service account has 'get' and 'list' permissions on deployments and statefulsets
+        # If runner is external: ensure kubeconfig is configured with appropriate cluster access
+
+      - name: Verify Image Version
+        run: |
+          echo "Verifying deployed image version for ${{ inputs.app }}..."
+          expected_image="curiosinauts/${{ inputs.app }}:${{ inputs.version }}"
+          
+          # Check if it's a deployment
+          if kubectl get deployment/${{ inputs.app }} --namespace=default >/dev/null 2>&1; then
+            actual_image=$(kubectl get deployment/${{ inputs.app }} --namespace=default -o jsonpath='{.spec.template.spec.containers[0].image}')
+          # Check if it's a statefulset
+          elif kubectl get statefulset/${{ inputs.app }} --namespace=default >/dev/null 2>&1; then
+            actual_image=$(kubectl get statefulset/${{ inputs.app }} --namespace=default -o jsonpath='{.spec.template.spec.containers[0].image}')
+          else
+            echo "No deployment or statefulset found for verification"
+            exit 1
+          fi
+          
+          echo "Expected image: $expected_image"
+          echo "Actual image: $actual_image"
+          
+          if [ "$actual_image" = "$expected_image" ]; then
+            echo "✅ Image version verified successfully!"
+          else
+            echo "❌ Image version mismatch!"
+            exit 1
+          fi
+
+      - name: Release ArgoCD Lock
+        if: always()
+        run: |
+          echo "Releasing ArgoCD lock..."
+          if gh variable set ARGOCD_LOCK --body "null" --repo curiosinauts/argocd-repo; then
+            echo "Lock released successfully"
+          else
+            echo "Warning: Failed to release lock"
+          fi
+        env:
+          GH_TOKEN: ${{ secrets.GH_ACCESS_TOKEN }}

@@ -1,0 +1,22 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    spec.ingressClassName: traefik
+  labels:
+    app.kubernetes.io/managed-by: Helm
+  name: argocd-server
+  namespace: argocd
+spec:
+  rules:
+  - host: argocd.scottseo.tech
+    http:
+      paths:
+      - backend:
+          service:
+            name: argocd-server
+            port:
+              name: http
+        path: /
+        pathType: Prefix
+

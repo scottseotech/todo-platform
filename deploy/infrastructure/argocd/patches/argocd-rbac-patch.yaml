@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: argocd-rbac-cm
+  namespace: argocd
+data:
+  policy.default: role:readonly
+  policy.csv: |
+    # Allow API tokens to perform sync operations
+    p, role:apikey, applications, sync, *, allow
+    p, role:apikey, applications, action/*, *, allow
+    p, role:apikey, applications, get, *, allow
+    p, role:apikey, applications, update, *, allow
+    
+    # Allow admin to use terminal/exec functionality
+    p, role:admin, exec, create, *, allow
+    
+    # Grant the apikey role to all authenticated users using API tokens
+    g, argocd:apikey, role:apikey

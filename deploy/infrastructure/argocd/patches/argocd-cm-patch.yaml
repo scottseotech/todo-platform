@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: argocd-cm
+  namespace: argocd
+data:
+  # Enable API key capability for admin account
+  accounts.admin: apiKey
+  # Optional: Set admin capabilities (login and apiKey)
+  accounts.admin.enabled: "true"
+  # Enable web-based terminal UI for applications
+  exec.enabled: "true"

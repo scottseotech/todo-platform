@@ -1,0 +1,104 @@
+name: Notify Slack
+
+on:
+  workflow_call:
+    inputs:
+      status:
+        description: 'Status of the workflow (success, failure, cancelled)'
+        required: true
+        type: string
+      workflow_name:
+        description: 'Name of the calling workflow'
+        required: true
+        type: string
+      message:
+        description: 'Custom message to include in notification'
+        required: false
+        type: string
+        default: ''
+      branch:
+        description: 'Git branch name'
+        required: false
+        type: string
+        default: 'main'
+      actor:
+        description: 'GitHub actor who triggered the workflow'
+        required: false
+        type: string
+        default: 'github-actions'
+      channel:
+        description: 'Slack channel to post to'
+        required: false
+        type: string
+        default: '#general'
+    secrets:
+      SLACK_BOT_TOKEN:
+        description: 'Slack bot token for notifications'
+        required: true
+
+jobs:
+  notify:
+    runs-on: self-hosted 
+    steps:
+      - name: Set status emoji and color
+        id: status_info
+        run: |
+          case "${{ inputs.status }}" in
+            "starting")
+              echo "emoji=:information_source:" >> $GITHUB_OUTPUT
+              echo "color=#36a64f" >> $GITHUB_OUTPUT
+              echo "status_text=starting" >> $GITHUB_OUTPUT
+              ;;
+            "success")
+              echo "emoji=:white_check_mark:" >> $GITHUB_OUTPUT
+              echo "color=#36a64f" >> $GITHUB_OUTPUT
+              echo "status_text=Success" >> $GITHUB_OUTPUT
+              ;;
+            "failure")
+              echo "emoji=:x:" >> $GITHUB_OUTPUT
+              echo "color=#ff0000" >> $GITHUB_OUTPUT
+              echo "status_text=Failed" >> $GITHUB_OUTPUT
+              ;;
+            "cancelled")
+              echo "emoji=:warning:" >> $GITHUB_OUTPUT
+              echo "color=#ffaa00" >> $GITHUB_OUTPUT
+              echo "status_text=Cancelled" >> $GITHUB_OUTPUT
+              ;;
+            *)
+              echo "emoji=:information_source:" >> $GITHUB_OUTPUT
+              echo "color=#0099cc" >> $GITHUB_OUTPUT
+              echo "status_text=Unknown" >> $GITHUB_OUTPUT
+              ;;
+          esac
+
+      - name: Send Slack notification
+        uses: slackapi/slack-github-action@v1.25.0
+        with:
+          channel-id: ${{ inputs.channel }}
+          payload: |
+            {
+              "text": "${{ steps.status_info.outputs.emoji }} ${{ inputs.workflow_name }} - ${{ inputs.message }}",
+              "blocks": [
+                {
+                  "type": "header",
+                  "text": {
+                    "type": "plain_text",
+                    "text": "${{ steps.status_info.outputs.emoji }} ${{ inputs.workflow_name }}"
+                  }
+                },
+                {
+                  "type": "divider"
+                },
+                {
+                  "type": "context",
+                  "elements": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Branch:* ${{ inputs.branch }}\n*Triggered by:* ${{ inputs.actor }}\n*Run ID:* <https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|${{ github.run_id }}>\n*Message:* ${{ inputs.message }}"
+                    }
+                  ]
+                }
+              ]
+            }
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}

@@ -1,0 +1,7 @@
+resources:
+- all-resources.yaml
+- ingress.yaml
+- grafana-ingress.yaml
+
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization

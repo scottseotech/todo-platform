@@ -1,0 +1,60 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: todo-db
+spec:
+  instances: 2
+  
+  storage:
+    size: 25Gi
+
+  walStorage:
+    size: 25Gi
+  
+  monitoring:
+    enablePodMonitor: true
+
+  bootstrap:
+    initdb:
+      database: todo_db
+      owner: todo_db_admin
+      secret:
+        name: todo-db-admin-secret
+      options:
+        - "--set=search_path=todo_db"
+
+  backup:
+    barmanObjectStore:
+      destinationPath: "s3://cnpg-backups/"
+      endpointURL: "http://minio.minio.svc.cluster.local:9000"
+      s3Credentials:
+        accessKeyId:
+          name: minio-secret
+          key: MINIO_ACCESS_KEY
+        secretAccessKey:
+          name: minio-secret
+          key: MINIO_SECRET_KEY
+        region:
+          name: minio-secret
+          key: MINIO_REGION
+      wal:
+        compression: bzip2
+      data:
+        compression: gzip
+
+  postgresql:
+    parameters:
+      max_connections: "100"
+      shared_buffers: "256MB"
+
+---
+
+apiVersion: postgresql.cnpg.io/v1
+kind: ScheduledBackup
+metadata:
+  name: todo-db-scheduled-backup
+spec:
+  schedule: "0 0 2 * * *"
+  backupOwnerReference: self
+  cluster:
+    name: todo-db

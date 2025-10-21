@@ -1,0 +1,454 @@
+# Default values for democratic-csi.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+nameOverride: ""
+fullnameOverride: ""
+
+extraCaCerts:
+#extraCaCerts: |-
+#  -----BEGIN CERTIFICATE-----
+#  ...
+#  -----END CERTIFICATE-----
+#  -----BEGIN CERTIFICATE-----
+#  ...
+#  -----END CERTIFICATE-----
+
+driver:
+  # see the driver-config-secret.yaml for syntax
+  # NOTE: if setting an existing secret you must still set `driver.config.driver`
+  # to the corresponding value that you place in the secret as the value is used
+  # by the chart for other purposes beyond secret creation
+  existingConfigSecret:
+  config:
+    driver: freenas-api-iscsi
+    instance_id: truenas-csi
+    httpConnection:
+      protocol: http
+      host: 192.168.30.110
+      port: 80
+      # use only 1 of apiKey or username/password
+      # if both are present, apiKey is preferred
+      # apiKey is only available starting in TrueNAS-12
+      apiKey: "2-SyTSPD6OaWY7xCy8q5rUH1bdYuojEHU3FmRGg0sqsctQ8j0OQ8IBQl2kOnAzFNRy"
+      # username: root
+      # password:
+      allowInsecure: true
+      # use apiVersion 2 for TrueNAS-12 and up (will work on 11.x in some scenarios as well)
+      # leave unset for auto-detection
+      #apiVersion: 2
+    zfs:
+      # can be used to override defaults if necessary
+      # the example below is useful for TrueNAS 12
+      #cli:
+      #  sudoEnabled: true
+      #
+      #  leave paths unset for auto-detection
+      #  paths:
+      #    zfs: /usr/local/sbin/zfs
+      #    zpool: /usr/local/sbin/zpool
+      #    sudo: /usr/local/bin/sudo
+      #    chroot: /usr/sbin/chroot
+
+      # can be used to set arbitrary values on the dataset/zvol
+      # can use handlebars templates with the parameters from the storage class/CO
+      #datasetProperties:
+      #  "org.freenas:description": "{{ parameters.[csi.storage.k8s.io/pvc/namespace] }}/{{ parameters.[csi.storage.k8s.io/pvc/name] }}"
+      #  "org.freenas:test": "{{ parameters.foo }}"
+      #  "org.freenas:test2": "some value"
+
+      # total volume name (zvol/<datasetParentName>/<pvc name>) length cannot exceed 63 chars
+      # https://www.ixsystems.com/documentation/freenas/11.2-U5/storage.html#zfs-zvol-config-opts-tab
+      # standard volume naming overhead is 46 chars
+      # datasetParentName should therefore be 17 chars or less when using TrueNAS 12 or below (SCALE and 13+ do not have the same limits)
+      # for work-arounds see https://github.com/democratic-csi/democratic-csi/issues/54
+      datasetParentName: cloud-storage/k8s-volumes
+      # do NOT make datasetParentName and detachedSnapshotsDatasetParentName overlap
+      # they may be siblings, but neither should be nested in the other
+      # do NOT comment this option out even if you don't plan to use snapshots, just leave it with dummy value
+      detachedSnapshotsDatasetParentName: tanks/k8s/b/snaps
+      # "" (inherit), lz4, gzip-9, etc
+      zvolCompression:
+      # "" (inherit), on, off, verify
+      zvolDedup:
+      zvolEnableReservation: false
+      # 512, 1K, 2K, 4K, 8K, 16K, 64K, 128K default is 16K
+      zvolBlocksize:
+    iscsi:
+      targetPortal: "192.168.30.110:3260"
+      # for multipath
+      targetPortals: [] # [ "server[:port]", "server[:port]", ... ]
+      # leave empty to omit usage of -I with iscsiadm
+      interface:
+
+      # MUST ensure uniqueness
+      # full iqn limit is 223 bytes, plan accordingly
+      # default is "{{ name }}"
+      #nameTemplate: "{{ parameters.[csi.storage.k8s.io/pvc/namespace] }}-{{ parameters.[csi.storage.k8s.io/pvc/name] }}"
+      namePrefix: csi-
+      nameSuffix: "-clustera"
+
+      # add as many as needed
+      targetGroups:
+        # get the correct ID from the "portal" section in the UI
+        # https://github.com/democratic-csi/democratic-csi/issues/302
+        # NOTE: the ID in the UI does NOT always match the ID in the DB, you must use the DB value
+        - targetGroupPortalGroup: 3
+          # get the correct ID from the "initiators" section in the UI
+          targetGroupInitiatorGroup: 6
+          # None, CHAP, or CHAP Mutual
+          targetGroupAuthType: None
+          # get the correct ID from the "Authorized Access" section of the UI
+          # only required if using Chap
+          targetGroupAuthGroup:
+
+      #extentCommentTemplate: "{{ parameters.[csi.storage.k8s.io/pvc/namespace] }}/{{ parameters.[csi.storage.k8s.io/pvc/name] }}"
+      extentInsecureTpc: true
+      extentXenCompat: false
+      extentDisablePhysicalBlocksize: true
+      # 512, 1024, 2048, or 4096,
+      extentBlocksize: 512
+      # "" (let FreeNAS decide, currently defaults to SSD), Unknown, SSD, 5400, 7200, 10000, 15000
+      extentRpm: "SSD"
+      # 0-100 (0 == ignore)
+      extentAvailThreshold: 0
+
+# https://kubernetes-csi.github.io/docs/csi-driver-object.html
+csiDriver:
+  # should be globally unique for a given cluster, this is the name of "provisioner" in StorageClass
+  name: truenas-csi-driver
+  version: 1.5.0
+  # create the kubernetes CSIDriver
+  enabled: true
+  attachRequired: true
+  podInfoOnMount: true
+  # https://github.com/democratic-csi/democratic-csi/issues/274#issuecomment-1426922600
+  # https://kubernetes-csi.github.io/docs/support-fsgroup.html
+  # https://kubernetes-csi.github.io/docs/support-fsgroup.html#delegate-fsgroup-to-csi-driver
+  #
+  # if node service advertises VOLUME_MOUNT_GROUP capability then fsGroup is passed to driver
+  #
+  # k8s 1.19+ (ignored otherwise)
+  # None|File|ReadWriteOnceWithFSType
+  # fsGroupPolicy: ReadWriteOnceWithFSType
+
+  # k8s 1.16+
+  # volumeLifecycleModes: []
+
+  # k8s 1.20+
+  # tokenRequests: []
+
+  # k8s 1.20+
+  # requiresRepublish: false
+
+  # k8s 1.19+
+  # storageCapacity: false
+
+controller:
+  enabled: true
+  rbac:
+    enabled: true
+    openshift:
+      # set to true if running on openshift *and* you have need
+      # ie: hostNetwork, hostIPC, etc are turned on
+      privileged: false
+  replicaCount: 1
+  hostNetwork: false
+  dnsPolicy: ClusterFirst
+  hostAliases: []
+  hostIPC: false
+  annotations: {}
+  labels: {}
+  podAnnotations: {}
+  podLabels: {}
+  priorityClassName: "system-cluster-critical"
+
+  # deployment = deploy controller parts in a distinct deployment
+  # node       = deploy controller as sidecars with node daemonset
+  strategy: deployment
+
+  # https://kubernetes-csi.github.io/docs/external-attacher.html
+  externalAttacher:
+    enabled: true
+    image:
+      registry: registry.k8s.io/sig-storage/csi-attacher
+      tag: v4.4.0
+    args:
+      - --v=5
+      - --leader-election
+      - --leader-election-namespace={{ .Release.Namespace }}
+      - --timeout=90s
+      - --worker-threads=10
+      - --csi-address={{ .csiSocketAddress }}
+    # if you do not want to completely override the defaults use this
+    extraArgs: []
+    resources:
+
+  # https://kubernetes-csi.github.io/docs/external-provisioner.html
+  externalProvisioner:
+    enabled: true
+    image:
+      registry: registry.k8s.io/sig-storage/csi-provisioner
+      tag: v3.6.0
+    args:
+      - --v=5
+      - --leader-election
+      - --leader-election-namespace={{ .Release.Namespace }}
+      - --timeout=90s
+      - --worker-threads=10
+      - --extra-create-metadata
+      - --csi-address={{ .csiSocketAddress }}
+    # if you do not want to completely override the defaults use this
+    extraArgs: []
+    resources:
+
+  # https://kubernetes-csi.github.io/docs/external-resizer.html
+  externalResizer:
+    enabled: true
+    image:
+      registry: registry.k8s.io/sig-storage/csi-resizer
+      tag: v1.9.0
+    args:
+      - --v=5
+      - --leader-election
+      - --leader-election-namespace={{ .Release.Namespace }}
+      - --timeout=90s
+      - --workers=10
+      - --csi-address={{ .csiSocketAddress }}
+    # if you do not want to completely override the defaults use this
+    extraArgs: []
+    resources:
+
+  # https://kubernetes-csi.github.io/docs/external-snapshotter.html
+  externalSnapshotter:
+    enabled: true
+    # 1.20+ should use v4.0.0+
+    # READ *before* updating from beta https://github.com/kubernetes-csi/external-snapshotter#usage
+    image:
+      registry: registry.k8s.io/sig-storage/csi-snapshotter
+      tag: v8.2.1
+    args:
+      - --v=5
+      - --leader-election
+      - --leader-election-namespace={{ .Release.Namespace }}
+      - --timeout=90s
+      - --worker-threads=10
+      - --csi-address={{ .csiSocketAddress }}
+    # if you do not want to completely override the defaults use this
+    extraArgs: []
+    resources:
+
+  # https://github.com/kubernetes-csi/external-health-monitor
+  externalHealthMonitorController:
+    enabled: false
+    image:
+      registry: registry.k8s.io/sig-storage/csi-external-health-monitor-controller
+      tag: v0.14.0
+    args:
+      - --v=5
+      - --leader-election
+      - --leader-election-namespace={{ .Release.Namespace }}
+      - --timeout=90s
+      - --worker-threads=10
+      - --csi-address={{ .csiSocketAddress }}
+    #- --enable-node-watcher
+    #- --list-volumes-interval
+    # if you do not want to completely override the defaults use this
+    extraArgs: []
+    resources:
+
+  # https://kubernetes-csi.github.io/docs/cluster-driver-registrar.html
+  # not implemented, likely uncessary at this point
+  clusterDriverRegistrar:
+    enabled: false
+
+  livenessProbe:
+    enabled: true
+
+  # democratic-csi controller
+  driver:
+    enabled: true
+    image:
+      registry: docker.io/democraticcsi/democratic-csi
+      tag: latest 
+      # pullPolicy: Always
+    logLevel: info
+    lifecycle:
+    #      postStart:
+    #        exec:
+    #          command: ["/bin/sh", "-c", "echo Hello from the postStart handler > /usr/share/message"]
+    #      preStop:
+    #        exec:
+    #          command: ["/bin/sh","-c","nginx -s quit; while killall -0 nginx; do sleep 1; done"]
+
+    securityContext:
+    #      allowPrivilegeEscalation: true
+    #      capabilities:
+    #        add:
+    #        - SYS_ADMIN
+    #      privileged: true
+
+    resources:
+    extraEnv: []
+    extraVolumeMounts: []
+  #    - name: foo
+  #      mountPath: /foo
+
+  extraVolumes: []
+  #  - name: foo
+  #    hostPath:
+  #      path: /dev
+  #      type: Directory
+
+  nodeSelector: {}
+
+  tolerations: []
+
+  topologySpreadConstraints: []
+
+  affinity: {}
+
+node:
+  # windows support
+  windows:
+    enabled: false
+  rbac:
+    enabled: true
+    openshift:
+      # set to true if running on openshift
+      privileged: false
+  enabled: true
+  hostNetwork: true
+  dnsPolicy: ClusterFirstWithHostNet
+  hostAliases: []
+  hostIPC: true
+  hostPID: false
+  kubeletHostPath: /var/lib/kubelet
+  annotations: {}
+  labels: {}
+  podAnnotations: {}
+  podLabels: {}
+  priorityClassName: "system-node-critical"
+
+  livenessProbe:
+    enabled: true
+
+  cleanup:
+    image:
+      registry: docker.io/busybox
+      tag: 1.37.0
+    resources:
+
+  # democratic-csi node
+  driver:
+    enabled: true
+    image:
+      registry: docker.io/democraticcsi/democratic-csi
+      tag: latest
+      # pullPolicy: Always
+    logLevel: info
+    # set path to null if your OS has no localtime file
+    # RancherOS, openshift, etc
+    localtimeHostPath: /etc/localtime
+    lifecycle:
+    #      postStart:
+    #        exec:
+    #          command: ["/bin/sh", "-c", "echo Hello from the postStart handler > /usr/share/message"]
+    #      preStop:
+    #        exec:
+    #          command: ["/bin/sh","-c","nginx -s quit; while killall -0 nginx; do sleep 1; done"]
+
+    resources:
+    extraEnv: []
+    extraVolumeMounts: []
+    #    - name: foo
+    #      mountPath: /foo
+
+    iscsiDirHostPath: /etc/iscsi
+    iscsiDirHostPathType: Directory
+
+    nvmeDirMountEnabled: false
+    nvmeDirHostPath: /etc/nvme
+    nvmeDirHostPathType: Directory
+  # https://kubernetes-csi.github.io/docs/node-driver-registrar.html
+  driverRegistrar:
+    enabled: true
+    image:
+      registry: registry.k8s.io/sig-storage/csi-node-driver-registrar
+      tag: v2.9.0
+    args:
+      - --v=5
+      - --csi-address={{ .csiSocketAddress }}
+      - --kubelet-registration-path={{ .Values.node.kubeletHostPath }}/plugins/{{ .Values.csiDriver.name }}/csi.sock
+    # if you do not want to completely override the defaults use this
+    extraArgs: []
+    resources:
+
+  extraVolumes: []
+  #  - name: foo
+  #    hostPath:
+  #      path: /dev
+  #      type: Directory
+
+  nodeSelector: {}
+
+  tolerations: []
+
+  affinity: {}
+
+# add note here about volume expansion requirements
+storageClasses: []
+#- name:
+#  annotations: {}
+#  labels: {}
+#  defaultClass: false
+#  reclaimPolicy: Delete
+#  volumeBindingMode: Immediate
+#  allowVolumeExpansion: true
+#  parameters:
+#    # for block-based storage can be ext3, ext4, xfs
+#    # for nfs should be nfs
+#    fsType:
+#  mountOptions: []
+#  secrets:
+#    provisioner-secret:
+#    controller-publish-secret:
+#    node-stage-secret:
+#      # any arbitrary iscsiadm entries can be add by creating keys starting with node-db.<entry.name>
+#      # if doing CHAP
+#      node-db.node.session.auth.authmethod: CHAP
+#      node-db.node.session.auth.username: foo
+#      node-db.node.session.auth.password: bar
+#
+#      # if doing mutual CHAP
+#      node-db.node.session.auth.username_in: baz
+#      node-db.node.session.auth.password_in: bar
+#    node-publish-secret:
+#    controller-expand-secret:
+
+volumeSnapshotClasses: []
+#- name:
+#  annotations: {}
+#  labels: {}
+#  deletionPolicy: Delete | Retain
+#  parameters:
+#  secrets:
+#    snapshotter-secret:
+
+# this is a temporary measure until all the k8s components are proper
+# grpc clients and send valid :authority headers
+# required to remove the deprecated/custom `grpc-uds` package with
+#`@grpc/grpc-js` and subsequently pave the way for updating `nodejs` to current
+# versions
+#
+# https://github.com/democratic-csi/csi-grpc-proxy
+csiProxy:
+  enabled: true
+  image:
+    registry: docker.io/democraticcsi/csi-grpc-proxy
+    tag: v0.5.6
+  resources:
+
+# Configure a pod security policy to allow privileged pods
+enablePSP: false
+

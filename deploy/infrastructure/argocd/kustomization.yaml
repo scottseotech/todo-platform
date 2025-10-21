@@ -1,0 +1,17 @@
+patches:
+  - path: patches/repo-server-patch.yaml
+    target:
+      kind: Deployment
+      name: argocd-repo-server
+  - path: patches/argocd-server-insecure-patch.yaml
+    target:
+      kind: Deployment
+      name: argocd-server
+  - path: patches/argocd-rbac-patch.yaml
+    target:
+      kind: ConfigMap
+      name: argocd-rbac-cm
+  - path: patches/argocd-cm-patch.yaml
+    target:
+      kind: ConfigMap
+      name: argocd-cm

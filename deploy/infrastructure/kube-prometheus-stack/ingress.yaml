@@ -1,0 +1,22 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    kubernetes.io/ingress.class: traefik
+  labels:
+    app.kubernetes.io/name: kube-prometheus-stack-prometheus 
+  name: kube-prometheus-stack-prometheus
+  namespace: monitoring 
+spec:
+  ingressClassName: traefik
+  rules:
+  - host: prometheus.scottseo.tech
+    http:
+      paths:
+      - backend:
+          service:
+            name: kube-prometheus-stack-prometheus
+            port:
+              name: http-web
+        path: /
+        pathType: Prefix
