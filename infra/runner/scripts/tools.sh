@@ -54,6 +54,9 @@ curl -sSL -o ${BINARY} https://github.com/mikefarah/yq/releases/download/${VERSI
 sudo install -m 555 ${BINARY} /usr/local/bin/yq
 rm ${BINARY}
 
+echo ------------------------------------------------------------------------
+echo installing golang and its tool chain
+echo ------------------------------------------------------------------------
 
 echo ------------------------------------------------------------------------
 echo installing python and poetry

@@ -18,19 +18,19 @@ env:
   DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
 
 jobs:
-  # notify-start:
-  #   uses: ./.github/workflows/notify-slack.yaml
-  #   with:
-  #     status: 'starting'
-  #     workflow_name: 'Runner Image Build'
-  #     message: 'Starting runner image build'
-  #     branch: ${{ github.ref_name }}
-  #     actor: ${{ github.actor }}
-  #     channel: '#builds'
-  #   secrets: inherit
+  notify-start:
+    uses: ./.github/workflows/notify-slack.yaml
+    with:
+      status: 'starting'
+      workflow_name: 'Runner Image Build'
+      message: 'Starting runner image build'
+      branch: ${{ github.ref_name }}
+      actor: ${{ github.actor }}
+      channel: '#builds'
+    secrets: inherit
 
   build:
-    # needs: notify-start
+    needs: notify-start
     runs-on: ubuntu-latest
     outputs:
       version: ${{ steps.metadata.outputs.version }}
@@ -62,35 +62,35 @@ jobs:
           tags: ${{ steps.metadata.outputs.tags }}
           labels: ${{ steps.metadata.outputs.labels }}
 
-  # call-update-runner:
-  #   needs: build
-  #   uses: curiosinauts/argocd-repo/.github/workflows/update-runner.yaml@main
-  #   with:
-  #     version: ${{ needs.build.outputs.version }}
-  #   secrets: inherit
+  call-update-runner:
+    needs: build
+    uses: ./.github/workflows/update-runner.yaml@main
+    with:
+      version: ${{ needs.build.outputs.version }}
+    secrets: inherit
 
-  # notify-success:
-  #   needs: [build, call-update-runner]
-  #   if: success()
-  #   uses: ./.github/workflows/notify-slack.yaml
-  #   with:
-  #     status: 'success'
-  #     workflow_name: 'Runner Image Build'
-  #     message: 'Runner image build completed successfully!'
-  #     branch: ${{ github.ref_name }}
-  #     actor: ${{ github.actor }}
-  #     channel: '#builds'
-  #   secrets: inherit
+  notify-success:
+    needs: [build, call-update-runner]
+    if: success()
+    uses: ./.github/workflows/notify-slack.yaml
+    with:
+      status: 'success'
+      workflow_name: 'Runner Image Build'
+      message: 'Runner image build completed successfully!'
+      branch: ${{ github.ref_name }}
+      actor: ${{ github.actor }}
+      channel: '#builds'
+    secrets: inherit
 
-  # notify-failure:
-  #   needs: [build, call-update-runner]
-  #   if: failure()
-  #   uses: ./.github/workflows/notify-slack.yaml
-  #   with:
-  #     status: 'failure'
-  #     workflow_name: 'Runner Image Build'
-  #     message: 'Runner image build pipeline failed - check logs for details'
-  #     branch: ${{ github.ref_name }}
-  #     actor: ${{ github.actor }}
-  #     channel: '#builds'
-  #   secrets: inherit
+  notify-failure:
+    needs: [build, call-update-runner]
+    if: failure()
+    uses: ./.github/workflows/notify-slack.yaml
+    with:
+      status: 'failure'
+      workflow_name: 'Runner Image Build'
+      message: 'Runner image build pipeline failed - check logs for details'
+      branch: ${{ github.ref_name }}
+      actor: ${{ github.actor }}
+      channel: '#builds'
+    secrets: inherit
