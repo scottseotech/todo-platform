@@ -32,7 +32,7 @@ func Load() Config {
 			Port:     getEnv("DB_PORT", "5432"),
 			User:     getEnv("DB_USER", "postgres"),
 			Password: getEnv("DB_PASSWORD", "postgres"),
-			DBName:   getEnv("DB_NAME", "todo"),
+			DBName:   getEnv("DB_NAME", "todo_db"),
 			SSLMode:  getEnv("DB_SSLMODE", "disable"),
 		},
 	}
