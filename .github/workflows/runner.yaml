@@ -64,7 +64,7 @@ jobs:
 
   call-update-runner:
     needs: build
-    uses: ./.github/workflows/update-runner.yaml@main
+    uses: ./.github/workflows/update-runner.yaml
     with:
       version: ${{ needs.build.outputs.version }}
     secrets: inherit
