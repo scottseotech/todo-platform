@@ -5,7 +5,7 @@
 title: "Home"
 subtitle: "Todo Platform Stack"
 # logo: "assets/icons/todo.png"
-icon: "fas fa-skull-crossbones" # Optional icon
+icon: "fas fa-list" # Optional icon
 
 header: true
 footer:

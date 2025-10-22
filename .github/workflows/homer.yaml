@@ -16,7 +16,7 @@ env:
   DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
   DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
 
-run-name: "Homer Image Build - ${{ github.ref_name }}"
+run-name: "Homer Image Build - ${{ github.ref }}"
 
 jobs:
   start:

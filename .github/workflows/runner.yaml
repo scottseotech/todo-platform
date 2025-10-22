@@ -17,9 +17,11 @@ env:
   DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
   DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
 
+run-name: "Runner Image Build - ${{ github.ref }}"
+
 jobs:
-  notify-start:
-    uses: ./.github/workflows/notify-slack.yaml
+  start:
+    uses: ./.github/workflows/slack-notification.yaml
     with:
       status: 'starting'
       workflow_name: 'Runner Image Build'
@@ -30,7 +32,7 @@ jobs:
     secrets: inherit
 
   build:
-    needs: notify-start
+    needs: start
     runs-on: ubuntu-latest
     outputs:
       version: ${{ steps.metadata.outputs.version }}
@@ -72,10 +74,10 @@ jobs:
   #     version: ${{ needs.build.outputs.version }}
   #   secrets: inherit
 
-  notify-success:
+  success:
     needs: [build]
     if: success()
-    uses: ./.github/workflows/notify-slack.yaml
+    uses: ./.github/workflows/slack-notification.yaml
     with:
       status: 'success'
       workflow_name: 'Runner Image Build'
@@ -85,10 +87,10 @@ jobs:
       channel: '#builds'
     secrets: inherit
 
-  notify-failure:
+  failure:
     needs: [build]
     if: failure()
-    uses: ./.github/workflows/notify-slack.yaml
+    uses: ./.github/workflows/slack-notification.yaml
     with:
       status: 'failure'
       workflow_name: 'Runner Image Build'
