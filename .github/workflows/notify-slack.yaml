@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       status:
-        description: 'Status of the workflow (staring, success, failure, cancelled)'
+        description: 'Status of the workflow (starting, success, failure, cancelled)'
         required: true
         type: string
       workflow_name:
@@ -101,7 +101,8 @@ jobs:
                       "type": "plain_text",
                       "text": "${{ inputs.branch }}"
                     }
-                },                
+                  ]
+                },
                 {
                   "type": "context",
                   "elements": [
