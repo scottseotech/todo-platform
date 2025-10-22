@@ -66,7 +66,7 @@ jobs:
     needs: build
     uses: scottseotech/todo-platform/.github/workflows/argocd-update.yaml@main
     with:
-      app_path: deploy/infrastructure/homer
+      app_path: deploy/infrastructure
       app: homer
       version: ${{ needs.build.outputs.image_version }}
     secrets: inherit
