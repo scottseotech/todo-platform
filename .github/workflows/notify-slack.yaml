@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       status:
-        description: 'Status of the workflow (success, failure, cancelled)'
+        description: 'Status of the workflow (staring, success, failure, cancelled)'
         required: true
         type: string
       workflow_name:
@@ -77,6 +77,7 @@ jobs:
           channel-id: ${{ inputs.channel }}
           payload: |
             {
+              "text": "${{ steps.status_info.outputs.emoji }} *${{ inputs.workflow_name }}* - ${{ steps.status_info.outputs.status_text }}",
               "blocks": [
                 {
                   "type": "header",
