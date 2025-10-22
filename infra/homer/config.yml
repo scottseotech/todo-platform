@@ -114,7 +114,7 @@ services:
         tag: "nas"
         keywords: "nas"
         url: "https://truenas.scottseo.tech/dashboard/#/"
-        target: "_blank" # optional html a tag target attribute
+        target: "_blank"
   - name: "Helpful Links"
     icon: "fa-fw fas fa-solid fa-arrow-up-right-from-square"
     items:
