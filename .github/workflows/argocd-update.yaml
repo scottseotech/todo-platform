@@ -14,7 +14,7 @@ on:
       
 jobs:
   update-argocd:
-    runs-on: self-hosted 
+    runs-on: self-hosted
     steps:
       - name: Acquire ArgoCD Lock
         run: |
