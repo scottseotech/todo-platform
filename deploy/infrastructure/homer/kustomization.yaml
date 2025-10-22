@@ -22,10 +22,4 @@ kind: Kustomization
 images:
 - name: homer
   newName: curiosinauts/scottseotech-homer
-<<<<<<< HEAD
-  newTag: 85b4dd5
-||||||| parent of ce23c4e (adding todo api)
-  newTag: "4302611"
-=======
   newTag: "85b4dd5"
->>>>>>> ce23c4e (adding todo api)
