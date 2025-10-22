@@ -100,7 +100,7 @@ services:
         tag: "visualization"
         keywords: "performance metrics visualization"
         url: "https://grafana.scottseo.tech"
-        target: "_blank" # optional html a tag target attribute\
+        target: "_blank"
       - name: "Prometheus"
         logo: "assets/icons/prometheus.png"
         subtitle: "Time Series Database"

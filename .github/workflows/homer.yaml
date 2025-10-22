@@ -66,6 +66,7 @@ jobs:
     needs: build
     uses: scottseotech/todo-platform/.github/workflows/argocd-update.yaml@main
     with:
+      namespace: tools
       app_path: deploy/infrastructure
       app: homer
       version: ${{ needs.build.outputs.image_version }}

@@ -3,6 +3,11 @@ name: Update ArgoCD Manifests
 on:
   workflow_call:
     inputs:
+      namespace:
+        description: 'Kubernetes namespace'
+        required: true
+        type: string
+        default: 'default'
       app_path:
         description: 'Path to the application in the deploy directory'
         required: true
@@ -131,26 +136,26 @@ jobs:
           
           # Debug: List what resources exist
           echo "Checking for deployments..."
-          kubectl get deployments --namespace=default | grep ${{ inputs.app }} || echo "No deployment found"
+          kubectl get deployments --namespace=${{ inputs.namespace }} | grep ${{ inputs.app }} || echo "No deployment found"
           echo "Checking for statefulsets..."
-          kubectl get statefulsets --namespace=default | grep ${{ inputs.app }} || echo "No statefulset found"
+          kubectl get statefulsets --namespace=${{ inputs.namespace }} | grep ${{ inputs.app }} || echo "No statefulset found"
           
           # Check if it's a deployment first
-          if kubectl get deployment/${{ inputs.app }} --namespace=default >/dev/null 2>&1; then
+          if kubectl get deployment/${{ inputs.app }} --namespace=${{ inputs.namespace }} >/dev/null 2>&1; then
             echo "Found deployment, waiting for availability..."
             kubectl wait --for=condition=available deployment/${{ inputs.app }} \
-              --namespace=default \
+              --namespace=${{ inputs.namespace }} \
               --timeout=300s
           # Check if it's a statefulset
-          elif kubectl get statefulset/${{ inputs.app }} --namespace=default >/dev/null 2>&1; then
+          elif kubectl get statefulset/${{ inputs.app }} --namespace=${{ inputs.namespace }} >/dev/null 2>&1; then
             echo "Found statefulset, waiting for ready replicas..."
             kubectl wait --for=jsonpath='{.status.readyReplicas}'=1 statefulset/${{ inputs.app }} \
-              --namespace=default \
+              --namespace=${{ inputs.namespace }} \
               --timeout=300s
           else
             echo "No deployment or statefulset found for ${{ inputs.app }}"
             echo "Available resources:"
-            kubectl get all --namespace=default | grep ${{ inputs.app }}
+            kubectl get all --namespace=${{ inputs.namespace }} | grep ${{ inputs.app }}
             exit 1
           fi
         timeout-minutes: 6
@@ -164,11 +169,11 @@ jobs:
           expected_image="scottseotech/${{ inputs.app }}:${{ inputs.version }}"
           
           # Check if it's a deployment
-          if kubectl get deployment/${{ inputs.app }} --namespace=default >/dev/null 2>&1; then
-            actual_image=$(kubectl get deployment/${{ inputs.app }} --namespace=default -o jsonpath='{.spec.template.spec.containers[0].image}')
+          if kubectl get deployment/${{ inputs.app }} --namespace=${{ inputs.namespace }} >/dev/null 2>&1; then
+            actual_image=$(kubectl get deployment/${{ inputs.app }} --namespace=${{ inputs.namespace }} -o jsonpath='{.spec.template.spec.containers[0].image}')
           # Check if it's a statefulset
-          elif kubectl get statefulset/${{ inputs.app }} --namespace=default >/dev/null 2>&1; then
-            actual_image=$(kubectl get statefulset/${{ inputs.app }} --namespace=default -o jsonpath='{.spec.template.spec.containers[0].image}')
+          elif kubectl get statefulset/${{ inputs.app }} --namespace=${{ inputs.namespace }} >/dev/null 2>&1; then
+            actual_image=$(kubectl get statefulset/${{ inputs.app }} --namespace=${{ inputs.namespace }} -o jsonpath='{.spec.template.spec.containers[0].image}')
           else
             echo "No deployment or statefulset found for verification"
             exit 1
