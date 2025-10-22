@@ -8,7 +8,7 @@ subtitle: "Todo Platform Stack"
 icon: "fas fa-list" # Optional icon
 
 header: true
-footer: true
+footer: 
 
 # Optional theme customization
 theme: default
