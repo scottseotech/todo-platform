@@ -104,29 +104,41 @@ jobs:
                   ]
                 },
                 {
-                  "type": "context",
-                  "elements": [
+                  "type": "section",
+                  "fields": [
                     {
                       "type": "mrkdwn",
-                      "text": "*Triggered by :* ${{ inputs.actor }}"
+                      "text": "*Triggered by  :*"
+                    },
+                    {
+                      "type": "plain_text",
+                      "text": "${{ inputs.branch }}"
                     }
                   ]
                 },
                 {
-                  "type": "context",
-                  "elements": [
+                  "type": "section",
+                  "fields": [
                     {
                       "type": "mrkdwn",
-                      "text": "*Run ID        :* <https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|${{ github.run_id }}>"
+                      "text": "*Run ID        :*"
+                    },
+                    {
+                      "type": "plain_text",
+                      "text": "${{ github.run_id }}"
                     }
                   ]
                 },
                 {
-                  "type": "context",
-                  "elements": [
+                  "type": "section",
+                  "fields": [
                     {
                       "type": "mrkdwn",
-                      "text": "*Message       :* ${{ inputs.message }}"
+                      "text": "*Message       :*"
+                    },
+                    {
+                      "type": "plain_text",
+                      "text": "${{ inputs.message }}"
                     }
                   ]
                 }
