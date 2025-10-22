@@ -85,7 +85,7 @@ deploy_argocd() {
     # download the original and make sure existing changes are copied over
     # https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
     # kubectl -n argocd apply -f ./k8s/argocd/argocd-install.yaml || true
-    kustomize build . --enable-helm | kubectl apply -n argocd -f -
+    kustomize build ./k8s/argocd --enable-helm | kubectl apply -n argocd -f -
 
     kubectl -n argocd apply -f ./k8s/argocd/argocd-ingress.yml || true
 
@@ -458,7 +458,7 @@ remove_arc() {
 # Check for --uninstall flag
 if [[ "$1" == "--uninstall" ]]; then
     echo "Select resources to uninstall:"
-    resources=$(gum choose --no-limit  remove_arc remove_cnpg_operator remove_prometheus_operator remove_argocd remove_metallb remove_democratic_csi)
+    resources=$(gum choose --no-limit remove_arc remove_argocd remove_cnpg_operator remove_prometheus_operator remove_metallb remove_democratic_csi)
     
     for resource in ${resources}
     do 
@@ -468,7 +468,7 @@ if [[ "$1" == "--uninstall" ]]; then
     gum confirm "Uninstall completed. Select Yes to end here... Or Select No to continue to new deployment" && exit 0 
 fi
 
-resources=$(gum choose --no-limit setup_node deploy_democratic_csi deploy_metallb deploy_argocd check_argocd_status deploy_prometheus_operator deploy_cnpg_operator deploy_arc)
+resources=$(gum choose --no-limit setup_node deploy_democratic_csi deploy_metallb deploy_prometheus_operator deploy_cnpg_operator deploy_argocd check_argocd_status deploy_arc)
 
 for resource in ${resources}
 do 
