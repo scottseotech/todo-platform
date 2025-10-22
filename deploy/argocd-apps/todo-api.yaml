@@ -1,22 +1,20 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: homer
+  name: todo-api
   namespace: argocd
   finalizers:
   - resources-finalizer.argocd.argoproj.io
 spec:
   destination:
-    namespace: tools
+    namespace: default
     server: https://kubernetes.default.svc
-  project: infrastructure
+  project: default
   source:
-    path: deploy/infrastructure/homer
+    path: deploy/applications/todo-api
     repoURL: git@github.com:scottseotech/todo-platform.git
     targetRevision: main 
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
-    syncOptions:
-      - CreateNamespace=true
