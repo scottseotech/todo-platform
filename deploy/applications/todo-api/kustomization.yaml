@@ -15,11 +15,11 @@ resources:
 labels:
 - includeSelectors: true
   pairs:
-    app: todo-api 
+    app: todo-api
 
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 images:
 - name: todo-api
   newName: curiosinauts/scottseotech-todo-api
-  newTag: "4302611"
+  newTag: 73356b5
