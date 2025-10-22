@@ -30,7 +30,7 @@ on:
         description: 'Slack channel to post to'
         required: false
         type: string
-        default: '#general'
+        default: '#builds'
     # secrets:
     #   SLACK_BOT_TOKEN:
     #     description: 'Slack bot token for notifications'
