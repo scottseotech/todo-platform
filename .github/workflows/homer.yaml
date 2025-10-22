@@ -17,7 +17,7 @@ env:
   DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
 
 jobs:
-  notify-start:
+  start:
     uses: ./.github/workflows/notify-slack.yaml
     with:
       status: 'starting'
@@ -29,7 +29,7 @@ jobs:
     secrets: inherit
 
   build:
-    needs: notify-start
+    needs: start
     runs-on: self-hosted
     outputs:
       image_version: ${{ steps.metadata.outputs.version }}
@@ -62,7 +62,7 @@ jobs:
           tags: ${{ steps.metadata.outputs.tags }}
           labels: ${{ steps.metadata.outputs.labels }}
 
-  call-argocd-update:
+  call:
     needs: build
     uses: scottseotech/todo-platform/.github/workflows/argocd-update.yaml@main
     with:
@@ -72,8 +72,8 @@ jobs:
       version: ${{ needs.build.outputs.image_version }}
     secrets: inherit
 
-  notify-success:
-    needs: [build, call-argocd-update]
+  success:
+    needs: [build, call]
     if: success()
     uses: ./.github/workflows/notify-slack.yaml
     with:
@@ -85,8 +85,8 @@ jobs:
       channel: '#builds'
     secrets: inherit
 
-  notify-failure:
-    needs: [build, call-argocd-update]
+  failure:
+    needs: [build, call]
     if: failure()
     uses: ./.github/workflows/notify-slack.yaml
     with:

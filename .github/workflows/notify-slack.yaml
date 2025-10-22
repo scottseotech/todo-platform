@@ -37,7 +37,7 @@ on:
         required: true
 
 jobs:
-  notify:
+  notification:
     runs-on: self-hosted 
     steps:
       - name: Set status emoji and color

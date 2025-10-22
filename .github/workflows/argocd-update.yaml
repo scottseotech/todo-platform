@@ -22,7 +22,7 @@ on:
         type: string
       
 jobs:
-  update-argocd:
+  argocd-update:
     runs-on: self-hosted
     steps:
       - name: Acquire ArgoCD Lock
