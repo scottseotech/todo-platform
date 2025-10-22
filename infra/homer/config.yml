@@ -8,7 +8,7 @@ subtitle: "Todo Platform Stack"
 icon: "fas fa-list" # Optional icon
 
 header: true
-footer:
+footer: true
 
 # Optional theme customization
 theme: default
@@ -74,7 +74,7 @@ services:
       - name: Todo Job 
         logo: "assets/icons/dagu.png"
         subtitle: "Jobs"
-        tag: "todo"
+        tag: "scheduler"
         target: "_blank"
         url: "https://todojob.scottseo.tech"
   - name: "Tools"
