@@ -1,7 +1,7 @@
 name: Slack Notification 
 
 on:
-  workflow_dispatch:
+  workflow_call:
     inputs:
       status:
         description: 'Status of the workflow (starting, success, failure, cancelled)'
@@ -31,10 +31,10 @@ on:
         required: false
         type: string
         default: '#builds'
-    # secrets:
-    #   SLACK_BOT_TOKEN:
-    #     description: 'Slack bot token for notifications'
-    #     required: true
+    secrets:
+      SLACK_BOT_TOKEN:
+        description: 'Slack bot token for notifications'
+        required: true
 
 jobs:
   notify:
@@ -95,7 +95,7 @@ jobs:
                   "fields": [
                     {
                       "type": "mrkdwn",
-                      "text": "*Branch        :*"
+                      "text": "*Branch:*"
                     },
                     {
                       "type": "plain_text",
@@ -108,11 +108,11 @@ jobs:
                   "fields": [
                     {
                       "type": "mrkdwn",
-                      "text": "*Triggered by  :*"
+                      "text": "*Triggered by:*"
                     },
                     {
                       "type": "plain_text",
-                      "text": "${{ inputs.branch }}"
+                      "text": "${{ inputs.actor }}"
                     }
                   ]
                 },
@@ -121,7 +121,7 @@ jobs:
                   "fields": [
                     {
                       "type": "mrkdwn",
-                      "text": "*Run ID        :*"
+                      "text": "*Run ID:*"
                     },
                     {
                       "type": "plain_text",
@@ -134,7 +134,7 @@ jobs:
                   "fields": [
                     {
                       "type": "mrkdwn",
-                      "text": "*Message       :*"
+                      "text": "*Message:*"
                     },
                     {
                       "type": "plain_text",
