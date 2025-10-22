@@ -15,17 +15,11 @@ resources:
 labels:
 - includeSelectors: true
   pairs:
-    app: homer
+    app: todo-api 
 
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 images:
-- name: homer
-  newName: curiosinauts/scottseotech-homer
-<<<<<<< HEAD
-  newTag: 85b4dd5
-||||||| parent of ce23c4e (adding todo api)
+- name: todo-api
+  newName: curiosinauts/scottseotech-todo-api
   newTag: "4302611"
-=======
-  newTag: "85b4dd5"
->>>>>>> ce23c4e (adding todo api)
