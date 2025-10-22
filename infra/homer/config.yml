@@ -107,7 +107,7 @@ services:
         tag: "performance"
         keywords: "performance metrics"
         url: "https://prometheus.scottseo.tech"
-        target: "_blank" # optional html a tag target attribute
+        target: "_blank"
       - name: "TrueNAS"
         logo: "assets/icons/truenas.png"
         subtitle: "scale"

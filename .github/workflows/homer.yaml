@@ -17,16 +17,16 @@ env:
   DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
 
 jobs:
-  # notify-start:
-  #   uses: ./.github/workflows/notify-slack.yaml
-  #   with:
-  #     status: 'starting'
-  #     workflow_name: 'Homer Image Build'
-  #     message: 'Starting Homer Docker image build and deployment'
-  #     branch: ${{ github.ref_name }}
-  #     actor: ${{ github.actor }}
-  #     channel: '#builds'
-  #   secrets: inherit
+  notify-start:
+    uses: ./.github/workflows/notify-slack.yaml
+    with:
+      status: 'starting'
+      workflow_name: 'Homer Image Build'
+      message: 'Starting Homer Docker image build and deployment'
+      branch: ${{ github.ref_name }}
+      actor: ${{ github.actor }}
+      channel: '#builds'
+    secrets: inherit
 
   build:
     # needs: notify-start
@@ -72,28 +72,28 @@ jobs:
       version: ${{ needs.build.outputs.image_version }}
     secrets: inherit
 
-  # notify-success:
-  #   needs: [build, call-argocd-update]
-  #   if: success()
-  #   uses: ./.github/workflows/notify-slack.yaml
-  #   with:
-  #     status: 'success'
-  #     workflow_name: 'Homer Image Build'
-  #     message: 'Homer build and deployment completed successfully!'
-  #     branch: ${{ github.ref_name }}
-  #     actor: ${{ github.actor }}
-  #     channel: '#builds'
-  #   secrets: inherit
+  notify-success:
+    needs: [build, call-argocd-update]
+    if: success()
+    uses: ./.github/workflows/notify-slack.yaml
+    with:
+      status: 'success'
+      workflow_name: 'Homer Image Build'
+      message: 'Homer build and deployment completed successfully!'
+      branch: ${{ github.ref_name }}
+      actor: ${{ github.actor }}
+      channel: '#builds'
+    secrets: inherit
 
-  # notify-failure:
-  #   needs: [build, call-argocd-update]
-  #   if: failure()
-  #   uses: ./.github/workflows/notify-slack.yaml
-  #   with:
-  #     status: 'failure'
-  #     workflow_name: 'Homer Image Build'
-  #     message: 'Homer build pipeline failed - check logs for details'
-  #     branch: ${{ github.ref_name }}
-  #     actor: ${{ github.actor }}
-  #     channel: '#builds'
-  #   secrets: inherit
+  notify-failure:
+    needs: [build, call-argocd-update]
+    if: failure()
+    uses: ./.github/workflows/notify-slack.yaml
+    with:
+      status: 'failure'
+      workflow_name: 'Homer Image Build'
+      message: 'Homer build pipeline failed - check logs for details'
+      branch: ${{ github.ref_name }}
+      actor: ${{ github.actor }}
+      channel: '#builds'
+    secrets: inherit
