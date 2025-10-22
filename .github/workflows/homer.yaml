@@ -62,13 +62,14 @@ jobs:
           tags: ${{ steps.metadata.outputs.tags }}
           labels: ${{ steps.metadata.outputs.labels }}
 
-  # call-argocd-update:
-  #   needs: build
-  #   uses: scottseotech/todo-platform/.github/workflows/argocd-update.yaml@main
-  #   with:
-  #     app: homer
-  #     version: ${{ needs.build.outputs.image_version }}
-  #   secrets: inherit
+  call-argocd-update:
+    needs: build
+    uses: scottseotech/todo-platform/.github/workflows/argocd-update.yaml@main
+    with:
+      app_path: deploy/infrastructure/homer
+      app: homer
+      version: ${{ needs.build.outputs.image_version }}
+    secrets: inherit
 
   # notify-success:
   #   needs: [build, call-argocd-update]

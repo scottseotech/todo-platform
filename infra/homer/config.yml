@@ -86,7 +86,7 @@ services:
         tag: "github"
         keywords: "github"
         url: "https://github.com/scottseotech/todo-platform/actions"
-        target: "_blank" # optional html a tag target attribute
+        target: "_blank" 
       - name: "ArgoCD"
         logo: "assets/icons/argocd.png"
         subtitle: "K8s Deployment"
