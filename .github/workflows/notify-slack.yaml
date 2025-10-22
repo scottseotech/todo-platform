@@ -91,14 +91,17 @@ jobs:
                   "type": "divider"
                 },
                 {
-                  "type": "context",
-                  "elements": [
+                  "type": "section",
+                  "fields": [
                     {
                       "type": "mrkdwn",
-                      "text": "*Branch        :* ${{ inputs.branch }}"
+                      "text": "*Branch        :*"
+                    },
+                    {
+                      "type": "plain_text",
+                      "text": "${{ inputs.branch }}"
                     }
-                  ]
-                },
+                },                
                 {
                   "type": "context",
                   "elements": [
