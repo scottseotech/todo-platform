@@ -84,7 +84,8 @@ deploy_argocd() {
 
     # download the original and make sure existing changes are copied over
     # https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
-    kubectl -n argocd apply -f ./k8s/argocd/argocd-install.yaml || true
+    # kubectl -n argocd apply -f ./k8s/argocd/argocd-install.yaml || true
+    kustomize build . --enable-helm | kubectl apply -n argocd -f -
 
     kubectl -n argocd apply -f ./k8s/argocd/argocd-ingress.yml || true
 
