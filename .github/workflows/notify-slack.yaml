@@ -125,7 +125,7 @@ jobs:
                     },
                     {
                       "type": "plain_text",
-                      "text": "${{ github.run_id }}"
+                      "text": "<${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|${{ github.run_id }}>"
                     }
                   ]
                 },

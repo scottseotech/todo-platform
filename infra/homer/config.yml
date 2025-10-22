@@ -124,7 +124,7 @@ services:
         tag: "docker"
         keywords: "docker"
         url: "https://hub.docker.com/"
-        target: "_blank" # optional html a tag target attribute
+        target: "_blank"
       - name: "Slack Apps"
         logo: "assets/icons/slack.png"
         subtitle: "slack"

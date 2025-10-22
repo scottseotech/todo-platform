@@ -22,7 +22,7 @@ jobs:
     with:
       status: 'starting'
       workflow_name: 'Homer Image Build'
-      message: 'Starting Homer Docker image build and deployment'
+      message: 'Starting build and deployment'
       branch: ${{ github.ref_name }}
       actor: ${{ github.actor }}
       channel: '#builds'
@@ -79,7 +79,7 @@ jobs:
     with:
       status: 'success'
       workflow_name: 'Homer Image Build'
-      message: 'Homer build and deployment completed successfully!'
+      message: 'Build and deployment completed'
       branch: ${{ github.ref_name }}
       actor: ${{ github.actor }}
       channel: '#builds'
@@ -92,7 +92,7 @@ jobs:
     with:
       status: 'failure'
       workflow_name: 'Homer Image Build'
-      message: 'Homer build pipeline failed - check logs for details'
+      message: 'Build pipeline failed - check logs for details'
       branch: ${{ github.ref_name }}
       actor: ${{ github.actor }}
       channel: '#builds'
