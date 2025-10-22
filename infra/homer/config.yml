@@ -5,7 +5,7 @@
 title: "Home"
 subtitle: "Todo Platform Stack"
 # logo: "assets/icons/todo.png"
-# icon: "fas fa-skull-crossbones" # Optional icon
+icon: "fas fa-skull-crossbones" # Optional icon
 
 header: true
 footer:
@@ -42,7 +42,7 @@ colors:
 
 # Optional message
 # message:
-#url: https://b4bz.io
+# url: https://b4bz.io
 # style: "is-dark" # See https://bulma.io/documentation/components/message/#colors for styling options.
 # title: "Demo !"
 # icon: "fa fa-grin"
