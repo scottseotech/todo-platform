@@ -93,7 +93,7 @@ services:
         tag: "argocd"
         keywords: "argocd"
         url: "https://argocd.scottseo.tech/"
-        target: "_blank" # optional html a tag target attribute
+        target: "_blank"
       - name: "Grafana"
         logo: "assets/icons/grafana.png"
         subtitle: "Metrics Visualization"
