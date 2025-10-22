@@ -131,5 +131,5 @@ services:
         tag: "slack"
         keywords: "slack"
         url: "https://api.slack.com/apps"
-        target: "_blank" # optional html a tag target attribute
+        target: "_blank"
 
