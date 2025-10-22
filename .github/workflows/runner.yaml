@@ -62,15 +62,18 @@ jobs:
           tags: ${{ steps.metadata.outputs.tags }}
           labels: ${{ steps.metadata.outputs.labels }}
 
-  call-update-runner:
-    needs: build
-    uses: ./.github/workflows/update-runner.yaml
-    with:
-      version: ${{ needs.build.outputs.version }}
-    secrets: inherit
+  # custom-values.yaml can not be checked in to the repo for security reasons.
+  # therefore, we need to update the docker version manually using upgrade.sh
+  #
+  # call-update-runner:
+  #   needs: build
+  #   uses: ./.github/workflows/update-runner.yaml
+  #   with:
+  #     version: ${{ needs.build.outputs.version }}
+  #   secrets: inherit
 
   notify-success:
-    needs: [build, call-update-runner]
+    needs: [build]
     if: success()
     uses: ./.github/workflows/notify-slack.yaml
     with:
@@ -83,7 +86,7 @@ jobs:
     secrets: inherit
 
   notify-failure:
-    needs: [build, call-update-runner]
+    needs: [build]
     if: failure()
     uses: ./.github/workflows/notify-slack.yaml
     with:

@@ -1,4 +1,4 @@
-name: Update ArgoCD Manifests
+name: Update ArgoCD
 
 on:
   workflow_call:
