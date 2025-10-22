@@ -166,7 +166,7 @@ jobs:
       - name: Verify Image Version
         run: |
           echo "Verifying deployed image version for ${{ inputs.app }}..."
-          expected_image="scottseotech/${{ inputs.app }}:${{ inputs.version }}"
+          expected_image="curiosinauts/scottseotech-${{ inputs.app }}:${{ inputs.version }}"
           
           # Check if it's a deployment
           if kubectl get deployment/${{ inputs.app }} --namespace=${{ inputs.namespace }} >/dev/null 2>&1; then
