@@ -78,7 +78,7 @@ jobs:
           payload: |
             {
               "unfurl_links": false,
-              "text": "${{ steps.status_info.outputs.emoji }} ${{ inputs.workflow_name }} - ${{ steps.status_info.outputs.status_text }}",
+              "text": "${{ inputs.workflow_name }} - ${{ steps.status_info.outputs.status_text }}",
               "blocks": [
                 {
                   "type": "header",
