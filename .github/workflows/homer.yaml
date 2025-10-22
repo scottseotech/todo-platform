@@ -29,7 +29,7 @@ jobs:
     secrets: inherit
 
   build:
-    # needs: notify-start
+    needs: notify-start
     runs-on: self-hosted
     outputs:
       image_version: ${{ steps.metadata.outputs.version }}
