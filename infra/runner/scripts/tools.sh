@@ -57,7 +57,7 @@ rm ${BINARY}
 echo ------------------------------------------------------------------------
 echo installing golang and its tool chain
 echo ------------------------------------------------------------------------
-
+# Install Go 1.25.3
 curl -sSL -o go1.25.3.linux-amd64.tar.gz https://go.dev/dl/go1.25.3.linux-amd64.tar.gz
 sudo tar -C /usr/local -xzf go1.25.3.linux-amd64.tar.gz
 rm go1.25.3.linux-amd64.tar.gz
