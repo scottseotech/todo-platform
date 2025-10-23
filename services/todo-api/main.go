@@ -16,12 +16,13 @@ import (
 var openapiSpec []byte
 
 func main() {
+	// during local development, load .env file
 	err := godotenv.Load()
 	if err != nil {
 		log.Printf("Continuing without .env file")
 	}
 
-	// Load configuration
+	// Load configuration from environment variables provided in k8s deployment
 	cfg := config.Load()
 
 	// Connect to database
@@ -64,16 +65,14 @@ func main() {
 
 	// API v1 routes
 	v1 := router.Group("/api/v1")
-	{
-		todos := v1.Group("/todos")
-		{
-			todos.GET("", handlers.GetTodos)
-			todos.GET("/:id", handlers.GetTodo)
-			todos.POST("", handlers.CreateTodo)
-			todos.PUT("/:id", handlers.UpdateTodo)
-			todos.DELETE("/:id", handlers.DeleteTodo)
-		}
-	}
+
+	todos := v1.Group("/todos")
+
+	todos.GET("", handlers.GetTodos)
+	todos.GET("/:id", handlers.GetTodo)
+	todos.POST("", handlers.CreateTodo)
+	todos.PUT("/:id", handlers.UpdateTodo)
+	todos.DELETE("/:id", handlers.DeleteTodo)
 
 	// Start server
 	serverAddr := ":" + cfg.Server.Port
