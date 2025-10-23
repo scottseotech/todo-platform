@@ -47,3 +47,11 @@ GH_ACCESS_TOKEN
 
 todo-platform variable
 ARGOCD_LOCK
+
+show artificial drawing of my lab environment
+
+user -> slack slash command -> todo-api -> database
+
+user simulation of 100 users
+
+capture metrics for 

@@ -1,14 +1,19 @@
 package main
 
 import (
+	_ "embed"
 	"log"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 	"github.com/scottseo.tech/todo-platform/services/todo-api/config"
 	"github.com/scottseo.tech/todo-platform/services/todo-api/database"
 	"github.com/scottseo.tech/todo-platform/services/todo-api/handlers"
 )
+
+//go:embed openapi.json
+var openapiSpec []byte
 
 func main() {
 	err := godotenv.Load()
@@ -41,9 +46,20 @@ func main() {
 	// Initialize Gin router
 	router := gin.Default()
 
+	router.Use(cors.New(cors.Config{
+		AllowOrigins: []string{"https://editor.swagger.io"},
+		AllowMethods: []string{"GET"},
+		AllowHeaders: []string{"Content-Type"},
+	}))
+
 	// Health check endpoint
 	router.GET("/health", func(c *gin.Context) {
 		c.JSON(200, gin.H{"status": "healthy"})
+	})
+
+	// OpenAPI specification endpoint
+	router.GET("/openapi.json", func(c *gin.Context) {
+		c.Data(200, "application/json", openapiSpec)
 	})
 
 	// API v1 routes
