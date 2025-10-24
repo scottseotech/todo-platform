@@ -1,0 +1,25 @@
+resources:
+- deployment.yaml
+- service.yaml
+- ingress.yaml
+
+# This adds the suffix to metadata.name
+# nameSuffix: -homer
+
+# # Use patch files to prevent kustomize edit set from mangling inline yaml into string
+# patches:
+# - path: ingress.yaml
+
+# Beaware this will update selector values as well. 
+# https://patrick-picard.medium.com/kustomization-applying-labels-gotchas-a53f87277661
+labels:
+- includeSelectors: true
+  pairs:
+    app: todo-mcp
+
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+images:
+- name: todo-mcp
+  newName: curiosinauts/scottseotech-todo-mcp
+  newTag: 98d3a19
