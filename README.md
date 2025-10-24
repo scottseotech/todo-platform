@@ -2,25 +2,26 @@
 
 ## Initial directory structure
 ```
+  .github/workflows/
+    build-api.yml
+    release.yml               # bump chart, push image, notify Slack
+    chatops.yml               # dispatch from /deploy  
   services/
     todo-api/                 # Go, OTEL, /metrics, Dockerfile
     todo-cli/                 # Go CLI + k6 fixtures
     todo-mcp/                 # Go
-    slackbot/                 # /deploy, /todo, GitHub dispatch
+    todo-bot/                 # Python /ship, /todo, GitHub dispatch
   clients/
     todo-client-go/           # golang client
   deploy/
-    charts/                   # Helm chart w/ Rollouts
-    kustomize/                # overlays: dev/stage/prod
+    applications/             # k8s applications
+    argocd-apps/              # ArgoCD applications
+    infrastructure            # k8s backend infrastructure
   k6/
     load.js                   # quick ramp test
-  .github/workflows/
-    build-api.yml
-    release.yml               # bump chart, push image, notify Slack
-    chatops.yml               # dispatch from /deploy
   infra/
-    loki/ prom/ grafana/      # values or manifests
-    cnpg/                     # cluster + backup CRs
+    homer/                    # homer
+    runner/                   # Github ARC runner
 ```
 
 execute `bootstrap.sh`
