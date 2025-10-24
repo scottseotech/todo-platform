@@ -24,6 +24,11 @@ spec:
                 secretKeyRef:
                   name: todo-bot-secret
                   key: SLACK_BOT_TOKEN
+            - name: SLACK_APP_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: todo-bot-secret
+                  key: SLACK_APP_TOKEN
           livenessProbe:
             httpGet:
               path: /health
