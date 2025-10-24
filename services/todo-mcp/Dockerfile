@@ -12,7 +12,7 @@ RUN go mod download
 COPY . .
 
 # Build the application
-RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o todo-api .
+RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o todo-mcp .
 
 # Final stage
 FROM alpine:latest
