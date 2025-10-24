@@ -15,5 +15,8 @@ COPY app.py .
 RUN useradd -m -u 1000 botuser && chown -R botuser:botuser /app
 USER botuser
 
+# Expose health check port
+EXPOSE 8080
+
 # Run the bot
 CMD ["python", "app.py"]
