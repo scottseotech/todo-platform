@@ -10,6 +10,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 	"github.com/modelcontextprotocol/go-sdk/mcp"
+	"github.com/scottseo.tech/todo-platform/services/todo-mcp/handlers"
 )
 
 type Config struct {
@@ -151,29 +152,7 @@ func capabilitiesHandler(c *gin.Context) {
 
 // listToolsHandler returns a handler that lists all available tools
 func listToolsHandler(srv *mcp.Server) gin.HandlerFunc {
-	return func(c *gin.Context) {
-		tools := []gin.H{
-			{
-				"id":          "hello",
-				"name":        "hello",
-				"description": "A simple hello world tool that greets you and says hello back",
-				"inputSchema": gin.H{
-					"type": "object",
-					"properties": gin.H{
-						"name": gin.H{
-							"type":        "string",
-							"description": "The name to greet",
-						},
-					},
-					"required": []string{"name"},
-				},
-			},
-		}
-
-		c.JSON(http.StatusOK, gin.H{
-			"tools": tools,
-		})
-	}
+	return handlers.Tools
 }
 
 // invokeToolHandler returns a handler that invokes a specific tool
