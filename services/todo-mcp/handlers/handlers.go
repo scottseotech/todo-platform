@@ -18,7 +18,7 @@ func Tools() gin.HandlerFunc {
 				"inputSchema": gin.H{
 					"type": "object",
 					"properties": gin.H{
-						"name": gin.H{
+						"title": gin.H{
 							"type":        "string",
 							"description": "The title of the todo item",
 						},
@@ -29,6 +29,54 @@ func Tools() gin.HandlerFunc {
 						},
 					},
 					"required": []string{"title"},
+				},
+			},
+			{
+				"id":          "get_todos",
+				"name":        "get_todos",
+				"description": "A tool to retrieve all todo items",
+				"inputSchema": gin.H{
+					"type":       "object",
+					"properties": gin.H{},
+				},
+			},
+			{
+				"id":          "update_todo",
+				"name":        "update_todo",
+				"description": "A tool to update an existing todo item by ID",
+				"inputSchema": gin.H{
+					"type": "object",
+					"properties": gin.H{
+						"id": gin.H{
+							"type":        "integer",
+							"description": "The ID of the todo item to update",
+						},
+						"title": gin.H{
+							"type":        "string",
+							"description": "The new title for the todo item (optional)",
+						},
+						"due_date": gin.H{
+							"type":        "string",
+							"format":      "date-time",
+							"description": "The new due date for the todo item (optional)",
+						},
+					},
+					"required": []string{"id"},
+				},
+			},
+			{
+				"id":          "delete_todo",
+				"name":        "delete_todo",
+				"description": "A tool to delete a todo item by ID",
+				"inputSchema": gin.H{
+					"type": "object",
+					"properties": gin.H{
+						"id": gin.H{
+							"type":        "integer",
+							"description": "The ID of the todo item to delete",
+						},
+					},
+					"required": []string{"id"},
 				},
 			},
 		}
@@ -62,8 +110,53 @@ func InvokeTool() gin.HandlerFunc {
 		switch toolID {
 		case "add_todo":
 			title, _ := requestBody.Arguments["title"].(string)
-			input := TodoCreateInput{Title: title}
-			result, _, err = TodoCreate(c.Request.Context(), nil, input)
+			dueDate, _ := requestBody.Arguments["due_date"].(string)
+			input := CreateTodoInput{
+				Title:   title,
+				DueDate: dueDate,
+			}
+			result, _, err = CreateTodo(c.Request.Context(), nil, input)
+
+		case "get_todos":
+			input := GetTodosInput{}
+			result, _, err = GetTodos(c.Request.Context(), nil, input)
+
+		case "update_todo":
+			// Handle ID as either float64 (from JSON) or int
+			var id int32
+			switch v := requestBody.Arguments["id"].(type) {
+			case float64:
+				id = int32(v)
+			case int:
+				id = int32(v)
+			case int32:
+				id = v
+			}
+
+			title, _ := requestBody.Arguments["title"].(string)
+			dueDate, _ := requestBody.Arguments["due_date"].(string)
+			input := UpdateTodoInput{
+				ID:      id,
+				Title:   title,
+				DueDate: dueDate,
+			}
+			result, _, err = UpdateTodo(c.Request.Context(), nil, input)
+
+		case "delete_todo":
+			// Handle ID as either float64 (from JSON) or int
+			var id int32
+			switch v := requestBody.Arguments["id"].(type) {
+			case float64:
+				id = int32(v)
+			case int:
+				id = int32(v)
+			case int32:
+				id = v
+			}
+
+			input := DeleteTodoInput{ID: id}
+			result, _, err = DeleteTodo(c.Request.Context(), nil, input)
+
 		default:
 			c.JSON(http.StatusNotFound, gin.H{"error": fmt.Sprintf("Tool '%s' not found", toolID)})
 			return

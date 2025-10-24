@@ -1,6 +1,7 @@
 package main
 
 import (
+	_ "embed"
 	"log"
 	"net/http"
 
@@ -10,6 +11,9 @@ import (
 	"github.com/scottseotech/todo-platform/services/todo-mcp/config"
 	"github.com/scottseotech/todo-platform/services/todo-mcp/handlers"
 )
+
+//go:embed openapi.json
+var openapiSpec []byte
 
 func main() {
 	cfg := config.Load()
@@ -33,11 +37,26 @@ func main() {
 		nil,
 	)
 
-	// Register add_todo tool
+	// Register todo tools
 	mcp.AddTool(srv, &mcp.Tool{
 		Name:        "add_todo",
 		Description: "A tool to add a new todo item",
-	}, handlers.TodoCreate)
+	}, handlers.CreateTodo)
+
+	mcp.AddTool(srv, &mcp.Tool{
+		Name:        "get_todos",
+		Description: "A tool to retrieve all todo items",
+	}, handlers.GetTodos)
+
+	mcp.AddTool(srv, &mcp.Tool{
+		Name:        "update_todo",
+		Description: "A tool to update an existing todo item by ID",
+	}, handlers.UpdateTodo)
+
+	mcp.AddTool(srv, &mcp.Tool{
+		Name:        "delete_todo",
+		Description: "A tool to delete a todo item by ID",
+	}, handlers.DeleteTodo)
 
 	// Health check endpoint
 	router.GET("/health", func(c *gin.Context) {
@@ -49,6 +68,11 @@ func main() {
 	sseHandler := mcp.NewSSEHandler(func(*http.Request) *mcp.Server { return srv }, nil)
 	router.GET("/sse", gin.WrapH(sseHandler))
 	router.POST("/sse", gin.WrapH(sseHandler))
+
+	// OpenAPI specification endpoint
+	router.GET("/openapi.json", func(c *gin.Context) {
+		c.Data(http.StatusOK, "application/json", openapiSpec)
+	})
 
 	// Regular HTTP endpoints for MCP protocol
 	router.GET("/schema", handlers.Schema())
