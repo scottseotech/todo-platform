@@ -17,18 +17,8 @@ spec:
         - name: todo-mcp
           image: todo-mcp
           env:
-            - name: DB_HOST
-              value: todo-db-rw.cnpg.svc.cluster.local
-            - name: DB_USER
-              valueFrom:
-                secretKeyRef:
-                  name: todo-mcp-secret
-                  key: DB_USER
-            - name: DB_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: todo-mcp-secret
-                  key: DB_PASSWORD
+            - name: TODO_API_URL
+              value: todo-api.default.svc.cluster.local
           livenessProbe:
             httpGet:
               path: /health
