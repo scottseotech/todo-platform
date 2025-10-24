@@ -122,39 +122,21 @@ func InvokeTool() gin.HandlerFunc {
 			result, _, err = GetTodos(c.Request.Context(), nil, input)
 
 		case "update_todo":
-			// Handle ID as either float64 (from JSON) or int
-			var id int32
-			switch v := requestBody.Arguments["id"].(type) {
-			case float64:
-				id = int32(v)
-			case int:
-				id = int32(v)
-			case int32:
-				id = v
-			}
-
+			// JSON unmarshals numbers as float64
+			idFloat, _ := requestBody.Arguments["id"].(float64)
 			title, _ := requestBody.Arguments["title"].(string)
 			dueDate, _ := requestBody.Arguments["due_date"].(string)
 			input := UpdateTodoInput{
-				ID:      id,
+				ID:      int32(idFloat),
 				Title:   title,
 				DueDate: dueDate,
 			}
 			result, _, err = UpdateTodo(c.Request.Context(), nil, input)
 
 		case "delete_todo":
-			// Handle ID as either float64 (from JSON) or int
-			var id int32
-			switch v := requestBody.Arguments["id"].(type) {
-			case float64:
-				id = int32(v)
-			case int:
-				id = int32(v)
-			case int32:
-				id = v
-			}
-
-			input := DeleteTodoInput{ID: id}
+			// JSON unmarshals numbers as float64
+			idFloat, _ := requestBody.Arguments["id"].(float64)
+			input := DeleteTodoInput{ID: int32(idFloat)}
 			result, _, err = DeleteTodo(c.Request.Context(), nil, input)
 
 		default:
