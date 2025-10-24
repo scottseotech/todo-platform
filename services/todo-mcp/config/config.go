@@ -26,7 +26,7 @@ func Load() Config {
 
 	todoAPIURL := os.Getenv("TODO_API_URL")
 	if todoAPIURL == "" {
-		todoAPIURL = "http://localhost:8080"
+		todoAPIURL = "http://localhost:8081"
 	}
 
 	return Config{

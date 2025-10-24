@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"context"
 	"fmt"
 	"net/http"
 
@@ -13,18 +12,23 @@ func Tools() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		tools := []gin.H{
 			{
-				"id":          "hello",
-				"name":        "hello",
-				"description": "A simple hello world tool that greets you and says hello back",
+				"id":          "add_todo",
+				"name":        "add_todo",
+				"description": "A tool to add a new todo item",
 				"inputSchema": gin.H{
 					"type": "object",
 					"properties": gin.H{
 						"name": gin.H{
 							"type":        "string",
-							"description": "The name to greet",
+							"description": "The title of the todo item",
+						},
+						"due_date": gin.H{
+							"type":        "string",
+							"format":      "date-time",
+							"description": "The due date of the todo item (optional)",
 						},
 					},
-					"required": []string{"name"},
+					"required": []string{"title"},
 				},
 			},
 		}
@@ -33,11 +37,6 @@ func Tools() gin.HandlerFunc {
 			"tools": tools,
 		})
 	}
-}
-
-// HelloInput defines the input parameters for the hello tool
-type HelloInput struct {
-	Name string `json:"name"`
 }
 
 // InvokeTool returns a handler that invokes a specific tool
@@ -61,10 +60,10 @@ func InvokeTool() gin.HandlerFunc {
 		var err error
 
 		switch toolID {
-		case "hello":
-			name, _ := requestBody.Arguments["name"].(string)
-			input := HelloInput{Name: name}
-			result, _, err = HelloHandler(c.Request.Context(), nil, input)
+		case "add_todo":
+			title, _ := requestBody.Arguments["title"].(string)
+			input := TodoCreateInput{Title: title}
+			result, _, err = TodoCreate(c.Request.Context(), nil, input)
 		default:
 			c.JSON(http.StatusNotFound, gin.H{"error": fmt.Sprintf("Tool '%s' not found", toolID)})
 			return
@@ -86,27 +85,6 @@ func InvokeTool() gin.HandlerFunc {
 
 		c.JSON(http.StatusOK, response)
 	}
-}
-
-// HelloHandler implements the hello tool
-func HelloHandler(ctx context.Context, req *mcp.CallToolRequest, input HelloInput) (*mcp.CallToolResult, any, error) {
-	if input.Name == "" {
-		return &mcp.CallToolResult{
-			Content: []mcp.Content{
-				&mcp.TextContent{Text: "Error: name parameter is required and must be a non-empty string"},
-			},
-			IsError: true,
-		}, nil, nil
-	}
-
-	// Generate greeting
-	greeting := fmt.Sprintf("Hello, %s! Welcome to the Todo MCP server. Hello back to you!", input.Name)
-
-	return &mcp.CallToolResult{
-		Content: []mcp.Content{
-			&mcp.TextContent{Text: greeting},
-		},
-	}, nil, nil
 }
 
 // schemaHandler returns the MCP protocol schema
