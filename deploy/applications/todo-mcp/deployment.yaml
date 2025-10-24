@@ -22,11 +22,11 @@ spec:
           livenessProbe:
             httpGet:
               path: /health
-              port: 8080
+              port: 8081
             initialDelaySeconds: 15
             periodSeconds: 10 
           ports:
-            - containerPort: 8080
+            - containerPort: 8081
           resources:
             limits:
               memory: "256Mi"

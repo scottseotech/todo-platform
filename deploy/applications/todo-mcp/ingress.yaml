@@ -17,6 +17,6 @@ spec:
           service:
             name: todo-mcp
             port:
-              number: 8080 
+              number: 8081
         path: /
         pathType: Prefix
