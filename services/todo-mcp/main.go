@@ -19,7 +19,10 @@ type Config struct {
 
 func loadConfig() Config {
 	// Load .env file for local development
-	_ = godotenv.Load()
+	err := godotenv.Load()
+	if err != nil {
+		log.Printf("Continuing without .env file")
+	}
 
 	port := os.Getenv("SERVER_PORT")
 	if port == "" {
@@ -66,19 +69,17 @@ func main() {
 	})
 
 	// MCP SSE endpoint - SDK handles the session
+	// SSE needs both GET (for event stream) and POST (for sending messages)
 	sseHandler := mcp.NewSSEHandler(func(*http.Request) *mcp.Server { return srv }, nil)
 	r.GET("/sse", gin.WrapH(sseHandler))
+	r.POST("/sse", gin.WrapH(sseHandler))
 
 	// Regular HTTP endpoints for MCP protocol
 	r.GET("/schema", schemaHandler)
 	r.GET("/capabilities", capabilitiesHandler)
 
-	// API v1 routes
-	api := r.Group("/api/v1")
-	{
-		api.GET("/tools", listToolsHandler(srv))
-		api.POST("/tools/:id/invoke", invokeToolHandler(srv))
-	}
+	r.GET("/tools", listToolsHandler(srv))
+	r.POST("/tools/:id/invoke", invokeToolHandler(srv))
 
 	// Start server
 	addr := ":" + cfg.ServerPort
