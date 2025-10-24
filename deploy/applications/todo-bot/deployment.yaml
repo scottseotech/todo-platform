@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: todo-bot
+spec:
+  replicas: 1
+  revisionHistoryLimit: 1
+  selector:
+    matchLabels:
+      app: placeholder
+  template:
+    metadata:
+      labels:
+        app: placeholder
+    spec:
+      containers:
+        - name: todo-bot
+          image: todo-bot
+          env:
+            - name: TODO_API_URL
+              value: todo-api.default.svc.cluster.local
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8082
+            initialDelaySeconds: 15
+            periodSeconds: 10 
+          ports:
+            - containerPort: 8082
+          resources:
+            limits:
+              memory: "256Mi"
+

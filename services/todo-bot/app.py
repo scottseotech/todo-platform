@@ -8,7 +8,9 @@ Built with Slack Bolt SDK using Socket Mode.
 
 import os
 import logging
+import threading
 from datetime import datetime
+from flask import Flask, jsonify
 from slack_bolt import App
 from slack_bolt.adapter.socket_mode import SocketModeHandler
 from dotenv import load_dotenv
@@ -23,6 +25,13 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
+# Initialize Flask web server for health checks
+web_app = Flask(__name__)
+
+# Disable Flask's default logger to reduce noise
+log = logging.getLogger('werkzeug')
+log.setLevel(logging.WARNING)
+
 # Initialize Slack app with Socket Mode
 # Note: signing_secret is not required for Socket Mode but kept for compatibility
 app = App(
@@ -31,6 +40,15 @@ app = App(
 
 # Configuration
 TODO_API_URL = os.environ.get("TODO_API_URL", "http://localhost:8080")
+SERVER_PORT = int(os.environ.get("SERVER_PORT", "8082"))
+
+
+@web_app.route("/health")
+def health():
+    """Health check endpoint for Kubernetes"""
+    return jsonify({
+        "status": "healthy"
+    }), 200
 
 
 @app.command("/todo")
@@ -184,6 +202,12 @@ def handle_app_mention(event, say):
         logger.error(f"[app_mention] Error: {e}", exc_info=True)
 
 
+def start_health_server():
+    """Start the Flask health check server in a separate thread"""
+    logger.info(f"🏥 Starting health check server on port {SERVER_PORT}")
+    web_app.run(host='0.0.0.0', port=SERVER_PORT, debug=False)
+
+
 def main():
     """Start the Slack bot"""
     try:
@@ -198,6 +222,10 @@ def main():
 
         logger.info("⚡️ Todo Bot is starting...")
         logger.info(f"📍 Todo API URL: {TODO_API_URL}")
+
+        # Start health check server in background thread
+        health_thread = threading.Thread(target=start_health_server, daemon=True)
+        health_thread.start()
 
         # Start the app using Socket Mode
         handler = SocketModeHandler(app, os.environ["SLACK_APP_TOKEN"])
