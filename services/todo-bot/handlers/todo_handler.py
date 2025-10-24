@@ -106,7 +106,7 @@ def handle_todo_command(ack, command, respond):
                       "text": f"*Added by:*"
                     },
                     {
-                      "type": "plain_text",
+                      "type": "mrkdwn",
                       "text": f"<@{user_id}> | {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}" 
                     }
                   ]
