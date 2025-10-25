@@ -60,10 +60,6 @@ jobs:
         with:
           context: .
           file: 'services/todo-bot/Dockerfile'
-          build-args: |
-            BUILDKIT_PROGRESS=plain
-            CACHEBUST=${{ github.run_id }}
-          no-cache: true
           push: true
           # push: ${{ github.ref_type == 'tag' && !startsWith(github.ref, 'refs/tags/v0.') }}
           tags: ${{ steps.metadata.outputs.tags }}

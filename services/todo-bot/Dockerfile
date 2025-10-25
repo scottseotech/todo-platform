@@ -5,9 +5,6 @@ WORKDIR /app
 # Copy todo-client-python first for better layer caching
 COPY clients/todo-client-python /tmp/todo-client-python
 
-ARG CACHEBUST=1
-RUN echo "cachebust=$CACHEBUST" > change.txt && set -x && pwd && ls -la
-
 # Install todo-client
 RUN pip install --no-cache-dir /tmp/todo-client-python && rm -rf /tmp/todo-client-python
 
