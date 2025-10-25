@@ -22,4 +22,4 @@ kind: Kustomization
 images:
 - name: todo-bot
   newName: curiosinauts/scottseotech-todo-bot
-  newTag: 74808f3
+  newTag: e260550
