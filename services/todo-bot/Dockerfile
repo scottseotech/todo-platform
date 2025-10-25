@@ -3,17 +3,17 @@ FROM python:3.11-slim
 WORKDIR /app
 
 # Copy todo-client-python first for better layer caching
-COPY ../../clients/todo-client-python /tmp/todo-client-python
+COPY clients/todo-client-python /tmp/todo-client-python
 
 # Install todo-client
 RUN pip install --no-cache-dir /tmp/todo-client-python && rm -rf /tmp/todo-client-python
 
 # Copy requirements and install dependencies
-COPY requirements.txt .
+COPY services/todo-bot/requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy application code
-COPY . .
+COPY services/todo-bot/ .
 
 # Create non-root user for security
 RUN useradd -m -u 1000 botuser && chown -R botuser:botuser /app
