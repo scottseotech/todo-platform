@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/modelcontextprotocol/go-sdk/mcp"
@@ -201,32 +202,51 @@ func InvokeTool() gin.HandlerFunc {
 		var err error
 
 		switch toolID {
-		case "add_todo":
+		case "todos-add":
 			title, _ := requestBody.Arguments["title"].(string)
 			dueDate, _ := requestBody.Arguments["due_date"].(string)
+			var duePtr *time.Time
+			if dueDate != "" {
+				t, err := time.Parse(time.RFC3339, dueDate)
+				if err != nil {
+					c.JSON(http.StatusBadRequest, gin.H{"error": "invalid due_date format; expected RFC3339 date-time"})
+					return
+				}
+				duePtr = &t
+			}
+
 			input := CreateTodoInput{
 				Title:   title,
-				DueDate: dueDate,
+				DueDate: duePtr,
 			}
 			result, _, err = CreateTodo(c.Request.Context(), nil, input)
 
-		case "get_todos":
+		case "todos-list":
 			input := GetTodosInput{}
 			result, _, err = GetTodos(c.Request.Context(), nil, input)
 
-		case "update_todo":
+		case "todos-update":
 			// JSON unmarshals numbers as float64
 			idFloat, _ := requestBody.Arguments["id"].(float64)
 			title, _ := requestBody.Arguments["title"].(string)
 			dueDate, _ := requestBody.Arguments["due_date"].(string)
+			var duePtr *time.Time
+			if dueDate != "" {
+				t, err := time.Parse(time.RFC3339, dueDate)
+				if err != nil {
+					c.JSON(http.StatusBadRequest, gin.H{"error": "invalid due_date format; expected RFC3339 date-time"})
+					return
+				}
+				duePtr = &t
+			}
 			input := UpdateTodoInput{
 				ID:      int32(idFloat),
 				Title:   title,
-				DueDate: dueDate,
+				DueDate: duePtr,
 			}
 			result, _, err = UpdateTodo(c.Request.Context(), nil, input)
 
-		case "delete_todo":
+		case "todos-delete":
 			// JSON unmarshals numbers as float64
 			idFloat, _ := requestBody.Arguments["id"].(float64)
 			input := DeleteTodoInput{ID: int32(idFloat)}

@@ -1,7 +1,9 @@
 package main
 
 import (
+	"context"
 	_ "embed"
+	"fmt"
 	"log"
 	"net/http"
 
@@ -37,31 +39,100 @@ func main() {
 		},
 		nil,
 	)
+	// Content: &mcp.TextContent{Text: "" +
+	// 	"You can use the following tools:" +
+	// 	"- `todos-list` → list current tasks." +
+	// 	"- `todos-add(title, due_date?)` → add a new todo item." +
+	// 	"- `todos-update(id, title)` → update a todo item." +
+	// 	"- `todos-delete(id)` → deletes a todo item." +
+	// 	"When users speak naturally, translate their intent into one of these tool invocations.",
+	// },
+
+	addPromptHandler := func(ctx context.Context, req *mcp.GetPromptRequest) (*mcp.GetPromptResult, error) {
+		return &mcp.GetPromptResult{
+			Messages: []*mcp.PromptMessage{
+				{
+					Role:    "system",
+					Content: &mcp.TextContent{Text: fmt.Sprintf("#todos-add(%s, %s)", req.Params.Arguments["title"], req.Params.Arguments["due_date"])},
+				},
+			},
+		}, nil
+	}
+
+	updatePromptHandler := func(ctx context.Context, req *mcp.GetPromptRequest) (*mcp.GetPromptResult, error) {
+		return &mcp.GetPromptResult{
+			Messages: []*mcp.PromptMessage{
+				{
+					Role:    "system",
+					Content: &mcp.TextContent{Text: fmt.Sprintf("#todos-update(%s, %s, %s)", req.Params.Arguments["id"], req.Params.Arguments["title"], req.Params.Arguments["due_date"])},
+				},
+			},
+		}, nil
+	}
+
+	srv.AddPrompt(&mcp.Prompt{
+		Name:  "todos-add",
+		Title: "Add a new todo item",
+		Arguments: []*mcp.PromptArgument{
+			{
+				Name:     "title",
+				Title:    "Title of the todo item",
+				Required: true,
+			},
+			{
+				Name:     "due_date",
+				Title:    "Due date of the todo item (optional)",
+				Required: false,
+			},
+		},
+	}, addPromptHandler)
+
+	srv.AddPrompt(&mcp.Prompt{
+		Name:  "todos-update",
+		Title: "Update an existing todo item",
+		Arguments: []*mcp.PromptArgument{
+			{
+				Name:     "id",
+				Title:    "ID of the todo item",
+				Required: true,
+			},
+			{
+				Name:     "title",
+				Title:    "Title of the todo item",
+				Required: true,
+			},
+			{
+				Name:     "due_date",
+				Title:    "Due date of the todo item (optional)",
+				Required: false,
+			},
+		},
+	}, updatePromptHandler)
 
 	// Register todo tools
 	mcp.AddTool(srv, &mcp.Tool{
-		Name:         "add_todo",
+		Name:         "todos-add",
 		Description:  "A tool to add a new todo item",
 		InputSchema:  handlers.AddTodoInputSchema,
 		OutputSchema: handlers.AddTodoOutputSchema,
 	}, handlers.CreateTodo)
 
 	mcp.AddTool(srv, &mcp.Tool{
-		Name:         "get_todos",
+		Name:         "todos-list",
 		Description:  "A tool to retrieve all todo items",
 		InputSchema:  handlers.GetTodosInputSchema,
 		OutputSchema: handlers.GetTodosOutputSchema,
 	}, handlers.GetTodos)
 
 	mcp.AddTool(srv, &mcp.Tool{
-		Name:         "update_todo",
+		Name:         "todos-update",
 		Description:  "A tool to update an existing todo item by ID",
 		InputSchema:  handlers.UpdateTodoInputSchema,
 		OutputSchema: handlers.UpdateTodoOutputSchema,
 	}, handlers.UpdateTodo)
 
 	mcp.AddTool(srv, &mcp.Tool{
-		Name:         "delete_todo",
+		Name:         "todos-delete",
 		Description:  "A tool to delete a todo item by ID",
 		InputSchema:  handlers.DeleteTodoInputSchema,
 		OutputSchema: handlers.DeleteTodoOutputSchema,

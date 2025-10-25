@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"time"
 
 	"github.com/modelcontextprotocol/go-sdk/mcp"
 	todoclient "github.com/scottseotech/todo-platform/clients/todo-client-go"
@@ -22,8 +23,8 @@ func init() {
 }
 
 type CreateTodoInput struct {
-	Title   string `json:"title"`
-	DueDate string `json:"due_date,omitempty"`
+	Title   string     `json:"title"`
+	DueDate *time.Time `json:"due_date,omitempty"`
 }
 
 func CreateTodo(ctx context.Context, req *mcp.CallToolRequest, input CreateTodoInput) (*mcp.CallToolResult, any, error) {
@@ -38,7 +39,7 @@ func CreateTodo(ctx context.Context, req *mcp.CallToolRequest, input CreateTodoI
 
 	createTodoRequest := todoclient.CreateTodoRequest{
 		Title:   input.Title,
-		DueDate: nil,
+		DueDate: input.DueDate,
 	}
 
 	resp, err := client.CreateTodoWithResponse(ctx, createTodoRequest)
@@ -115,9 +116,9 @@ func GetTodos(ctx context.Context, req *mcp.CallToolRequest, input GetTodosInput
 
 // UpdateTodoInput defines the input parameters for the update_todo tool
 type UpdateTodoInput struct {
-	ID      int32  `json:"id"`
-	Title   string `json:"title,omitempty"`
-	DueDate string `json:"due_date,omitempty"`
+	ID      int32      `json:"id"`
+	Title   string     `json:"title,omitempty"`
+	DueDate *time.Time `json:"due_date,omitempty"`
 }
 
 // UpdateTodo updates an existing todo item
