@@ -1,4 +1,4 @@
-.PHONY: install dev run clean
+.PHONY: install dev run clean docker-build
 
 # Install dependencies including local todo-client
 install:
@@ -17,6 +17,11 @@ dev:
 # Run normally (production mode)
 run:
 	python app.py
+
+# Build Docker image (must run from repo root)
+docker-build:
+	@echo "🐳 Building Docker image from repo root..."
+	@cd ../.. && docker build -f services/todo-bot/Dockerfile -t todo-bot .
 
 # Clean Python cache files
 clean:

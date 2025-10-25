@@ -32,7 +32,7 @@ jobs:
 
   build:
     needs: start
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     outputs:
       image_version: ${{ steps.metadata.outputs.version }}
     steps:
