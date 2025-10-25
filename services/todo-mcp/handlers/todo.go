@@ -74,46 +74,36 @@ type GetTodosInput struct {
 	// No input parameters needed
 }
 
+func ErrorCallToolResult(message string) *mcp.CallToolResult {
+	return &mcp.CallToolResult{
+		Content: []mcp.Content{
+			&mcp.TextContent{Text: message},
+		},
+		IsError: true,
+	}
+}
+
 // GetTodos retrieves all todo items
 func GetTodos(ctx context.Context, req *mcp.CallToolRequest, input GetTodosInput) (*mcp.CallToolResult, any, error) {
 	resp, err := client.GetTodosWithResponse(ctx)
 	if err != nil {
-		return &mcp.CallToolResult{
-			Content: []mcp.Content{
-				&mcp.TextContent{Text: fmt.Sprintf("Error fetching todos: %v", err)},
-			},
-			IsError: true,
-		}, nil, nil
+		return ErrorCallToolResult(fmt.Sprintf("Error fetching todos: %v", err)), nil, nil
 	}
 
 	if resp.StatusCode() != 200 {
-		return &mcp.CallToolResult{
-			Content: []mcp.Content{
-				&mcp.TextContent{Text: fmt.Sprintf("Error: received status code %d", resp.StatusCode())},
-			},
-			IsError: true,
-		}, nil, nil
+		return ErrorCallToolResult(fmt.Sprintf("Error: received status code %d", resp.StatusCode())), nil, nil
 	}
 
 	// Parse the response body
 	todos := resp.JSON200
 	if todos == nil || len(*todos) == 0 {
-		return &mcp.CallToolResult{
-			Content: []mcp.Content{
-				&mcp.TextContent{Text: "No todos found"},
-			},
-		}, nil, nil
+		return ErrorCallToolResult("No todos found"), nil, nil
 	}
 
 	// Format todos as JSON
 	todosJSON, err := json.MarshalIndent(todos, "", "  ")
 	if err != nil {
-		return &mcp.CallToolResult{
-			Content: []mcp.Content{
-				&mcp.TextContent{Text: fmt.Sprintf("Error formatting todos: %v", err)},
-			},
-			IsError: true,
-		}, nil, nil
+		return ErrorCallToolResult(fmt.Sprintf("Error formatting todos: %v", err)), nil, nil
 	}
 
 	return &mcp.CallToolResult{

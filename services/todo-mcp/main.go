@@ -10,6 +10,7 @@ import (
 	"github.com/modelcontextprotocol/go-sdk/mcp"
 	"github.com/scottseotech/todo-platform/services/todo-mcp/config"
 	"github.com/scottseotech/todo-platform/services/todo-mcp/handlers"
+	"github.com/scottseotech/todo-platform/services/todo-mcp/middleware"
 )
 
 //go:embed openapi.json
@@ -41,21 +42,25 @@ func main() {
 	mcp.AddTool(srv, &mcp.Tool{
 		Name:        "add_todo",
 		Description: "A tool to add a new todo item",
+		InputSchema: handlers.AddTodoInputSchema,
 	}, handlers.CreateTodo)
 
 	mcp.AddTool(srv, &mcp.Tool{
 		Name:        "get_todos",
 		Description: "A tool to retrieve all todo items",
+		InputSchema: handlers.GetTodosInputSchema,
 	}, handlers.GetTodos)
 
 	mcp.AddTool(srv, &mcp.Tool{
 		Name:        "update_todo",
 		Description: "A tool to update an existing todo item by ID",
+		InputSchema: handlers.UpdateTodoInputSchema,
 	}, handlers.UpdateTodo)
 
 	mcp.AddTool(srv, &mcp.Tool{
 		Name:        "delete_todo",
 		Description: "A tool to delete a todo item by ID",
+		InputSchema: handlers.DeleteTodoInputSchema,
 	}, handlers.DeleteTodo)
 
 	// Health check endpoint
@@ -66,8 +71,12 @@ func main() {
 	// MCP SSE endpoint - SDK handles the session
 	// SSE needs both GET (for event stream) and POST (for sending messages)
 	sseHandler := mcp.NewSSEHandler(func(*http.Request) *mcp.Server { return srv }, nil)
-	router.GET("/sse", gin.WrapH(sseHandler))
-	router.POST("/sse", gin.WrapH(sseHandler))
+
+	// Wrap SSE handler with logging middleware
+	loggedSSEHandler := middleware.SSELogger()(sseHandler)
+
+	router.GET("/sse", gin.WrapH(loggedSSEHandler))
+	router.POST("/sse", gin.WrapH(loggedSSEHandler))
 
 	// OpenAPI specification endpoint
 	router.GET("/openapi.json", func(c *gin.Context) {

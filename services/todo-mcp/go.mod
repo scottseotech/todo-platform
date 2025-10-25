@@ -5,13 +5,14 @@ go 1.25.3
 require (
 	github.com/gin-gonic/gin v1.11.0
 	github.com/joho/godotenv v1.5.1
-	github.com/modelcontextprotocol/go-sdk v1.0.0
+	github.com/modelcontextprotocol/go-sdk v1.1.0-pre.1
 )
 
 require (
 	github.com/apapsch/go-jsonmerge/v2 v2.0.0 // indirect
 	github.com/google/uuid v1.5.0 // indirect
 	github.com/oapi-codegen/runtime v1.1.2 // indirect
+	golang.org/x/oauth2 v0.30.0 // indirect
 )
 
 require (
