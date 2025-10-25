@@ -61,6 +61,7 @@ jobs:
           context: services/todo-bot
           build-args: |
             BUILDKIT_PROGRESS=plain
+          no-cache: true
           push: true
           # push: ${{ github.ref_type == 'tag' && !startsWith(github.ref, 'refs/tags/v0.') }}
           tags: ${{ steps.metadata.outputs.tags }}
