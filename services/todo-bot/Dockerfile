@@ -4,7 +4,7 @@ WORKDIR /app
 
 COPY . .
 
-RUN set -x; pwd && ls -la
+RUN echo 1; set -x; pwd && ls -la
 
 # Copy todo-client-python first for better layer caching
 COPY clients/todo-client-python /tmp/todo-client-python

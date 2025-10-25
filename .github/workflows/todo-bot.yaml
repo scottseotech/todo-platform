@@ -59,6 +59,8 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: services/todo-bot
+          build-args: |
+            BUILDKIT_PROGRESS=plain
           push: true
           # push: ${{ github.ref_type == 'tag' && !startsWith(github.ref, 'refs/tags/v0.') }}
           tags: ${{ steps.metadata.outputs.tags }}
