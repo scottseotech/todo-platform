@@ -40,27 +40,31 @@ func main() {
 
 	// Register todo tools
 	mcp.AddTool(srv, &mcp.Tool{
-		Name:        "add_todo",
-		Description: "A tool to add a new todo item",
-		InputSchema: handlers.AddTodoInputSchema,
+		Name:         "add_todo",
+		Description:  "A tool to add a new todo item",
+		InputSchema:  handlers.AddTodoInputSchema,
+		OutputSchema: handlers.AddTodoOutputSchema,
 	}, handlers.CreateTodo)
 
 	mcp.AddTool(srv, &mcp.Tool{
-		Name:        "get_todos",
-		Description: "A tool to retrieve all todo items",
-		InputSchema: handlers.GetTodosInputSchema,
+		Name:         "get_todos",
+		Description:  "A tool to retrieve all todo items",
+		InputSchema:  handlers.GetTodosInputSchema,
+		OutputSchema: handlers.GetTodosOutputSchema,
 	}, handlers.GetTodos)
 
 	mcp.AddTool(srv, &mcp.Tool{
-		Name:        "update_todo",
-		Description: "A tool to update an existing todo item by ID",
-		InputSchema: handlers.UpdateTodoInputSchema,
+		Name:         "update_todo",
+		Description:  "A tool to update an existing todo item by ID",
+		InputSchema:  handlers.UpdateTodoInputSchema,
+		OutputSchema: handlers.UpdateTodoOutputSchema,
 	}, handlers.UpdateTodo)
 
 	mcp.AddTool(srv, &mcp.Tool{
-		Name:        "delete_todo",
-		Description: "A tool to delete a todo item by ID",
-		InputSchema: handlers.DeleteTodoInputSchema,
+		Name:         "delete_todo",
+		Description:  "A tool to delete a todo item by ID",
+		InputSchema:  handlers.DeleteTodoInputSchema,
+		OutputSchema: handlers.DeleteTodoOutputSchema,
 	}, handlers.DeleteTodo)
 
 	// Health check endpoint

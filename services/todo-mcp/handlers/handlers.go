@@ -58,6 +58,91 @@ var DeleteTodoInputSchema map[string]any = gin.H{
 	"required": []string{"id"},
 }
 
+// Output Schemas
+var AddTodoOutputSchema map[string]any = gin.H{
+	"type": "object",
+	"properties": gin.H{
+		"id": gin.H{
+			"type":        "integer",
+			"description": "The ID of the created todo item",
+		},
+		"title": gin.H{
+			"type":        "string",
+			"description": "The title of the created todo item",
+		},
+		"created_at": gin.H{
+			"type":        "string",
+			"format":      "date-time",
+			"description": "When the todo was created",
+		},
+		"updated_at": gin.H{
+			"type":        "string",
+			"format":      "date-time",
+			"description": "When the todo was last updated",
+		},
+	},
+}
+
+var GetTodosOutputSchema map[string]any = gin.H{
+	"type": "object",
+	"items": gin.H{
+		"type": "array",
+		"properties": gin.H{
+			"id": gin.H{
+				"type":        "integer",
+				"description": "The ID of the todo item",
+			},
+			"title": gin.H{
+				"type":        "string",
+				"description": "The title of the todo item",
+			},
+			"created_at": gin.H{
+				"type":        "string",
+				"format":      "date-time",
+				"description": "When the todo was created",
+			},
+			"updated_at": gin.H{
+				"type":        "string",
+				"format":      "date-time",
+				"description": "When the todo was last updated",
+			},
+		},
+	},
+}
+
+var UpdateTodoOutputSchema map[string]any = gin.H{
+	"type": "object",
+	"properties": gin.H{
+		"id": gin.H{
+			"type":        "integer",
+			"description": "The ID of the updated todo item",
+		},
+		"title": gin.H{
+			"type":        "string",
+			"description": "The updated title",
+		},
+		"updated_at": gin.H{
+			"type":        "string",
+			"format":      "date-time",
+			"description": "When the todo was last updated",
+		},
+	},
+}
+
+var DeleteTodoOutputSchema map[string]any = gin.H{
+	"type": "object",
+	"properties": gin.H{
+		"success": gin.H{
+			"type":        "boolean",
+			"description": "Whether the deletion was successful",
+		},
+		"id": gin.H{
+			"type":        "integer",
+			"description": "The ID of the deleted todo item",
+		},
+	},
+}
+
 // Tools returns the list of available tools
 func Tools() gin.HandlerFunc {
 	return func(c *gin.Context) {

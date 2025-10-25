@@ -108,7 +108,7 @@ func GetTodos(ctx context.Context, req *mcp.CallToolRequest, input GetTodosInput
 
 	return &mcp.CallToolResult{
 		Content: []mcp.Content{
-			&mcp.TextContent{Text: fmt.Sprintf("Found %d todos:\n%s", len(*todos), string(todosJSON))},
+			&mcp.TextContent{Text: string(todosJSON)},
 		},
 	}, nil, nil
 }
@@ -123,12 +123,7 @@ type UpdateTodoInput struct {
 // UpdateTodo updates an existing todo item
 func UpdateTodo(ctx context.Context, req *mcp.CallToolRequest, input UpdateTodoInput) (*mcp.CallToolResult, any, error) {
 	if input.ID <= 0 {
-		return &mcp.CallToolResult{
-			Content: []mcp.Content{
-				&mcp.TextContent{Text: "Error: id parameter is required and must be greater than 0"},
-			},
-			IsError: true,
-		}, nil, nil
+		return ErrorCallToolResult("Error: id parameter is required and must be greater than 0"), nil, nil
 	}
 
 	// Build update request
@@ -143,30 +138,15 @@ func UpdateTodo(ctx context.Context, req *mcp.CallToolRequest, input UpdateTodoI
 
 	resp, err := client.UpdateTodoWithResponse(ctx, input.ID, updateRequest)
 	if err != nil {
-		return &mcp.CallToolResult{
-			Content: []mcp.Content{
-				&mcp.TextContent{Text: fmt.Sprintf("Error updating todo: %v", err)},
-			},
-			IsError: true,
-		}, nil, nil
+		return ErrorCallToolResult(fmt.Sprintf("Error updating todo: %v", err)), nil, nil
 	}
 
 	if resp.StatusCode() == 404 {
-		return &mcp.CallToolResult{
-			Content: []mcp.Content{
-				&mcp.TextContent{Text: fmt.Sprintf("Todo with id %d not found", input.ID)},
-			},
-			IsError: true,
-		}, nil, nil
+		return ErrorCallToolResult(fmt.Sprintf("Todo with id %d not found", input.ID)), nil, nil
 	}
 
 	if resp.StatusCode() != 200 {
-		return &mcp.CallToolResult{
-			Content: []mcp.Content{
-				&mcp.TextContent{Text: fmt.Sprintf("Error: received status code %d", resp.StatusCode())},
-			},
-			IsError: true,
-		}, nil, nil
+		return ErrorCallToolResult(fmt.Sprintf("Error: received status code %d", resp.StatusCode())), nil, nil
 	}
 
 	textResponse := fmt.Sprintf("Updated todo #%d", input.ID)
