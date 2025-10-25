@@ -2,6 +2,10 @@ FROM python:3.11-slim
 
 WORKDIR /app
 
+COPY . .
+
+RUN pwd && ls -la
+
 # Copy todo-client-python first for better layer caching
 COPY clients/todo-client-python /tmp/todo-client-python
 
