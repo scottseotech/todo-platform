@@ -2,13 +2,11 @@ FROM python:3.11-slim
 
 WORKDIR /app
 
-COPY . .
+# Copy todo-client-python first for better layer caching
+COPY clients/todo-client-python /tmp/todo-client-python
 
 ARG CACHEBUST=0
 RUN echo "cachebust=$CACHEBUST" > change.txt && set -x && pwd && ls -la
-
-# Copy todo-client-python first for better layer caching
-COPY clients/todo-client-python /tmp/todo-client-python
 
 # Install todo-client
 RUN pip install --no-cache-dir /tmp/todo-client-python && rm -rf /tmp/todo-client-python
