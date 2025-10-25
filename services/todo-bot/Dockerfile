@@ -4,7 +4,8 @@ WORKDIR /app
 
 COPY . .
 
-RUN echo 2 > change.txt; set -x; pwd && ls -la
+ARG CACHEBUST=0
+RUN echo "cachebust=$CACHEBUST" && echo 2 > change.txt && set -x && pwd && ls -la
 
 # Copy todo-client-python first for better layer caching
 COPY clients/todo-client-python /tmp/todo-client-python
