@@ -22,5 +22,5 @@ USER botuser
 # Expose health check port
 EXPOSE 8080
 
-# Run the bot
+# Run the bot rev 1
 CMD ["python", "app.py"]
