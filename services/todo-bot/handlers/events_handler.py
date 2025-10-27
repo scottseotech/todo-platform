@@ -3,6 +3,7 @@ Event handlers for Slack events
 """
 
 import logging
+import asyncio
 import re
 from backends import ChatBackend
 
@@ -48,13 +49,19 @@ def handle_app_mention(event, say):
 
         # Send to LLM
         logger.info(f"[app_mention] Relaying to LLM: {clean_text}")
-        response = _chat_backend.chat(clean_text)
+
+        # Run async function in sync context
+        response = asyncio.run(_chat_backend.chat(clean_text, user))
+
+        # Format response in alert style
+        formatted_response = f"*AI Agent Response* for <@{user}>\n\n{response}"
+        say(formatted_response)
 
         # Reply in thread
-        say(
-            text=response,
-            thread_ts=event["ts"]
-        )
+        # say(
+        #     text=formatted_response,
+        #     thread_ts=event["ts"]
+        # )
 
     except Exception as e:
         logger.error(f"[app_mention] Error: {e}", exc_info=True)

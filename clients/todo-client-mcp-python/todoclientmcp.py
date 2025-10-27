@@ -217,7 +217,7 @@ class TodoMCPClient:
         except queue.Empty:
             raise MCPError(f"No response received within {timeout} seconds")
 
-    def _call_tool(self, tool_name: str, arguments: dict) -> Any:
+    def call_tool(self, tool_name: str, arguments: dict) -> Any:
         """
         Call an MCP tool.
 
@@ -271,7 +271,7 @@ class TodoMCPClient:
         if due_date:
             arguments["due_date"] = due_date
 
-        return self._call_tool("add_todo", arguments)
+        return self.call_tool("add_todo", arguments)
 
     def get_todos(self) -> List[Todo]:
         """
@@ -280,7 +280,7 @@ class TodoMCPClient:
         Returns:
             List of Todo objects
         """
-        result = self._call_tool("get_todos", {})
+        result = self.call_tool("get_todos", {})
 
         # Parse the response - it might be JSON or formatted text
         try:
@@ -316,7 +316,7 @@ class TodoMCPClient:
         if due_date:
             arguments["due_date"] = due_date
 
-        return self._call_tool("update_todo", arguments)
+        return self.call_tool("update_todo", arguments)
 
     def delete_todo(self, todo_id: int) -> str:
         """
@@ -328,7 +328,7 @@ class TodoMCPClient:
         Returns:
             Success message
         """
-        return self._call_tool("delete_todo", {"id": todo_id})
+        return self.call_tool("delete_todo", {"id": todo_id})
 
     def list_tools(self) -> List[Dict[str, Any]]:
         """
