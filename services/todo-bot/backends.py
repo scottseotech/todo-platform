@@ -8,6 +8,9 @@ from todoclientmcp import TodoMCPClient, MCPError
 
 logger = logging.getLogger(__name__)
 
+# Configuration
+TODO_MCP_URL = os.environ.get("TODO_MCP_URL", "http://localhost:8081")
+
 class ChatBackend(Protocol):
     def chat(self, prompt: str, user: str) -> str: 
         ...
@@ -19,7 +22,7 @@ class OpenAIBackend:
         self.openai_max_tokens = int(os.environ.get("OPENAI_MAX_TOKENS", "1000"))
         self.openai_temperature = float(os.environ.get("OPENAI_TEMPERATURE", "0.3"))
         self.conversation_history = []
-        self.mcpclient = TodoMCPClient("http://localhost:8081")
+        self.mcpclient = TodoMCPClient(TODO_MCP_URL)
         self.mcpclient.connect()
         self.mcp_tools = self.mcpclient.list_tools()
         # logger.info(f"MCP tools loaded: {self.mcp_tools}")
