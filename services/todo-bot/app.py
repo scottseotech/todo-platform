@@ -13,10 +13,13 @@ from flask import Flask, jsonify
 from slack_bolt import App
 from slack_bolt.adapter.socket_mode import SocketModeHandler
 from dotenv import load_dotenv
+from handlers import set_chat_backend
+from backends import OpenAIBackend
+
 
 # Import handler functions
 from handlers.todo_handler import handle_todo_command
-from handlers.events_handler import handle_app_home_opened, handle_app_mention
+from handlers.events_handler import handle_app_mention
 
 # Load environment variables
 load_dotenv()
@@ -45,13 +48,17 @@ app = App(
 app.command("/todo")(handle_todo_command)
 
 # Events
-app.event("app_home_opened")(handle_app_home_opened)
 app.event("app_mention")(handle_app_mention)
 
 # Configuration
 TODO_API_URL = os.environ.get("TODO_API_URL", "http://localhost:8080")
 SERVER_PORT = int(os.environ.get("SERVER_PORT", "8082"))
 
+# Configure your backend
+backend = OpenAIBackend()
+
+# Set the backend for event handlers
+set_chat_backend(backend)
 
 @web_app.route("/health")
 def health():

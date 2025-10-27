@@ -3,62 +3,65 @@ Event handlers for Slack events
 """
 
 import logging
+import re
+from backends import ChatBackend
 
 logger = logging.getLogger(__name__)
 
+# Global backend reference - should be set by main app
+_chat_backend: ChatBackend = None
 
-def handle_app_home_opened(client, event):
-    """
-    Handle app home opened event
-    Shows a welcome message when users open the app's home tab
-    """
-    try:
-        client.views_publish(
-            user_id=event["user"],
-            view={
-                "type": "home",
-                "blocks": [
-                    {
-                        "type": "section",
-                        "text": {
-                            "type": "mrkdwn",
-                            "text": "*Welcome to Todo Bot! 👋*"
-                        }
-                    },
-                    {
-                        "type": "section",
-                        "text": {
-                            "type": "mrkdwn",
-                            "text": "Use the `/todo` command to manage your todos.\n\n*Available Commands:*\n• `/todo <text>` - Add a new todo"
-                        }
-                    },
-                    {
-                        "type": "divider"
-                    },
-                    {
-                        "type": "section",
-                        "text": {
-                            "type": "mrkdwn",
-                            "text": "*Examples:*\n```/todo Buy groceries\n/todo \"Call dentist tomorrow\"\n/todo Finish project report```"
-                        }
-                    }
-                ]
-            }
-        )
-    except Exception as e:
-        logger.error(f"[app_home_opened] Error: {e}", exc_info=True)
 
+def set_chat_backend(backend: ChatBackend):
+    """Set the chat backend for handling app mentions"""
+    global _chat_backend
+    _chat_backend = backend
 
 def handle_app_mention(event, say):
     """
     Handle app mentions
-    Responds when the bot is mentioned in a channel
+    Responds when the bot is mentioned in a channel by relaying to LLM
     """
     try:
         user = event["user"]
+        text = event.get("text", "")
+
+        # Remove bot mention from the text
+        # Slack mentions look like <@U12345678>
+        clean_text = re.sub(r'<@[A-Z0-9]+>', '', text).strip()
+
+        if not clean_text:
+            say(
+                text=f"Hi <@{user}>! How can I help you?",
+                thread_ts=event["ts"]
+            )
+            return
+
+        # Check if backend is configured
+        if _chat_backend is None:
+            logger.warning("[app_mention] Chat backend not configured")
+            say(
+                text="Sorry, I'm not configured to respond right now.",
+                thread_ts=event["ts"]
+            )
+            return
+
+        # Send to LLM
+        logger.info(f"[app_mention] Relaying to LLM: {clean_text}")
+        response = _chat_backend.chat(clean_text)
+
+        # Reply in thread
         say(
-            text=f"Hi <@{user}>! Use `/todo` to add a todo item.",
+            text=response,
             thread_ts=event["ts"]
         )
+
     except Exception as e:
         logger.error(f"[app_mention] Error: {e}", exc_info=True)
+        try:
+            say(
+                text="Sorry, I encountered an error processing your message.",
+                thread_ts=event.get("ts")
+            )
+        except:
+            pass
