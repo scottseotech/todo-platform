@@ -1,6 +1,7 @@
 import os
-from typing import Protocol, List, Dict
+from typing import Protocol
 from openai import OpenAI
+from todoclientmcp import TodoMCPClient, MCPError
 
 class ChatBackend(Protocol):
     def chat(self, prompt: str) -> str: 
@@ -13,6 +14,8 @@ class OpenAIBackend:
         self.openai_max_tokens = int(os.environ.get("OPENAI_MAX_TOKENS", "1000"))
         self.openai_temperature = float(os.environ.get("OPENAI_TEMPERATURE", "0.3"))
         self.conversation_history = []
+        self.mcpclient = TodoMCPClient("http://localhost:8081")
+        self.mcpclient.connect()
 
     def chat(self, prompt) -> str:
         system_prompt = f"""You are a friendly bot that specializes in comedy.
@@ -45,8 +48,8 @@ EXAMPLES:
         # Add function calling if MCP client is available
         # functions = self.get_available_functions()
         # if functions and self.mcp_client:
-        #     response_kwargs["functions"] = functions
-        #     response_kwargs["function_call"] = "auto"
+        #     kwargs["functions"] = functions
+        #     kwargs["function_call"] = "auto"
 
         r = self.client.chat.completions.create(model=self.model, messages=self.conversation_history, **kwargs)
         return r.choices[0].message.content

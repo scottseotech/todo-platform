@@ -1,11 +1,11 @@
-from setuptools import setup, find_packages
+from setuptools import setup
 
 setup(
     name="todo-client-mcp",
     version="1.0.0",
     description="Python MCP client for todo-mcp server",
-    author="Your Name",
-    packages=find_packages(),
+    author="scottseo.tech",
+    py_modules=["todoclientmcp"],
     install_requires=[
         "requests>=2.31.0",
         "sseclient-py>=1.8.0",

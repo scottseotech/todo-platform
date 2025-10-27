@@ -3,6 +3,7 @@
 # Install dependencies including local todo-client
 install:
 	pip install -e ../../clients/todo-client-python
+	pip install -e ../../clients/todo-client-mcp-python
 	pip install -r requirements.txt
 
 # Run in development mode with auto-reload

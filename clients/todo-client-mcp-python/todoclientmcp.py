@@ -7,6 +7,9 @@ This client uses the Model Context Protocol (MCP) to communicate with the todo-m
 import json
 import logging
 import uuid
+import threading
+import queue
+import time
 from typing import Optional, Dict, Any, List
 from dataclasses import dataclass
 from datetime import datetime
@@ -81,15 +84,16 @@ class TodoMCPClient:
         self.session_id: Optional[str] = None
         self.sse_client: Optional[SSEClient] = None
         self.initialized = False
+        self.http_session = requests.Session()  # Reuse same session for all requests
+        self.sse_thread: Optional[threading.Thread] = None
+        self.response_queue: queue.Queue = queue.Queue()
+        self.stop_event = threading.Event()
 
     def connect(self) -> None:
         """
         Connect to the MCP server and initialize the session.
         This establishes the SSE connection and sends the initialize request.
         """
-        # Generate session ID
-        self.session_id = str(uuid.uuid4())
-
         # Establish SSE connection (GET /sse)
         logger.info(f"Connecting to MCP server at {self.sse_url}")
         headers = {
@@ -97,15 +101,56 @@ class TodoMCPClient:
             'Cache-Control': 'no-cache',
         }
 
-        response = requests.get(self.sse_url, headers=headers, stream=True)
+        response = self.http_session.get(self.sse_url, headers=headers, stream=True)
         if response.status_code != 200:
             raise MCPError(f"Failed to connect to SSE endpoint: {response.status_code}")
 
         self.sse_client = SSEClient(response)
+
+        # Start background thread to read SSE events and extract session ID
+        self.sse_thread = threading.Thread(target=self._sse_reader, daemon=True)
+        self.sse_thread.start()
+
+        # Wait for the endpoint event to be processed by background thread
+        logger.info("Waiting for endpoint event from server...")
+        timeout = 10.0
+        start_time = time.time()
+        while not self.session_id:
+            if time.time() - start_time > timeout:
+                raise MCPError("Timeout waiting for endpoint event")
+            time.sleep(0.01)
+
         logger.info(f"SSE connection established with session {self.session_id}")
 
         # Send initialize request
         self._initialize()
+
+    def _sse_reader(self):
+        """Background thread that reads SSE events and queues responses"""
+        try:
+            for event in self.sse_client.events():
+                if self.stop_event.is_set():
+                    break
+
+                # Handle endpoint event (contains session ID)
+                if event.event == 'endpoint' and event.data:
+                    endpoint_url = event.data.strip()
+                    logger.debug(f"Received endpoint: {endpoint_url}")
+                    if '?sessionid=' in endpoint_url:
+                        self.session_id = endpoint_url.split('?sessionid=')[1]
+                        logger.debug(f"Extracted session ID: {self.session_id}")
+                    continue
+
+                # Handle message events (JSON-RPC responses)
+                if event.event == 'message' and event.data:
+                    try:
+                        data = json.loads(event.data)
+                        logger.debug(f"SSE message received: {data}")
+                        self.response_queue.put(data)
+                    except json.JSONDecodeError:
+                        logger.warning(f"Failed to parse SSE message: {event.data}")
+        except Exception as e:
+            logger.error(f"SSE reader thread error: {e}", exc_info=True)
 
     def _initialize(self) -> None:
         """Send initialize request to the MCP server"""
@@ -151,38 +196,26 @@ class TodoMCPClient:
             'Content-Type': 'application/json',
         }
 
+        logger.info(f"Posting to URL: {url}")
         logger.debug(f"Sending request: {json.dumps(request, indent=2)}")
-        response = requests.post(url, json=request, headers=headers)
+        response = self.http_session.post(url, json=request, headers=headers)
+        logger.info(f"POST response status: {response.status_code}")
 
-        if response.status_code != 200:
+        if response.status_code not in [200, 202]:
             raise MCPError(f"Request failed with status {response.status_code}: {response.text}")
 
-        # For SSE transport, we need to read the response from the event stream
-        # For simplicity, we'll parse the immediate response
-        # In production, you'd listen to SSE events for async responses
+        # For SSE transport, response comes through the SSE stream, not the POST response
+        # The POST just accepts the request (202 Accepted)
+        logger.debug("Request sent, reading response from SSE stream")
+        return self._read_sse_response()
+
+    def _read_sse_response(self, timeout: float = 30.0) -> dict:
+        """Read the next JSON-RPC response from the SSE stream (via background thread queue)"""
         try:
-            result = response.json()
-            logger.debug(f"Received response: {json.dumps(result, indent=2)}")
-            return result
-        except json.JSONDecodeError:
-            # Response might be empty for SSE, need to read from stream
-            logger.warning("No immediate JSON response, reading from SSE stream")
-            return self._read_sse_response()
-
-    def _read_sse_response(self) -> dict:
-        """Read the next JSON-RPC response from the SSE stream"""
-        if not self.sse_client:
-            raise MCPError("SSE client not initialized")
-
-        for event in self.sse_client.events():
-            if event.data:
-                try:
-                    return json.loads(event.data)
-                except json.JSONDecodeError:
-                    logger.warning(f"Failed to parse SSE event data: {event.data}")
-                    continue
-
-        raise MCPError("No response received from SSE stream")
+            response = self.response_queue.get(timeout=timeout)
+            return response
+        except queue.Empty:
+            raise MCPError(f"No response received within {timeout} seconds")
 
     def _call_tool(self, tool_name: str, arguments: dict) -> Any:
         """
@@ -323,9 +356,14 @@ class TodoMCPClient:
 
     def disconnect(self) -> None:
         """Disconnect from the MCP server"""
+        logger.info("Disconnecting from MCP server")
+
+        # Stop SSE reader thread
+        self.stop_event.set()
+        if self.sse_thread and self.sse_thread.is_alive():
+            self.sse_thread.join(timeout=2.0)
+
         if self.sse_client:
-            # SSEClient doesn't have explicit close, but we can close the underlying response
-            logger.info("Disconnecting from MCP server")
             self.sse_client = None
 
         self.session_id = None
