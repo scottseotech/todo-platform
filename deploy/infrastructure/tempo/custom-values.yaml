@@ -61,7 +61,7 @@ tempo:
   #  max_concurrent_queries: 20
   # -- Configuration options for the query-fronted.
   # Refers to: https://grafana.com/docs/tempo/latest/configuration/#query-frontend
-  queryFrontend: {storage}
+  queryFrontend: {}
   #  search:
   #    concurrent_jobs: 2000
   retention: 24h

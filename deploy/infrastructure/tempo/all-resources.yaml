@@ -76,7 +76,7 @@ data:
     querier:
           {}
     query_frontend:
-          storage: null
+          {}
     overrides:
           defaults: {}
           per_tenant_override_config: /conf/overrides.yaml
@@ -169,7 +169,7 @@ spec:
         app.kubernetes.io/name: tempo
         app.kubernetes.io/instance: grafana-tempo
       annotations:
-        checksum/config: 8d71a4519566a1d25693a8bf89742bbdb074ba0bbb5a6b4d5b0703cc6dfa71da
+        checksum/config: 82262bbb9cbc1071c65609b776110d4ad485741c10e5ad6b072c1bce4ca4cadc
     spec:
       serviceAccountName: grafana-tempo
       automountServiceAccountToken: true
