@@ -3,12 +3,12 @@
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: grafana-tempo
+  name: tempo
   namespace: observability
   labels:
     helm.sh/chart: tempo-1.24.0
     app.kubernetes.io/name: tempo
-    app.kubernetes.io/instance: grafana-tempo
+    app.kubernetes.io/instance: tempo
     app.kubernetes.io/version: "2.9.0"
     app.kubernetes.io/managed-by: Helm
 automountServiceAccountToken: true
@@ -22,7 +22,7 @@ metadata:
   labels:
     helm.sh/chart: tempo-1.24.0
     app.kubernetes.io/name: tempo
-    app.kubernetes.io/instance: grafana-tempo
+    app.kubernetes.io/instance: tempo
     app.kubernetes.io/version: "2.9.0"
     app.kubernetes.io/managed-by: Helm
 data:
@@ -31,7 +31,7 @@ data:
       {}
   tempo.yaml: |
     memberlist:
-      cluster_label: "grafana-tempo.observability"
+      cluster_label: "tempo.observability"
     multitenancy_enabled: false
     usage_report:
       reporting_enabled: true
@@ -85,12 +85,12 @@ data:
 apiVersion: v1
 kind: Service
 metadata:
-  name: grafana-tempo
+  name: tempo
   namespace: observability
   labels:
     helm.sh/chart: tempo-1.24.0
     app.kubernetes.io/name: tempo
-    app.kubernetes.io/instance: grafana-tempo
+    app.kubernetes.io/instance: tempo
     app.kubernetes.io/version: "2.9.0"
     app.kubernetes.io/managed-by: Helm
 spec:
@@ -142,18 +142,18 @@ spec:
     targetPort: 55678
   selector:
     app.kubernetes.io/name: tempo
-    app.kubernetes.io/instance: grafana-tempo
+    app.kubernetes.io/instance: tempo
 ---
 # Source: tempo/templates/statefulset.yaml
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: grafana-tempo
+  name: tempo
   namespace: observability
   labels:
     helm.sh/chart: tempo-1.24.0
     app.kubernetes.io/name: tempo
-    app.kubernetes.io/instance: grafana-tempo
+    app.kubernetes.io/instance: tempo
     app.kubernetes.io/version: "2.9.0"
     app.kubernetes.io/managed-by: Helm
 spec:
@@ -161,17 +161,17 @@ spec:
   selector:
     matchLabels:
       app.kubernetes.io/name: tempo
-      app.kubernetes.io/instance: grafana-tempo
-  serviceName: grafana-tempo-headless
+      app.kubernetes.io/instance: tempo
+  serviceName: tempo-headless
   template:
     metadata:
       labels:
         app.kubernetes.io/name: tempo
-        app.kubernetes.io/instance: grafana-tempo
+        app.kubernetes.io/instance: tempo
       annotations:
-        checksum/config: 82262bbb9cbc1071c65609b776110d4ad485741c10e5ad6b072c1bce4ca4cadc
+        checksum/config: a10c2b2b97ffc412ffca3029c02e1bc04387c23af1813ee8775d02908decf28f
     spec:
-      serviceAccountName: grafana-tempo
+      serviceAccountName: tempo
       automountServiceAccountToken: true
       containers:
       - args:
@@ -246,7 +246,7 @@ spec:
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
-  name: grafana-tempo
+  name: tempo
   namespace: observability
   labels:
     app: tempo
@@ -257,7 +257,7 @@ spec:
     matchLabels:
       helm.sh/chart: tempo-1.24.0
       app.kubernetes.io/name: tempo
-      app.kubernetes.io/instance: grafana-tempo
+      app.kubernetes.io/instance: tempo
       app.kubernetes.io/version: "2.9.0"
       app.kubernetes.io/managed-by: Helm
   namespaceSelector:
