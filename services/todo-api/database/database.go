@@ -8,6 +8,7 @@ import (
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
+	"gorm.io/plugin/opentelemetry/tracing"
 )
 
 type Config struct {
@@ -39,8 +40,13 @@ func Connect(config Config) error {
 		return fmt.Errorf("failed to connect to database: %w", err)
 	}
 
+	// Register OpenTelemetry plugin for database tracing
+	if err := db.Use(tracing.NewPlugin()); err != nil {
+		return fmt.Errorf("failed to register tracing plugin: %w", err)
+	}
+
 	DB = db
-	log.Println("Database connection established")
+	log.Println("Database connection established with OpenTelemetry tracing")
 
 	return nil
 }
