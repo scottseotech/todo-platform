@@ -9,6 +9,9 @@ import (
 	"github.com/modelcontextprotocol/go-sdk/mcp"
 	todoclient "github.com/scottseotech/todo-platform/clients/todo-client-go"
 	"github.com/scottseotech/todo-platform/services/todo-mcp/config"
+	"go.opentelemetry.io/otel"
+	"go.opentelemetry.io/otel/attribute"
+	"go.opentelemetry.io/otel/codes"
 )
 
 var client *todoclient.ClientWithResponses
@@ -28,7 +31,23 @@ type CreateTodoInput struct {
 }
 
 func CreateTodo(ctx context.Context, req *mcp.CallToolRequest, input CreateTodoInput) (*mcp.CallToolResult, any, error) {
+	// Start tracing span for MCP tool call
+	tracer := otel.Tracer("todo-mcp")
+	ctx, span := tracer.Start(ctx, "mcp.tool.CreateTodo")
+	defer span.End()
+
+	// Add attributes about the MCP tool call
+	span.SetAttributes(
+		attribute.String("mcp.tool.name", "todos-add"),
+		attribute.String("mcp.tool.type", "tool"),
+		attribute.String("todo.title", input.Title),
+	)
+
+	// Validation
 	if input.Title == "" {
+		err := fmt.Errorf("title parameter is required")
+		span.RecordError(err)
+		span.SetStatus(codes.Error, "Validation failed: missing title")
 		return &mcp.CallToolResult{
 			Content: []mcp.Content{
 				&mcp.TextContent{Text: "Error: title parameter is required and must be a non-empty string"},
@@ -37,13 +56,21 @@ func CreateTodo(ctx context.Context, req *mcp.CallToolRequest, input CreateTodoI
 		}, nil, nil
 	}
 
+	// Add due date attribute if present
+	if input.DueDate != nil {
+		span.SetAttributes(attribute.String("todo.due_date", input.DueDate.Format(time.RFC3339)))
+	}
+
 	createTodoRequest := todoclient.CreateTodoRequest{
 		Title:   input.Title,
 		DueDate: input.DueDate,
 	}
 
+	// Make HTTP call to todo-api (context propagates trace!)
 	resp, err := client.CreateTodoWithResponse(ctx, createTodoRequest)
 	if err != nil {
+		span.RecordError(err)
+		span.SetStatus(codes.Error, "HTTP request to todo-api failed")
 		return &mcp.CallToolResult{
 			Content: []mcp.Content{
 				&mcp.TextContent{Text: fmt.Sprintf("Error creating todo: %v", err)},
@@ -52,7 +79,13 @@ func CreateTodo(ctx context.Context, req *mcp.CallToolRequest, input CreateTodoI
 		}, nil, nil
 	}
 
+	// Check status code
+	span.SetAttributes(attribute.Int("http.status_code", resp.StatusCode()))
+
 	if resp.StatusCode() != 201 {
+		err := fmt.Errorf("received status code %d", resp.StatusCode())
+		span.RecordError(err)
+		span.SetStatus(codes.Error, "Non-201 status code from todo-api")
 		return &mcp.CallToolResult{
 			Content: []mcp.Content{
 				&mcp.TextContent{Text: fmt.Sprintf("Error: received status code %d", resp.StatusCode())},
@@ -61,6 +94,15 @@ func CreateTodo(ctx context.Context, req *mcp.CallToolRequest, input CreateTodoI
 		}, nil, nil
 	}
 
+	// Add result attributes
+	if resp.JSON201 != nil {
+		span.SetAttributes(
+			attribute.Int64("todo.id", int64(resp.JSON201.Id)),
+			attribute.String("todo.created_at", resp.JSON201.CreatedAt.String()),
+		)
+	}
+
+	span.SetStatus(codes.Ok, "Todo created successfully")
 	textResponse := fmt.Sprintf("Added todo: %s", input.Title)
 
 	return &mcp.CallToolResult{

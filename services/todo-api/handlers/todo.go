@@ -7,6 +7,9 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/scottseo.tech/todo-platform/services/todo-api/database"
 	"github.com/scottseo.tech/todo-platform/services/todo-api/models"
+	"go.opentelemetry.io/otel"
+	"go.opentelemetry.io/otel/attribute"
+	"go.opentelemetry.io/otel/codes"
 )
 
 // GetTodos retrieves all todos
@@ -40,22 +43,38 @@ func GetTodo(c *gin.Context) {
 
 // CreateTodo creates a new todo
 func CreateTodo(c *gin.Context) {
+	tracer := otel.Tracer("todo-api")
+	ctx, span := tracer.Start(c.Request.Context(), "CreateTodo")
+	defer span.End()
+
 	var req models.CreateTodoRequest
 
 	if err := c.ShouldBindJSON(&req); err != nil {
+		span.RecordError(err)
+		span.SetStatus(codes.Error, "Invalid request body")
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
+
+	span.SetAttributes(attribute.String("todo.title", req.Title))
 
 	todo := models.Todo{
 		Title:   req.Title,
 		DueDate: req.DueDate,
 	}
 
-	if err := database.DB.Create(&todo).Error; err != nil {
+	if err := database.DB.WithContext(ctx).Create(&todo).Error; err != nil {
+		span.RecordError(err)
+		span.SetStatus(codes.Error, "Failed to create todo")
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create todo"})
 		return
 	}
+
+	span.SetAttributes(
+		attribute.Int64("todo.id", int64(todo.ID)),
+		attribute.String("todo.created_at", todo.CreatedAt.String()),
+	)
+	span.SetStatus(codes.Ok, "Todo created successfully")
 
 	c.JSON(http.StatusCreated, todo)
 }

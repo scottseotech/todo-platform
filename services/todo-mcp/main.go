@@ -1,9 +1,11 @@
 package main
 
 import (
+	"context"
 	_ "embed"
 	"log"
 	"net/http"
+	"time"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -13,6 +15,8 @@ import (
 	"github.com/scottseotech/todo-platform/services/todo-mcp/middleware"
 	"github.com/scottseotech/todo-platform/services/todo-mcp/prompts"
 	"github.com/scottseotech/todo-platform/services/todo-mcp/resources"
+	"github.com/scottseotech/todo-platform/services/todo-mcp/telemetry"
+	"go.opentelemetry.io/contrib/instrumentation/github.com/gin-gonic/gin/otelgin"
 )
 
 //go:embed openapi.json
@@ -21,10 +25,28 @@ var openapiSpec []byte
 func main() {
 	cfg := config.Load()
 
+	// Initialize OpenTelemetry
+	telemetryConfig := telemetry.LoadConfig("todo-mcp", "1.0.0")
+	shutdown, err := telemetry.InitTracer(telemetryConfig)
+	if err != nil {
+		log.Fatalf("Failed to initialize telemetry: %v", err)
+	}
+	defer func() {
+		ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+		defer cancel()
+		if err := shutdown(ctx); err != nil {
+			log.Printf("Error shutting down telemetry: %v", err)
+		}
+	}()
+
 	// Create Gin router
 	router := gin.New()
 	router.Use(gin.Recovery())
 	router.Use(gin.Logger())
+
+	// Add OpenTelemetry middleware
+	router.Use(otelgin.Middleware("todo-mcp"))
+
 	router.Use(cors.New(cors.Config{
 		AllowOrigins: []string{"https://editor.swagger.io"},
 		AllowMethods: []string{"GET"},
