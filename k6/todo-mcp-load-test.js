@@ -29,6 +29,10 @@ const BASE_URL = __ENV.TODO_MCP_URL || 'http://localhost:8081';
 
 // Helper function to call MCP tool via HTTP endpoint
 function callTool(toolName, input) {
+  const payload = {
+    arguments: input,
+  };
+
   const params = {
     headers: {
       'Content-Type': 'application/json',
@@ -39,7 +43,7 @@ function callTool(toolName, input) {
   const startTime = Date.now();
   const response = http.post(
     `${BASE_URL}/tools/${toolName}/invoke`,
-    JSON.stringify(input),
+    JSON.stringify(payload),
     params
   );
   const duration = Date.now() - startTime;
