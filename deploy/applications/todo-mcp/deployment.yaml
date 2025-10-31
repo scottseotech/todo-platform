@@ -19,8 +19,6 @@ spec:
           env:
             - name: TODO_API_URL
               value: todo-api.default.svc.cluster.local
-            - name: TODO_MCP_URL
-              value: todo-mcp.default.svc.cluster.local
             - name: OTEL_EXPORTER_OTLP_ENDPOINT
               value: "tempo.observability.svc.cluster.local:4317"
             - name: ENVIRONMENT
