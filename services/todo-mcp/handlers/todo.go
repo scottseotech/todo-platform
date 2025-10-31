@@ -4,11 +4,13 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"net/http"
 	"time"
 
 	"github.com/modelcontextprotocol/go-sdk/mcp"
 	todoclient "github.com/scottseotech/todo-platform/clients/todo-client-go"
 	"github.com/scottseotech/todo-platform/services/todo-mcp/config"
+	"go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/codes"
@@ -18,8 +20,22 @@ var client *todoclient.ClientWithResponses
 
 func init() {
 	cfg := config.Load()
+	// var err error
+	// client, err = todoclient.NewClientWithResponses(cfg.TodoAPIURL)
+	// if err != nil {
+	// 	panic(err)
+	// }
+
+	// Create HTTP client with OTel instrumentation
+	httpClient := &http.Client{
+		Transport: otelhttp.NewTransport(http.DefaultTransport),
+	}
+
 	var err error
-	client, err = todoclient.NewClientWithResponses(cfg.TodoAPIURL)
+	client, err = todoclient.NewClientWithResponses(
+		cfg.TodoAPIURL,
+		todoclient.WithHTTPClient(httpClient), // Use instrumented client
+	)
 	if err != nil {
 		panic(err)
 	}
