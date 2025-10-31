@@ -1,3 +1,4 @@
+# Build stage to generate the static site
 FROM python:3.11-slim AS builder
 
 WORKDIR /docs
@@ -14,7 +15,6 @@ COPY docs/ ./docs/
 RUN mkdocs build
 
 # Final stage to serve the site with Nginx
-
 FROM nginx:alpine
 
 COPY --from=builder /docs/site /usr/share/nginx/html

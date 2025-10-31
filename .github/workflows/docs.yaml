@@ -12,7 +12,7 @@ defaults:
     shell: bash -leo pipefail {0}
 
 env:
-  IMG_NAME: curiosinauts/scottseotech-todo-docs
+  IMG_NAME: curiosinauts/scottseotech-docs
   DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
   DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
 
