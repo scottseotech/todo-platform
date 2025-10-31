@@ -13,7 +13,7 @@ COPY docs/ ./docs/
 
 RUN mkdocs build
 
-# Final stage
+# Final stage to serve the site with Nginx
 
 FROM nginx:alpine
 
