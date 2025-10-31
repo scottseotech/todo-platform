@@ -22,4 +22,4 @@ kind: Kustomization
 images:
 - name: todo-api
   newName: curiosinauts/scottseotech-todo-api
-  newTag: ac80467
+  newTag: a00e86f
