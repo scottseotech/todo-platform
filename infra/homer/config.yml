@@ -53,7 +53,7 @@ colors:
 links:
   - name: "Homer Repository"
     icon: "fa-brands fa-github"
-    url: "https://github.com/scottseotech/todo-platform/homer"
+    url: "https://github.com/scottseotech/todo-platform/infra/homer"
     target: "_blank" # optional html a tag target attribute
   - name: "Docs"
     icon: "fa-solid fa-book"
