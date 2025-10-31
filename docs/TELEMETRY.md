@@ -1,37 +1,3 @@
-## Trace Attributes
-
-### Automatic Attributes
-
-All traces include:
-
-- `service.name`: Service identifier (todo-api, todo-mcp)
-- `service.version`: Application version
-- `environment`: Deployment environment
-- `http.method`: HTTP method (GET, POST, etc.)
-- `http.route`: Route pattern (/api/v1/todos/:id)
-- `http.status_code`: Response status code
-- `http.client_ip`: Client IP address
-
-
-## Visualizing Traces
-
-### Grafana with Tempo
-
-1. Access Grafana: `kubectl port-forward -n observability svc/grafana 3000:3000`
-2. Navigate to Explore
-3. Select Tempo data source
-4. Query traces:
-   - By Trace ID
-   - By service name
-   - By tag (e.g., `http.status_code=500`)
-
-## Trace Context Propagation
-
-Traces are propagated across services using:
-
-- **W3C Trace Context**: Standard HTTP headers (`traceparent`, `tracestate`)
-- **Baggage**: Key-value pairs propagated with trace context
-
 ## Performance Considerations
 
 ### Sampling
@@ -58,73 +24,11 @@ sdktrace.WithBatcher(exporter,
 )
 ```
 
-## Troubleshooting
-
-### No Traces Appearing
-
-1. **Check exporter configuration**:
-   ```bash
-   # Verify OTLP endpoint is reachable
-   curl http://tempo:4318/v1/traces
-   ```
-
-2. **Enable stdout exporter**:
-   ```bash
-   export OTEL_ENABLE_STDOUT=true
-   ```
-   Check if traces are printed to stdout.
-
-3. **Verify service startup logs**:
-   ```
-   Telemetry initialized: service=todo-api, version=1.0.0, env=production
-   OTLP trace exporter configured: tempo:4318
-   ```
-
-### Incomplete Traces
-
-- **Database spans missing**: Ensure database queries use `WithContext(ctx)`
-- **HTTP client spans missing**: Use instrumented HTTP client
-
 ### High Overhead
 
 - Reduce sampling rate
 - Increase batch timeout
 - Disable stdout exporter in production
-
-## Adding Custom Spans
-
-### Example: Instrumenting a Function
-
-```go
-import (
-    "go.opentelemetry.io/otel"
-    "go.opentelemetry.io/otel/attribute"
-    "go.opentelemetry.io/otel/codes"
-)
-
-func ProcessTodo(ctx context.Context, todoID int) error {
-    tracer := otel.Tracer("todo-api")
-    ctx, span := tracer.Start(ctx, "ProcessTodo")
-    defer span.End()
-
-    // Add attributes
-    span.SetAttributes(
-        attribute.Int("todo.id", todoID),
-        attribute.String("operation", "process"),
-    )
-
-    // Do work...
-    err := doSomething(ctx)
-    if err != nil {
-        span.RecordError(err)
-        span.SetStatus(codes.Error, "Processing failed")
-        return err
-    }
-
-    span.SetStatus(codes.Ok, "Processing completed")
-    return nil
-}
-```
 
 ### Example: Adding Events
 
