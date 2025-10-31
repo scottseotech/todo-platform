@@ -1,4 +1,4 @@
-FROM python:3.11-slim
+FROM python:3.11-slim AS builder
 
 WORKDIR /docs
 
@@ -10,6 +10,7 @@ RUN pip install --no-cache-dir \
 
 # Copy documentation files
 COPY mkdocs.yml .
+COPY nginx.conf .
 COPY docs/ ./docs/
 
 # Build the documentation
@@ -18,10 +19,10 @@ RUN mkdocs build
 # Use nginx to serve the static files
 FROM nginx:alpine
 
-COPY --from=0 /docs/site /usr/share/nginx/html
+COPY --from=builder /docs/site /usr/share/nginx/html
 
-# Copy nginx configuration
-COPY nginx.conf /etc/nginx/nginx.conf
+# Copy nginx configuration from builder stage
+COPY --from=builder /docs/nginx.conf /etc/nginx/nginx.conf
 
 EXPOSE 80
 
