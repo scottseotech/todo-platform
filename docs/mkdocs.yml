@@ -1,0 +1,100 @@
+site_name: Todo Platform
+site_description: Documentation for the Todo Platform - A Kubernetes-based todo application with GitOps workflow
+site_author: Todo Platform Team
+site_url: https://docs.scottseo.tech
+
+repo_name: scottseotech/todo-platform
+repo_url: https://github.com/scottseotech/todo-platform
+edit_uri: edit/main/docs/
+
+theme:
+  name: material
+  palette:
+    # Light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    # Dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+
+  features:
+    - navigation.instant
+    - navigation.tracking
+    - navigation.tabs
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+    - content.code.annotate
+
+  icon:
+    repo: fontawesome/brands/github
+
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+  - admonition
+  - pymdownx.details
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - attr_list
+  - md_in_html
+  - tables
+
+plugins:
+  - search
+  - tags
+
+nav:
+  - Home: index.md
+  - Architecture:
+      - Overview: architecture/overview.md
+      - Services: architecture/services.md
+      - Database: architecture/database.md
+      - GitOps: architecture/gitops.md
+  - Development:
+      - Getting Started: development/getting-started.md
+      - Local Setup: development/local-setup.md
+      - Building Images: development/building.md
+      - Testing: development/testing.md
+  - Deployment:
+      - Kubernetes: deployment/kubernetes.md
+      - ArgoCD: deployment/argocd.md
+      - GitHub Actions: deployment/github-actions.md
+  - Observability:
+      - OpenTelemetry: observability/opentelemetry.md
+      - Troubleshooting: observability/troubleshooting.md
+      - Traces: observability/traces.md
+      - Load Testing: observability/load-testing.md
+  - API Reference:
+      - Todo API: api/todo-api.md
+      - Todo MCP: api/todo-mcp.md
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/scottseotech/todo-platform
