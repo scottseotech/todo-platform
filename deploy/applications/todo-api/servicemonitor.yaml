@@ -4,6 +4,7 @@ metadata:
   name: todo-api
   labels:
     app: todo-api
+    release: kube-prometheus-stack
 spec:
   selector:
     matchLabels:
