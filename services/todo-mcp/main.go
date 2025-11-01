@@ -10,6 +10,7 @@ import (
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/modelcontextprotocol/go-sdk/mcp"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/scottseotech/todo-platform/services/todo-mcp/config"
 	"github.com/scottseotech/todo-platform/services/todo-mcp/handlers"
 	"github.com/scottseotech/todo-platform/services/todo-mcp/middleware"
@@ -113,6 +114,9 @@ func main() {
 	router.GET("/health", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{"status": "healthy"})
 	})
+
+	// Prometheus metrics endpoint
+	router.GET("/metrics", gin.WrapH(promhttp.Handler()))
 
 	// MCP SSE endpoint - SDK handles the session
 	// SSE needs both GET (for event stream) and POST (for sending messages)

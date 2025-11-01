@@ -12,6 +12,10 @@ spec:
     metadata:
       labels:
         app: placeholder
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8081"
+        prometheus.io/path: "/metrics"
     spec:
       containers:
         - name: todo-mcp

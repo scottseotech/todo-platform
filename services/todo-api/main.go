@@ -12,6 +12,7 @@ import (
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/scottseo.tech/todo-platform/services/todo-api/config"
 	"github.com/scottseo.tech/todo-platform/services/todo-api/database"
 	"github.com/scottseo.tech/todo-platform/services/todo-api/handlers"
@@ -81,6 +82,9 @@ func main() {
 	router.GET("/health", func(c *gin.Context) {
 		c.JSON(200, gin.H{"status": "healthy"})
 	})
+
+	// Prometheus metrics endpoint
+	router.GET("/metrics", gin.WrapH(promhttp.Handler()))
 
 	// OpenAPI specification endpoint
 	router.GET("/openapi.json", func(c *gin.Context) {

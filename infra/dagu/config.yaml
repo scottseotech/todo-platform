@@ -1,0 +1,27 @@
+# Dagu Configuration
+# See: https://dagu.readthedocs.io/en/latest/config.html
+
+# Server settings
+host: "0.0.0.0"
+port: 8080
+
+auth:
+  basic:
+    enabled: true
+
+# History retention
+histRetentionDays: 30
+
+paths:
+  dagsDir: "/dags"                                  # DAG definitions
+
+tz: "America/New_York"
+
+ui:
+  navbarColor: "#1976d2"     # Hex or CSS color
+  navbarTitle: "Todo Jobs"
+  logEncodingCharset: "utf-8"
+  maxDashboardPageLimit: 100
+  dags:
+    sortField: "name"        # Default sort field (name/status/lastRun/schedule/suspended)
+    sortOrder: "asc"         # Default sort order (asc/desc)
