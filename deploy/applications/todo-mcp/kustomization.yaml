@@ -2,6 +2,7 @@ resources:
 - deployment.yaml
 - service.yaml
 - ingress.yaml
+- servicemonitor.yaml
 
 # This adds the suffix to metadata.name
 # nameSuffix: -homer
