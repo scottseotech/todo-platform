@@ -115,6 +115,13 @@ services:
         keywords: "object storage"
         url: "https://minio.scottseo.tech"
         target: "_blank"
+      - name: "Swagger"
+        logo: "assets/icons/swagger.png"
+        subtitle: "API Documentation"
+        tag: "documentation"
+        keywords: "swagger api documentation"
+        url: "https://editor.swagger.io/"
+        target: "_blank"
   - name: "Helpful Links"
     icon: "fa-fw fas fa-solid fa-arrow-up-right-from-square"
     items:
