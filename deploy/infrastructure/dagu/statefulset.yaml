@@ -1,0 +1,87 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: dagu 
+  labels:
+    app.kubernetes.io/name: dagu
+    app.kubernetes.io/instance: dagu
+    app.kubernetes.io/component: svc
+spec:
+  selector:
+    matchLabels:
+      app: dagu
+  podManagementPolicy: OrderedReady
+  serviceName: dagu
+  replicas: 1
+  updateStrategy:
+    rollingUpdate:
+      partition: 0
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: dagu
+        app.kubernetes.io/name: dagu
+        app.kubernetes.io/instance: dagu
+        app.kubernetes.io/version: "0"
+        app.kubernetes.io/component: dagu
+        helm.sh/chart-version: 4.0.0
+    spec:
+      containers:
+        - name: dagu
+          image: dagu
+          ports:
+            - containerPort: 8080
+          env:
+            - name: LOKI_URL
+              value: "http://loki-gateway.logging.svc.cluster.local:80"
+            # - name: DATABASE_URL
+            #   valueFrom:
+            #     secretKeyRef:
+            #       name: dagu-secret
+            #       key: DATABASE_URL
+            # - name: SLACK_BOT_TOKEN
+            #   valueFrom:
+            #     secretKeyRef:
+            #       name: dagu-secret
+            #       key: SLACK_BOT_TOKEN
+            # - name: DAGU_ADMIN_PASSWORD
+            #   valueFrom:
+            #     secretKeyRef:
+            #       name: dagu-secret
+            #       key: DAGU_ADMIN_PASSWORD
+          readinessProbe:
+            tcpSocket:
+              port: 8080
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          livenessProbe:
+            tcpSocket:
+              port: 8080
+            initialDelaySeconds: 15
+            periodSeconds: 20
+          resources:
+            requests:
+              cpu: "512m"
+              memory: "512Mi"
+            limits:
+              memory: "2048Mi"
+          volumeMounts:
+            - name: dagu-pvc
+              mountPath: /root/.config/dagu
+  volumeClaimTemplates:
+    - metadata:
+        name: dagu-pvc
+        labels:
+          app.kubernetes.io/name: dagu
+          app.kubernetes.io/instance: dagu-pvc
+          app.kubernetes.io/version: "0"
+          app.kubernetes.io/component: dagu-pvc
+          helm.sh/chart-version: 4.0.0
+      spec:
+        storageClassName: local-path 
+        resources:
+          requests:
+            storage: 20Gi
+        accessModes:
+          - ReadWriteOnce

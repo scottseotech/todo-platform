@@ -1,0 +1,10 @@
+Metadata-Version: 2.4
+Name: todops
+Version: 0.1.0
+Summary: A minimal CLI for todo platform operations
+Requires-Python: >=3.8
+Description-Content-Type: text/markdown
+Requires-Dist: click>=8.0.0
+Provides-Extra: dev
+Requires-Dist: pytest>=7.0.0; extra == "dev"
+Requires-Dist: black>=22.0.0; extra == "dev"

@@ -1,0 +1,10 @@
+README.md
+pyproject.toml
+todops/__init__.py
+todops/cli.py
+todops.egg-info/PKG-INFO
+todops.egg-info/SOURCES.txt
+todops.egg-info/dependency_links.txt
+todops.egg-info/entry_points.txt
+todops.egg-info/requires.txt
+todops.egg-info/top_level.txt

@@ -37,11 +37,11 @@ COPY config.yaml /root/
 COPY dags /dags
 
 # Install signalmine from private PyPI server
-RUN <<EOF
-    set -xe
-    pip install --index-url http://pypi.k8slabs.dev/simple/ --trusted-host pypi.k8slabs.dev signalmine>=0.1.73
-    pip install logmine
-EOF
+# RUN <<EOF
+#     set -xe
+#     pip install --index-url http://pypi.k8slabs.dev/simple/ --trusted-host pypi.k8slabs.dev signalmine>=0.1.73
+#     pip install logmine
+# EOF
 
 # Copy entrypoint (changes most frequently)
 COPY entrypoint.sh /
