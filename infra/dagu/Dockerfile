@@ -1,5 +1,20 @@
 # syntax=docker/dockerfile:1
 
+# Builder stage for building todops-cli wheel
+FROM python:3.11-slim AS builder
+
+WORKDIR /build
+
+# Install build dependencies
+RUN pip install --no-cache-dir build
+
+# Copy todops-cli source
+COPY apps/todops-cli /build/todops-cli
+
+# Build the wheel
+RUN cd /build/todops-cli && python3 -m build --wheel
+
+# Final stage
 FROM debian:stable-slim
 
 # Install system dependencies (rarely changes - good for caching)
@@ -36,12 +51,9 @@ WORKDIR /root
 COPY config.yaml /root/
 COPY dags /dags
 
-# Install signalmine from private PyPI server
-# RUN <<EOF
-#     set -xe
-#     pip install --index-url http://pypi.k8slabs.dev/simple/ --trusted-host pypi.k8slabs.dev signalmine>=0.1.73
-#     pip install logmine
-# EOF
+# Copy and install todops-cli wheel from builder stage
+COPY --from=builder /build/todops-cli/dist/*.whl /tmp/
+RUN pip install /tmp/*.whl && rm -rf /tmp/*.whl
 
 # Copy entrypoint (changes most frequently)
 COPY entrypoint.sh /
