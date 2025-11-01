@@ -1,6 +1,7 @@
 # Todo Platform Documentation
 
-Welcome to the Todo Platform documentation! This is a Kubernetes-based todo application demonstrating modern cloud-native practices including GitOps, observability, and MCP (Model Context Protocol) integration.
+Welcome to the Todo Platform documentation! A cloud-native Kubernetes application demonstrating GitOps with ArgoCD, self-hosted GitHub Actions runners, OpenTelemetry distributed tracing, automated PostgreSQL HA with
+  CloudNativePG, and Model Context Protocol (MCP) integration.
 
 ## Quick Links
 
@@ -11,24 +12,15 @@ Welcome to the Todo Platform documentation! This is a Kubernetes-based todo appl
 
 ## Features
 
-- **RESTful API** - Todo CRUD operations via todo-api
 - **MCP Integration** - AI assistant integration via todo-mcp
 - **GitOps Workflow** - ArgoCD for continuous delivery
-- **Observability** - OpenTelemetry distributed tracing
 - **Self-Hosted CI** - GitHub Actions with ARC runners
+- **Observability** - OpenTelemetry distributed tracing
+- **RESTful API** - Todo CRUD operations via todo-api
 - **PostgreSQL** - CloudNativePG operator for database
 - **Load Testing** - k6 performance testing
 
-## Architecture
 
-```mermaid
-graph LR
-    A[Client] --> B[todo-mcp]
-    B --> C[todo-api]
-    C --> D[(PostgreSQL)]
-    C --> E[Tempo]
-    B --> E
-```
 
 ## Getting Started
 
