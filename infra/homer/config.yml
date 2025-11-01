@@ -71,12 +71,12 @@ services:
   - name: "Applications"
     icon: "fa-solid fa-cloud"
     items:
-      - name: Todo Job 
+      - name: scheduler
         logo: "assets/icons/dagu.png"
         subtitle: "Jobs"
         tag: "scheduler"
         target: "_blank"
-        url: "https://todojob.scottseo.tech"
+        url: "https://dagu.scottseo.tech"
   - name: "Tools"
     icon: "fa-solid fa-screwdriver-wrench"
     items:
