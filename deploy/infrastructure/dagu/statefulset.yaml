@@ -45,11 +45,11 @@ spec:
             #     secretKeyRef:
             #       name: dagu-secret
             #       key: SLACK_BOT_TOKEN
-            # - name: DAGU_ADMIN_PASSWORD
-            #   valueFrom:
-            #     secretKeyRef:
-            #       name: dagu-secret
-            #       key: DAGU_ADMIN_PASSWORD
+            - name: DAGU_ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: dagu-secret
+                  key: DAGU_ADMIN_PASSWORD
           readinessProbe:
             tcpSocket:
               port: 8080

@@ -4,7 +4,7 @@
 export PATH="/opt/venv/bin:$PATH"
 
 # Set up Dagu directories and configuration
-echo "🚀 Starting SignalJob (Dagu-based pipeline runner)..."
+echo "🚀 Starting dagu (Dagu-based pipeline runner)..."
 
 # Create Dagu configuration directory
 # mkdir -p /root/.dagu
@@ -43,12 +43,12 @@ echo "🔧 Validating Dagu installation..."
 dagu version || echo "  ⚠️  Could not get Dagu version"
 
 echo "⏰ Starting Dagu ..."
-dagu start-all --port=8080 &
+dagu start-all --port="8080" &
 DAGU_PID=$!
 
 # Function to handle shutdown gracefully
 shutdown() {
-    echo "🛑 Shutting down SignalJob..."
+    echo "🛑 Shutting down dagu..."
     echo "  Stopping (PID: $DAGU_PID)..."
     kill $DAGU_PID 2>/dev/null || true
     wait $DAGU_PID 2>/dev/null || true
@@ -56,7 +56,7 @@ shutdown() {
     exit 0
 }
 
-# Set up signal handlers for graceful shutdown
+# Set up dagu handlers for graceful shutdown
 trap shutdown SIGTERM SIGINT
 
 # Wait for either process to exit
