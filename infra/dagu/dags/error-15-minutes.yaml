@@ -1,21 +1,18 @@
-# Error Monitoring Pipeline
-# This DAG monitors Kubernetes logs for errors in the default namespace
-# and sends Slack alerts when errors are detected
-
-schedule: "*/15 * * * *"  # Run every 15 minutes
+schedule: "*/15 * * * *"
 
 env:
   - SLACK_BOT_TOKEN
   - LOKI_URL
 
-# Pipeline steps
 steps:
-  - name: "check-loki-errors"
+  - name: "error-15-minutes"
     description: "Checking for errors in the last 15 minutes..."
     command: "bash"
     script: |
       #!/bin/bash -xe
 
-      # todops --version
+      todops version
 
-      # todops loki search error --since "15 minutes ago" | logmine -dhp | tr '\n' '\0' | xargs -0 -n1 -I{} todops slack post-message alerts --code "{}"
+      todops loki search error --since "15 minutes ago" | logmine -dhp | tr '\n' '\0'
+      
+      #| xargs -0 -n1 -I{} todops slack post-message alerts --code "{}"
