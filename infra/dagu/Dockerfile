@@ -54,6 +54,7 @@ COPY infra/dagu/dags /dags
 # Copy and install todops-cli wheel from builder stage
 COPY --from=builder /build/todops-cli/dist/*.whl /tmp/
 RUN pip install /tmp/*.whl && rm -rf /tmp/*.whl
+RUN pip install logmine
 
 # Copy entrypoint (changes most frequently)
 COPY infra/dagu/entrypoint.sh /

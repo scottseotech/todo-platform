@@ -1,13 +1,24 @@
 """Main CLI module for todops."""
 
+import os
+from pathlib import Path
 import click
+from dotenv import load_dotenv
 from todops import __version__
+from todops.loki_commands import loki
 
+# Load .env file if it exists
+env_path = Path('.') / '.env'
+if env_path.exists():
+    load_dotenv(dotenv_path=env_path)
 
 @click.group()
 def main():
     """todops - A minimal CLI for todo platform operations."""
     pass
+
+
+main.add_command(loki)
 
 
 @main.command()

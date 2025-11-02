@@ -4,3 +4,4 @@ tmp
 **/*.egg-info/**
 apps/todops-cli/dist/**
 apps/todops-cli/build/**
+.env
