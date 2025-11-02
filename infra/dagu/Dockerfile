@@ -38,7 +38,7 @@ RUN python3 -m venv /opt/venv
 ENV PATH="/opt/venv/bin:$PATH"
 
 # Install Dagu (rarely changes - good for caching)
-RUN DAGU_VERSION=v1.17.4 && \
+RUN DAGU_VERSION=v1.23.4 && \
     curl -fsSL "https://github.com/dagu-org/dagu/releases/download/${DAGU_VERSION}/dagu_${DAGU_VERSION#v}_linux_amd64.tar.gz" -o dagu.tar.gz && \
     tar zxf dagu.tar.gz && \
     mv dagu /usr/local/bin/dagu && \
