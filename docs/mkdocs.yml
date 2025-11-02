@@ -78,9 +78,9 @@ nav:
       - GitOps: architecture/gitops.md
   - Development:
       - Getting Started: development/getting-started.md
-      - Local Setup: development/local-setup.md
-      - Building Images: development/building.md
-      - Testing: development/testing.md
+      # - Local Setup: development/local-setup.md
+      # - Building Images: development/building.md
+      # - Testing: development/testing.md
   - Deployment:
       - Kubernetes: deployment/kubernetes.md
       - ArgoCD: deployment/argocd.md
