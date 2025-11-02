@@ -4,7 +4,7 @@
 export PATH="/opt/venv/bin:$PATH"
 
 # Set up Dagu directories and configuration
-echo "🚀 Starting dagu (Dagu-based pipeline runner)..."
+echo "Starting dagu (Dagu-based pipeline runner)..."
 
 # Create Dagu configuration directory
 # mkdir -p /root/.dagu
@@ -14,7 +14,7 @@ export DAGU_DAGS="/dags"
 export DAGU_HOME="/root/.config/dagu"
 
 if [[ -f /root/config.yaml ]]; then
-    echo "📋 Setting up main configuration..."
+    echo "Setting up main configuration..."
     mv /root/config.yaml ~/.config/dagu/
 fi
 
@@ -23,7 +23,7 @@ export DAGU_AUTH_BASIC_USERNAME=admin
 export DAGU_AUTH_BASIC_PASSWORD=${DAGU_ADMIN_PASSWORD}
 
 # Verify configuration
-echo "🔍 Verifying Dagu setup..."
+echo "Verifying Dagu setup..."
 echo "  DAGU_DAGS: $DAGU_DAGS"
 echo "  DAGU_HOME: $DAGU_HOME"
 echo "  Config files:"
@@ -35,24 +35,24 @@ if [[ -d "$DAGU_DAGS" ]]; then
     echo "  Found $DAG_COUNT DAG files in $DAGU_DAGS"
     find "$DAGU_DAGS" -name "*.yaml" -o -name "*.yml" | head -5
 else
-    echo "  ⚠️  DAGs directory not found: $DAGU_DAGS"
+    echo "  DAGs directory not found: $DAGU_DAGS"
 fi
 
 # Validate Dagu installation
-echo "🔧 Validating Dagu installation..."
-dagu version || echo "  ⚠️  Could not get Dagu version"
+echo "Validating Dagu installation..."
+dagu version || echo "   Could not get Dagu version"
 
-echo "⏰ Starting Dagu ..."
+echo "Starting Dagu ..."
 dagu start-all --port="8080" &
 DAGU_PID=$!
 
 # Function to handle shutdown gracefully
 shutdown() {
-    echo "🛑 Shutting down dagu..."
-    echo "  Stopping (PID: $DAGU_PID)..."
+    echo "Shutting down dagu..."
+    echo "Stopping (PID: $DAGU_PID)..."
     kill $DAGU_PID 2>/dev/null || true
     wait $DAGU_PID 2>/dev/null || true
-    echo "✅ Shutdown complete"
+    echo "Shutdown complete"
     exit 0
 }
 
