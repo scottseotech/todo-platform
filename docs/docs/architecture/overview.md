@@ -80,9 +80,9 @@ The platform implements the three pillars of observability with full integration
 
 Scrapes metrics from all services every 15 seconds:
 
-- **Todo MCP Server**: Request rates, latency, tool invocations
-- **Todo API**: HTTP request metrics, database connection pool stats
-- **PostgreSQL**: Database performance, replication lag, query statistics
+- **Todo MCP Server**: General golang runtime metrics
+- **Todo API**: General golang runtime metrics
+- **PostgreSQL**: Database performance, replication lag, operational stats
 
 ### Traces - Tempo
 
@@ -91,7 +91,7 @@ Collects distributed traces via OpenTelemetry:
 - End-to-end request tracing from SlackBot → MCP → API → Database
 - W3C Trace Context propagation
 - OTLP gRPC ingestion (port 4317)
-- Trace correlation with logs and metrics
+- Trace correlation with logs and metrics (TODO)
 
 ### Logs - Loki
 
@@ -141,6 +141,4 @@ S3-compatible object storage serving dual purposes:
 ### Backup Flow
 
 - CNPG operator performs daily PostgreSQL backups
-- Backup data compressed and encrypted
-- Pushed to MinIO S3 with configurable retention
 - Point-in-time recovery available from backup archives
