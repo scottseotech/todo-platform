@@ -1,6 +1,21 @@
 schedule: "*/15 * * * *"
 
+env:
+  LOKI_URL: "${LOKI_URL}"
+  SLACK_BOT_TOKEN: "${SLACK_BOT_TOKEN}"
+
 steps:
   - name: "error-15-minutes"
     description: "Checking for errors in the last 15 minutes..."
-    command: /dags/error-15-minutes.sh
+    shell: bash
+    script: |
+      #!/bin/bash
+      set -euo pipefail
+
+      echo "LOKI_URL=${LOKI_URL}"
+      echo "SLACK_BOT_TOKEN=${SLACK_BOT_TOKEN}"
+
+      todops loki search error --since "15 minutes ago" | \
+      logmine -dhp | \
+      tr '\n' '\0' | \
+      xargs -0 -n1 -I{} todops slack post-message alerts --code "{}"     
