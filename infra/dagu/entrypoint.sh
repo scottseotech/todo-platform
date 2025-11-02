@@ -21,6 +21,7 @@ fi
 # Set Dagu environment variables
 export DAGU_AUTH_BASIC_USERNAME=admin
 export DAGU_AUTH_BASIC_PASSWORD=${DAGU_ADMIN_PASSWORD}
+export DAGU_PORT=8080
 
 # Verify configuration
 echo "Verifying Dagu setup..."
