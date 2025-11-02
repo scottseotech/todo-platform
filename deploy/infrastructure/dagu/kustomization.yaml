@@ -8,4 +8,4 @@ kind: Kustomization
 images:
 - name: dagu
   newName: curiosinauts/scottseotech-dagu
-  newTag: f452e71
+  newTag: 59877fa
