@@ -1,9 +1,5 @@
 schedule: "*/15 * * * *"
 
-env:
-  - SLACK_BOT_TOKEN
-  - LOKI_URL
-
 steps:
   - name: "error-15-minutes"
     description: "Checking for errors in the last 15 minutes..."
