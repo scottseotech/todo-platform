@@ -6,6 +6,7 @@ import click
 from dotenv import load_dotenv
 from todops import __version__
 from todops.loki_commands import loki
+from todops.slack_commands import slack
 
 # Load .env file if it exists
 env_path = Path('.') / '.env'
@@ -19,7 +20,7 @@ def main():
 
 
 main.add_command(loki)
-
+main.add_command(slack)
 
 @main.command()
 def version():

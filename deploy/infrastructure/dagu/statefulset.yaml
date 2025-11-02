@@ -35,16 +35,11 @@ spec:
           env:
             - name: LOKI_URL
               value: "http://loki-gateway.logging.svc.cluster.local:80"
-            # - name: DATABASE_URL
-            #   valueFrom:
-            #     secretKeyRef:
-            #       name: dagu-secret
-            #       key: DATABASE_URL
-            # - name: SLACK_BOT_TOKEN
-            #   valueFrom:
-            #     secretKeyRef:
-            #       name: dagu-secret
-            #       key: SLACK_BOT_TOKEN
+            - name: SLACK_BOT_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: dagu-secret
+                  key: SLACK_BOT_TOKEN
             - name: DAGU_ADMIN_PASSWORD
               valueFrom:
                 secretKeyRef:
