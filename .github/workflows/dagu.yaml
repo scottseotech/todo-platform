@@ -6,7 +6,7 @@ on:
       - "main"
     paths:
       - "infra/dagu/**"
-      - "apps/todo-cli/**"
+      - "apps/todops-cli/**"
 
 defaults:
   run:
