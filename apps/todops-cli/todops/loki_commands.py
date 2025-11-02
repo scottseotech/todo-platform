@@ -12,12 +12,10 @@ from typing import Optional
 
 import click
 
-from todops.loki_ignore_commands import ignore
 from todops.loki.client import LokiClient
 from todops.loki.helpers import (
     is_quiet_mode,
     load_ignore_list,
-    print_search_info,
     handle_empty_results,
     output_json,
     output_raw,
@@ -31,11 +29,6 @@ logger = logging.getLogger(__name__)
 def loki():
     """Loki log search and analysis commands."""
     pass
-
-
-# Add the ignore subgroup
-loki.add_command(ignore)
-
 
 @loki.command()
 @click.argument('search_term', required=True)
@@ -63,15 +56,7 @@ def search(search_term: str, since: str, limit: int, namespace: Optional[str],
     """
     url = get_loki_url()
 
-    # Show search info in interactive mode
-    if not is_quiet_mode(output_format):
-        print_search_info(url, search_term, since, namespace, pod, app)
-
-    # Load ignore list
     ignore_list = load_ignore_list(output_format) if not no_ignore else None
-
-    if ignore_list and not is_quiet_mode(output_format):
-        click.echo(f"Applying {len(ignore_list)} active ignore filters\n")
 
     # Search logs
     try:
@@ -84,18 +69,13 @@ def search(search_term: str, since: str, limit: int, namespace: Optional[str],
         return
 
     if debug:
+        click.echo(f"Found {len(log_entries)} log entries\n")
         return
 
-    # Handle empty results
     if not log_entries:
         handle_empty_results(output_format)
         return
 
-    # Show count in interactive mode
-    if not is_quiet_mode(output_format):
-        click.echo(f"Found {len(log_entries)} log entries\n")
-
-    # Output results based on format
     if output_format == 'json':
         output_json(log_entries)
     elif output_format == 'raw':
@@ -111,34 +91,17 @@ def _perform_search(url: str, output_format: str, search_term: str,
     """Perform the actual log search with appropriate progress indication."""
     client = LokiClient(url)
 
-    if is_quiet_mode(output_format):
-        client._silent_mode = True
-        return client.search_logs(
-            search_term=search_term,
-            since=since,
-            limit=limit,
-            namespace=namespace,
-            pod=pod,
-            app=app,
-            ignore_list=ignore_list,
-            debug=debug
-        )
-
-    # Interactive mode with progress bar
-    with click.progressbar(length=1, label='Searching logs...') as bar:
-        log_entries = client.search_logs(
-            search_term=search_term,
-            since=since,
-            limit=limit,
-            namespace=namespace,
-            pod=pod,
-            app=app,
-            ignore_list=ignore_list,
-            debug=debug
-        )
-        bar.update(1)
-    return log_entries
-
+    client._silent_mode = True
+    return client.search_logs(
+        search_term=search_term,
+        since=since,
+        limit=limit,
+        namespace=namespace,
+        pod=pod,
+        app=app,
+        ignore_list=ignore_list,
+        debug=debug
+    )
 
 def _handle_search_error(error: Exception, output_format: str):
     """Handle search errors appropriately based on output format."""

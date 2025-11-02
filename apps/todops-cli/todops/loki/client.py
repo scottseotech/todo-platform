@@ -163,12 +163,10 @@ class LokiClient:
                 escaped_term = re.escape(search_term)
                 query_parts.append(f' |~ "(?i){escaped_term}"')
         
-        # TODO: Implement ignore list filtering properly 
-        # LogQL doesn't support chaining multiple line filters like |~ followed by |!~
-        # For now, ignore list functionality is disabled until we find the correct syntax
-        # if ignore_list:
-        #     # Need to research proper LogQL syntax for combining positive and negative line filters
-        
+        if ignore_list:
+            for entry in ignore_list:
+                query_parts.append(f' !~ "{entry["log_signature"]}"')
+
         query = ''.join(query_parts)
 
         # Parse time range

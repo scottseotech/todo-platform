@@ -6,6 +6,7 @@ import click
 from dotenv import load_dotenv
 from todops import __version__
 from todops.loki_commands import loki
+from todops.loki_ignore_commands import ignore
 from todops.slack_commands import slack
 
 # Load .env file if it exists
@@ -20,6 +21,7 @@ def main():
 
 
 main.add_command(loki)
+loki.add_command(ignore)
 main.add_command(slack)
 
 @main.command()

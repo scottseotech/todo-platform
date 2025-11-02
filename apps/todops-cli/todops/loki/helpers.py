@@ -6,7 +6,8 @@ from typing import Optional
 
 import click
 
-from todops.loki_ignore_commands import LokiIgnoreManager, get_minio_config
+from todops.loki.config import get_minio_config
+from todops.loki.ignore_manager import LokiIgnoreManager
 
 
 def is_quiet_mode(output_format: str) -> bool:
@@ -28,24 +29,6 @@ def load_ignore_list(output_format: str) -> Optional[list]:
         if not is_quiet_mode(output_format):
             click.echo(f"Warning: Could not load ignore list: {e}", err=True)
         return None
-
-
-def print_search_info(url: str, search_term: str, since: str,
-                     namespace: Optional[str], pod: Optional[str],
-                     app: Optional[str]):
-    """Print search parameters (for interactive mode)."""
-    click.echo(f"Searching Loki at: {url}")
-    click.echo(f"Search term: '{search_term}'")
-    click.echo(f"Time range: {since}")
-
-    if namespace:
-        click.echo(f"Namespace: {namespace}")
-    if pod:
-        click.echo(f"Pod filter: {pod}")
-    if app:
-        click.echo(f"App filter: {app}")
-
-    click.echo()
 
 
 def handle_empty_results(output_format: str):
@@ -70,7 +53,7 @@ def output_json(log_entries: list):
 def output_raw(log_entries: list):
     """Output log entries in raw format."""
     for entry in log_entries:
-        namespace_prefix = f"[{entry['namespace']}] "
+        namespace_prefix = f"[{entry['namespace']}/{entry['labels'].get('app', 'unknown')}] "
         click.echo(f"{namespace_prefix}{entry['message']}")
 
 
