@@ -6,6 +6,9 @@ on:
       - "main"
     paths:
       - "services/todo-api/**"
+    paths-ignore:
+      - "services/todo-api/openapi.json"
+      - "services/todo-api/Dockerfile.swagger"
 
 defaults:
   run:
