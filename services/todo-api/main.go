@@ -73,21 +73,13 @@ func main() {
 	router.Use(otelgin.Middleware("todo-api"))
 
 	router.Use(cors.New(cors.Config{
-		AllowOrigins: []string{"https://editor.swagger.io"},
-		AllowMethods: []string{"GET"},
-		AllowHeaders: []string{"Content-Type"},
-	}))
-
-	router.Use(cors.New(cors.Config{
-		AllowOrigins: []string{"https://todo-api.scottseo.tech"},
-		AllowMethods: []string{"GET"},
-		AllowHeaders: []string{"Content-Type"},
-	}))
-
-	router.Use(cors.New(cors.Config{
-		AllowOrigins: []string{"http://localhost:8000"},
-		AllowMethods: []string{"GET"},
-		AllowHeaders: []string{"Content-Type"},
+		AllowOrigins: []string{
+			"https://editor.swagger.io",
+			"http://localhost:8000",
+			"https://docs.scottseo.tech",
+		},
+		AllowMethods: []string{"GET", "OPTIONS"},
+		AllowHeaders: []string{"Content-Type", "Accept"},
 	}))
 
 	// Health check endpoint
