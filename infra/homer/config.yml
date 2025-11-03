@@ -122,6 +122,13 @@ services:
         keywords: "swagger api documentation"
         url: "https://todo-api-swagger.scottseo.tech//"
         target: "_blank"
+      - name: "Swagger"
+        logo: "assets/icons/swagger.png"
+        subtitle: "TODO MCP OpenAPI Documentation"
+        tag: "documentation"
+        keywords: "swagger api documentation"
+        url: "https://todo-mcp-swagger.scottseo.tech//"
+        target: "_blank"
   - name: "Helpful Links"
     icon: "fa-fw fas fa-solid fa-arrow-up-right-from-square"
     items:

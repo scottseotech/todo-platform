@@ -49,9 +49,13 @@ func main() {
 	router.Use(otelgin.Middleware("todo-mcp"))
 
 	router.Use(cors.New(cors.Config{
-		AllowOrigins: []string{"https://editor.swagger.io"},
-		AllowMethods: []string{"GET"},
-		AllowHeaders: []string{"Content-Type"},
+		AllowOrigins: []string{
+			"https://editor.swagger.io",
+			"http://localhost:8000",
+			"https://docs.scottseo.tech",
+		},
+		AllowMethods: []string{"GET", "OPTIONS"},
+		AllowHeaders: []string{"Content-Type", "Accept"},
 	}))
 
 	// Create MCP server

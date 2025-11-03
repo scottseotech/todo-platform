@@ -1,0 +1,5 @@
+FROM swaggerapi/swagger-ui:latest
+
+COPY services/todo-mcp/openapi.json /app/swagger.json
+
+# rev 1

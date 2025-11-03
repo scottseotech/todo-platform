@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: todo-api-swagger
+  name: todo-mcp-swagger
 spec:
   replicas: 1
   revisionHistoryLimit: 1
@@ -14,8 +14,8 @@ spec:
         app: placeholder
     spec:
       containers:
-        - name: todo-api-swagger
-          image: todo-api-swagger
+        - name: todo-mcp-swagger
+          image: todo-mcp-swagger
           ports:
             - containerPort: 8080
           resources:
