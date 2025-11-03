@@ -79,7 +79,7 @@ func main() {
 	}))
 
 	router.Use(cors.New(cors.Config{
-		AllowOrigins: []string{"https://todo-api.scottseo.tech"},
+		AllowOrigins: []string{"http://localhost:8000"},
 		AllowMethods: []string{"GET"},
 		AllowHeaders: []string{"Content-Type"},
 	}))
