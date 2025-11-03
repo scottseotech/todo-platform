@@ -21,6 +21,8 @@ COPY --from=builder /docs/site /usr/share/nginx/html
 
 COPY --from=builder /docs/nginx.conf /etc/nginx/nginx.conf
 
+COPY --from=builder /docs/site/assets/images/favicon.png /usr/share/nginx/html/api/assets/images/favicon.png
+
 EXPOSE 80
 
 CMD ["nginx", "-g", "daemon off;"]
