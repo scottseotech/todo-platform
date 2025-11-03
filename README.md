@@ -1,60 +1,30 @@
-# Setup
+# About
+So this repository came about to showcase my devops, chatops, and mlops skills using a simple todo list app.
+
+# About This Lab
+I built this lab to experiment with K8s, GitHub Actions, and observability pipelines in a realistic setup
+
+![image](https://github.com/scottseotech/todo-platform/blob/main/assets/images/homelab.jpg?raw=true)
+
 
 ## Initial directory structure
 ```
-  .github/workflows/
-    build-api.yml
-    release.yml               # bump chart, push image, notify Slack
-    chatops.yml               # dispatch from /deploy  
+  .github/workflows/          # push image, notify Slack
+  apps/todops-cli             # Python CLI
   services/
     todo-api/                 # Go, OTEL, /metrics, Dockerfile
-    todo-cli/                 # Go CLI + k6 fixtures
-    todo-mcp/                 # Go
-    todo-bot/                 # Python /ship, /todo, GitHub dispatch
+    todo-mcp/                 # Go MCP server
+    todo-bot/                 # Python Slack bot /ship, /todo
   clients/
-    todo-client-go/           # golang client
+    todo-client-go/           # Go todo-api client
   deploy/
     applications/             # k8s applications
     argocd-apps/              # ArgoCD applications
-    infrastructure            # k8s backend infrastructure
+    bootstrap/bootstrap.sh    # Automation script for setting up my homelab
+    infrastructure/           # k8s backend infrastructure
   k6/
     load.js                   # quick ramp test
   infra/
     homer/                    # homer
     runner/                   # Github ARC runner
 ```
-
-execute `bootstrap.sh`
-
-k create ns cnpg
-
-### ArgoCD
-ArgoCD changes must be applied using patches in k8s/argocd folder
-
-argocd account generate-token --account admin
-
-### CNPG 
-psql -h 192.168.
-
-```
-CREATE SCHEMA todo;
-
-ALTER USER todo_db_admin SET search_path TO todo;
-```
-
-four github secrets
-ARGOCD_TOKEN
-DOCKERHUB_TOKEN
-DOCKERHUB_USERNAME
-GH_ACCESS_TOKEN
-
-todo-platform variable
-ARGOCD_LOCK
-
-show artificial drawing of my lab environment
-
-user -> slack slash command -> todo-api -> database
-
-user simulation of 100 users
-
-capture metrics for 
