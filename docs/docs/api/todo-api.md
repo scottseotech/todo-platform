@@ -4,6 +4,8 @@
 
 A simple REST API for managing todos with PostgreSQL backend.
 
+<swagger-ui src="https://todo-api.scottseo.tech/openapi.json"/>
+
 ## Base URLs
 
 | Environment | URL |

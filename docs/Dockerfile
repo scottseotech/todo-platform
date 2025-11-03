@@ -6,7 +6,9 @@ WORKDIR /docs
 RUN pip install --no-cache-dir \
     mkdocs==1.5.3 \
     mkdocs-material==9.4.14 \
-    pymdown-extensions==10.5
+    pymdown-extensions==10.5 \
+    neoteroi-mkdocs==1.1.3 \
+    mkdocs-swagger-ui-tag=0.7.2
 
 COPY mkdocs.yml .
 COPY nginx.conf .

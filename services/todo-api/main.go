@@ -78,6 +78,12 @@ func main() {
 		AllowHeaders: []string{"Content-Type"},
 	}))
 
+	router.Use(cors.New(cors.Config{
+		AllowOrigins: []string{"https://todo-api.scottseo.tech"},
+		AllowMethods: []string{"GET"},
+		AllowHeaders: []string{"Content-Type"},
+	}))
+
 	// Health check endpoint
 	router.GET("/health", func(c *gin.Context) {
 		c.JSON(200, gin.H{"status": "healthy"})
