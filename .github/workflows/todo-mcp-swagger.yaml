@@ -7,6 +7,7 @@ on:
     paths:
       - "services/todo-mcp/openapi.json"
       - "services/todo-mcp/Dockerfile.swagger"
+  workflow_dispatch:
 
 defaults:
   run:
