@@ -6,10 +6,12 @@ The Todo Platform is a cloud-native Kubernetes application demonstrating product
 
 ```mermaid
 graph LR
-    A[SlackBot Client] --> B[Todo MCP Server]
+    A[SlackBot Client] -- prompt --> K[OpenAI Model]
+    K -- reponse --> A
+    A -->|tools| B[Todo MCP Server]
     B --> C[Todo API]
     C --> D[(PostgreSQL<br/>CNPG)]
-    D -.backups.-> F[MinIO S3]
+    D -->|backups| F[MinIO S3]
     C --> E[Tempo Telemetry]
     B --> E
     G[Prometheus] -.scrapes.-> B
@@ -18,10 +20,10 @@ graph LR
     H[Grafana] --> G
     H --> E
     H -.alerts.-> I[Slack]
-    B -.logs.-> J[Loki]
-    C -.logs.-> J
-    D -.logs.-> J
-    J -.storage.-> F
+    B -->|logs| J[Loki]
+    C -->|logs| J
+    D -->|logs| J
+    J -->|storage| F
     H --> J
 ```
 
