@@ -26,13 +26,7 @@ See [Deployment Documentation](docs/docs/deployment/kubernetes.md) for detailed 
 
 **Purpose:** Build a realistic, reproducible environment to practice production operations end-to-end (design -> code -> CI/CD -> K8s -> observability -> rollback).
 
-<details>
-  <summary>Lab photo</summary>
-
-  ![Homelab rack and cluster layout](assets/images/homelab.jpg)
-  <br>
-  <em>A compact homelab used to test Kubernetes, GitHub Actions, ArgoCD, observability pipelines, and disaster-recovery drills.</em>
-</details>
+![Homelab rack and cluster layout](assets/images/homelab.jpg)
 
 ### What It Demonstrates
 
