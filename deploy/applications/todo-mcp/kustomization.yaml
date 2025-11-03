@@ -23,4 +23,4 @@ kind: Kustomization
 images:
 - name: todo-mcp
   newName: curiosinauts/scottseotech-todo-mcp
-  newTag: 50126de
+  newTag: 3f90e7f
