@@ -1,4 +1,7 @@
 import logging
+import json
+
+from utils.subprocess import run_command
 
 logger = logging.getLogger(__name__)
 
@@ -113,8 +116,19 @@ def handle_deploy_submission(ack, body, client, logger):
 
         logger.info(f"[deploy] User: {user_id}, Services: {services}, Version: {version}")
 
-        # TODO: Trigger the actual deployment workflow here
-        # For now, just send a confirmation message
+        servicesObj = {"service": services}
+        servicesJson = json.dumps(servicesObj)
+        cmds = [
+            "gh",
+            "workflow",
+            "run", 
+            "-R",
+            "scottseotech/todo-platform",
+            "Services Release",
+            f"-f version={version}",
+            f"-f services={servicesJson}"
+        ]
+        result = run_command(cmds)
 
         # Format services list for display
         services_list = "\n".join([f"• {svc}" for svc in services])
@@ -122,25 +136,41 @@ def handle_deploy_submission(ack, body, client, logger):
         # Send a message to the user
         client.chat_postMessage(
             channel=user_id,
-            text=f"Deployment initiated for {len(services)} service(s) version {version}",
+            text=f"Service Deployment initiated",
             blocks=[
                 {
                     "type": "header",
                     "text": {
                         "type": "plain_text",
-                        "text": "Deployment Initiated"
+                        "text": "Service Deployment Initiated"
                     }
+                },
+                {
+                    "type": "divider"
                 },
                 {
                     "type": "section",
                     "fields": [
                         {
                             "type": "mrkdwn",
-                            "text": f"*Services:*\n{services_list}"
+                            "text": f"*Services:* "
                         },
                         {
+                            "type": "plain_text",
+                            "text": f"{services_list}"
+                        }
+                    ]
+                },
+                {
+                    "type": "section",
+                    "fields": [
+                        {
                             "type": "mrkdwn",
-                            "text": f"*Version:* {version}"
+                            "text": f"*Version:* "
+                        },
+                        {
+                            "type": "plain_text",
+                            "text": f"{version}"
                         }
                     ]
                 },
