@@ -21,3 +21,7 @@ git tag "${version}"
 echo "Pushing changes and tags..."
 git push origin HEAD
 git push origin "${version}"
+
+# gh workflow run -R "scottseotech/todo-platform" "Services Release" \
+#   -f version=v0.2.4 \
+#   -f services="{ \"service\": [ \"todo-api\", \"todo-mcp\", \"todo-bot\" ]}"
