@@ -4,27 +4,29 @@ Subprocess utility functions
 
 import subprocess
 import logging
-from typing import Optional, List, Dict
+from typing import Optional, List, Dict, Union
 
 logger = logging.getLogger(__name__)
 
 
 def run_command(
-    cmd: List[str],
+    cmd: Union[List[str], str],
     cwd: Optional[str] = None,
     env: Optional[Dict[str, str]] = None,
     timeout: Optional[int] = 300,
-    check: bool = True
+    check: bool = True,
+    shell: bool = False
 ) -> subprocess.CompletedProcess:
     """
     Execute a shell command using subprocess.run with sensible defaults.
 
     Args:
-        cmd: Command and arguments as a list (e.g., ['git', 'status'])
+        cmd: Command as a list (e.g., ['git', 'status']) or string (when shell=True)
         cwd: Working directory for the command
         env: Environment variables (merged with current env)
         timeout: Command timeout in seconds (default: 300)
         check: Raise exception if command fails (default: True)
+        shell: Run command through shell (required for pipes, redirects, etc.)
 
     Returns:
         CompletedProcess instance with returncode, stdout, stderr
@@ -33,12 +35,26 @@ def run_command(
         subprocess.CalledProcessError: If check=True and command fails
         subprocess.TimeoutExpired: If command exceeds timeout
 
-    Example:
+    Examples:
+        >>> # Safe mode (list)
         >>> result = run_command(['echo', 'hello'])
         >>> print(result.stdout)
         'hello'
+
+        >>> # Shell mode (for pipes, etc.)
+        >>> result = run_command('echo "hello" | grep hello', shell=True)
+        >>> print(result.stdout)
+        'hello'
     """
-    logger.info(f"Running command: {' '.join(cmd)}")
+    # Format command for logging
+    if isinstance(cmd, list):
+        cmd_str = ' '.join(cmd)
+    else:
+        cmd_str = cmd
+
+    logger.info(f"Running command: {cmd_str}")
+    if shell:
+        logger.warning("Running command with shell=True - ensure input is trusted")
 
     try:
         result = subprocess.run(
@@ -48,7 +64,8 @@ def run_command(
             capture_output=True,
             text=True,
             timeout=timeout,
-            check=check
+            check=check,
+            shell=shell
         )
 
         logger.debug(f"Command completed with return code: {result.returncode}")

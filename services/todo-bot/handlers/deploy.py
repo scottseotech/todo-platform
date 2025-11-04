@@ -1,5 +1,6 @@
 import logging
 import json
+from time import sleep
 
 from utils.subprocess import run_command
 
@@ -130,7 +131,16 @@ def handle_deploy_submission(ack, body, client, logger):
             "-f", 
             f"services={servicesJson}"
         ]
-        result = run_command(cmds)
+        run_command(cmds)
+
+        search_cmd = f'gh run list --workflow=deployment.yaml --limit=10 --json databaseId,displayTitle --jq ".[] | select(.displayTitle | ascii_downcase | contains(\"{version}\" | ascii_downcase)) | .databaseId" | head -1'
+        
+        run_id = ""
+        for i in range(10):
+            sleep(1)
+            result = run_command(search_cmd, shell=True)
+            if result.stdout:
+                run_id=result.stdout.decode().strip("\n")
 
         # Format services list for display
         services_list = "\n".join([f"{svc}" for svc in services])
@@ -150,6 +160,19 @@ def handle_deploy_submission(ack, body, client, logger):
                 {
                     "type": "divider"
                 },
+                {
+                  "type": "section",
+                  "fields": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Github Workflow Run:*"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": f"https://github.com/scottseotech/todo-platform/actions/runs/{run_id}|{run_id}>"
+                    }
+                  ]
+                },                
                 {
                     "type": "section",
                     "fields": [
@@ -173,15 +196,6 @@ def handle_deploy_submission(ack, body, client, logger):
                         {
                             "type": "plain_text",
                             "text": f"{version}"
-                        }
-                    ]
-                },
-                {
-                    "type": "context",
-                    "elements": [
-                        {
-                            "type": "mrkdwn",
-                            "text": f"Requested by <@{user_id}>"
                         }
                     ]
                 }
