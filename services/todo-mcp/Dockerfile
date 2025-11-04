@@ -3,7 +3,7 @@ FROM golang:1.25-alpine AS builder
 WORKDIR /app
 
 # Copy go mod files
-COPY go.mod go.sum ./
+COPY services/todo-mcp/go.mod services/todo-mcp/go.sum ./
 
 # Download dependencies
 RUN go mod download
