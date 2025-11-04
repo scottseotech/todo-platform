@@ -145,7 +145,7 @@ def handle_deploy_submission(ack, body, client, logger):
                 break
 
         # Format services list for display
-        services_list = ",".join([f"{svc}" for svc in services])
+        services_list = ", ".join([f"{svc}" for svc in services])
 
         # Send a message to the user
         client.chat_postMessage(
