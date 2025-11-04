@@ -19,6 +19,8 @@ spec:
           env:
             - name: TODO_API_URL
               value: todo-api.default.svc.cluster.local
+            - name: TODO_MCP_URL
+              value: todo-mcp.default.svc.cluster.local
             - name: SLACK_BOT_TOKEN
               valueFrom:
                 secretKeyRef:
@@ -29,6 +31,11 @@ spec:
                 secretKeyRef:
                   name: todo-bot-secret
                   key: SLACK_APP_TOKEN
+            - name: OPENAI_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: todo-bot-secret
+                  key: OPENAI_API_KEY
           livenessProbe:
             httpGet:
               path: /health
