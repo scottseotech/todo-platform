@@ -1,4 +1,4 @@
-name: Slack Notification 
+name: Slack Notification Deployment
 
 on:
   workflow_call:
@@ -16,11 +16,11 @@ on:
         required: false
         type: string
         default: ''
-      branch:
-        description: 'Git branch name'
+      version:
+        description: 'version'
         required: false
         type: string
-        default: 'main'
+        default: ''
       actor:
         description: 'GitHub actor who triggered the workflow'
         required: false
@@ -30,7 +30,7 @@ on:
         description: 'Slack channel to post to'
         required: false
         type: string
-        default: '#builds'
+        default: '#deployments'
     secrets:
       SLACK_BOT_TOKEN:
         description: 'Slack bot token for notifications'
@@ -84,24 +84,11 @@ jobs:
                   "type": "header",
                   "text": {
                     "type": "plain_text",
-                    "text": "${{ steps.status_info.outputs.emoji }} ${{ inputs.workflow_name }}"
+                    "text": "${{ steps.status_info.outputs.emoji }} Services Deployment ${{ inputs.version }}"
                   }
                 },
                 {
                   "type": "divider"
-                },
-                {
-                  "type": "section",
-                  "fields": [
-                    {
-                      "type": "mrkdwn",
-                      "text": "*Branch:*"
-                    },
-                    {
-                      "type": "plain_text",
-                      "text": "${{ inputs.branch }}"
-                    }
-                  ]
                 },
                 {
                   "type": "section",

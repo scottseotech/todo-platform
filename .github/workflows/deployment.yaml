@@ -33,12 +33,12 @@ jobs:
   success:
     needs: [call]
     if: success()
-    uses: ./.github/workflows/slack-notification.yaml
+    uses: ./.github/workflows/slack-notification-deployment.yaml
     with:
       status: 'success'
       workflow_name: 'Services Deployment'
-      message: '${{ fromJson(inputs.services) }} ${{ inputs.version }} completed'
-      branch: ${{ github.ref_name }}
+      message: '${{ fromJson(inputs.services).service }} completed'
+      version: ${{ inputs.version }}
       actor: ${{ github.actor }}
       channel: '#deployments'
     secrets: inherit
@@ -46,12 +46,12 @@ jobs:
   failure:
     needs: [call]
     if: failure()
-    uses: ./.github/workflows/slack-notification.yaml
+    uses: ./.github/workflows/slack-notification-deployment.yaml
     with:
       status: 'failure'
       workflow_name: 'Services Deployment'
-      message: '${{ fromJson(inputs.services) }} ${{ inputs.version }} failed'
-      branch: ${{ github.ref_name }}
+      message: '${{ fromJson(inputs.services).service }} failed'
+      version: ${{ inputs.version }}
       actor: ${{ github.actor }}
       channel: '#deployments'
     secrets: inherit
