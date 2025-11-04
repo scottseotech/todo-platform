@@ -18,9 +18,9 @@ spec:
           image: todo-bot
           env:
             - name: TODO_API_URL
-              value: todo-api.default.svc.cluster.local
+              value: http://todo-api.default.svc.cluster.local
             - name: TODO_MCP_URL
-              value: todo-mcp.default.svc.cluster.local
+              value: http://todo-mcp.default.svc.cluster.local
             - name: SLACK_BOT_TOKEN
               valueFrom:
                 secretKeyRef:
