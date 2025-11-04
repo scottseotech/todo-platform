@@ -156,7 +156,7 @@ def handle_deploy_submission(ack, body, client, logger):
                     "type": "header",
                     "text": {
                         "type": "plain_text",
-                        "text": ":information_source: Service Deployment Initiated"
+                        "text": f":information_source: Service Deployment {version}"
                     }
                 },
                 {
@@ -185,19 +185,6 @@ def handle_deploy_submission(ack, body, client, logger):
                         {
                             "type": "plain_text",
                             "text": f"{services_list}"
-                        }
-                    ]
-                },
-                {
-                    "type": "section",
-                    "fields": [
-                        {
-                            "type": "mrkdwn",
-                            "text": f"*Version:* "
-                        },
-                        {
-                            "type": "plain_text",
-                            "text": f"{version}"
                         }
                     ]
                 }
