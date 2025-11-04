@@ -1,11 +1,11 @@
 name: Todo Bot Image Build
 
 on:
-  # push:
-  #   branches:
-  #     - "main"
-  #   paths:
-  #     - "services/todo-bot/**"
+  push:
+    branches:
+      - "main"
+    paths:
+      - "services/todo-bot/**"
   workflow_dispatch:
 
 defaults:
