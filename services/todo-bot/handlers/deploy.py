@@ -124,14 +124,16 @@ def handle_deploy_submission(ack, body, client, logger):
             "run", 
             "-R",
             "scottseotech/todo-platform",
-            "Services Release",
-            f"-f version={version}",
-            f"-f services={servicesJson}"
+            "Services Deployment",
+            "-f",
+            f"version={version}",
+            "-f", 
+            f"services={servicesJson}"
         ]
         result = run_command(cmds)
 
         # Format services list for display
-        services_list = "\n".join([f"• {svc}" for svc in services])
+        services_list = "\n".join([f"{svc}" for svc in services])
 
         # Send a message to the user
         client.chat_postMessage(

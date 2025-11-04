@@ -1,0 +1,57 @@
+name: Services Deployment
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        type: string
+        required: true
+        description: git tag
+      services:
+        type: string
+        required: true
+        description: service names matrix 
+        # e.g. { "service": [ "todo-api", "todo-mcp", "todo-bot" ] }
+
+defaults:
+  run:
+    shell: bash -leo pipefail {0}
+
+run-name: "Services Deployment - ${{ inputs.version }}"
+
+jobs:
+
+  call:
+    strategy:
+      matrix: ${{ fromJson(inputs.services) }}
+    uses: ./.github/workflows/image-build.yaml
+    with:
+      service: ${{ matrix.service }}
+      version: ${{ inputs.version }}
+    secrets: inherit
+
+  success:
+    needs: [call]
+    if: success()
+    uses: ./.github/workflows/slack-notification.yaml
+    with:
+      status: 'success'
+      workflow_name: 'Services Deployment'
+      message: '${{ fromJson(inputs.services) }} ${{ inputs.version }} completed'
+      branch: ${{ github.ref_name }}
+      actor: ${{ github.actor }}
+      channel: '#deployments'
+    secrets: inherit
+
+  failure:
+    needs: [call]
+    if: failure()
+    uses: ./.github/workflows/slack-notification.yaml
+    with:
+      status: 'failure'
+      workflow_name: 'Services Deployment'
+      message: '${{ fromJson(inputs.services) }} ${{ inputs.version }} failed'
+      branch: ${{ github.ref_name }}
+      actor: ${{ github.actor }}
+      channel: '#deployments'
+    secrets: inherit
