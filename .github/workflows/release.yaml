@@ -45,7 +45,7 @@ jobs:
     needs: build
     strategy:
       matrix: ${{ fromJson(inputs.services) }}
-    uses: ./.github/workflows/todo-api.yaml@main
+    uses: ./.github/workflows/todo-api.yaml
     with:
       service_version: ${{ inputs.version }}
     secrets: inherit
