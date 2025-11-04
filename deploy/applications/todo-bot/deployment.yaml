@@ -50,5 +50,5 @@ spec:
             - containerPort: 8082
           resources:
             limits:
-              memory: "256Mi"
+              memory: "512Mi"
 
