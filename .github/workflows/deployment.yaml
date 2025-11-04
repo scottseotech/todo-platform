@@ -37,7 +37,7 @@ jobs:
     with:
       status: 'success'
       workflow_name: 'Services Deployment'
-      message: '${{ toJson(fromJson(inputs.services).service) }} completed'
+      message: '${{ join(fromJson(inputs.services).service) }} completed'
       version: ${{ inputs.version }}
       actor: ${{ github.actor }}
       channel: '#deployments'
@@ -50,7 +50,7 @@ jobs:
     with:
       status: 'failure'
       workflow_name: 'Services Deployment'
-      message: '${{ toJson(fromJson(inputs.services).service) }} failed'
+      message: '${{ join(fromJson(inputs.services).service) }} failed'
       version: ${{ inputs.version }}
       actor: ${{ github.actor }}
       channel: '#deployments'
