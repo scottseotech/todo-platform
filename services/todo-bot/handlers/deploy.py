@@ -139,8 +139,10 @@ def handle_deploy_submission(ack, body, client, logger):
         for i in range(10):
             sleep(1)
             result = run_command(search_cmd, shell=True)
-            if result.stdout:
-                run_id=result.stdout.decode().strip("\n")
+            output = result.stdout.decode().strip("\n")
+            logger.inf(f"output={output}")
+            if output:
+                run_id=output
 
         # Format services list for display
         services_list = "\n".join([f"{svc}" for svc in services])
@@ -169,7 +171,7 @@ def handle_deploy_submission(ack, body, client, logger):
                     },
                     {
                       "type": "mrkdwn",
-                      "text": f"https://github.com/scottseotech/todo-platform/actions/runs/{run_id}|{run_id}>"
+                      "text": f"<https://github.com/scottseotech/todo-platform/actions/runs/{run_id}|{run_id}>"
                     }
                   ]
                 },                

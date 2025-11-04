@@ -15,7 +15,8 @@ def run_command(
     env: Optional[Dict[str, str]] = None,
     timeout: Optional[int] = 300,
     check: bool = True,
-    shell: bool = False
+    shell: bool = False,
+    debug: bool = False
 ) -> subprocess.CompletedProcess:
     """
     Execute a shell command using subprocess.run with sensible defaults.
@@ -52,9 +53,8 @@ def run_command(
     else:
         cmd_str = cmd
 
-    logger.info(f"Running command: {cmd_str}")
-    if shell:
-        logger.warning("Running command with shell=True - ensure input is trusted")
+    if debug:
+        logger.debug(f"Running command: {cmd_str}")
 
     try:
         result = subprocess.run(
@@ -68,11 +68,12 @@ def run_command(
             shell=shell
         )
 
-        logger.debug(f"Command completed with return code: {result.returncode}")
-        if result.stdout:
-            logger.debug(f"stdout: {result.stdout.strip()}")
-        if result.stderr:
-            logger.debug(f"stderr: {result.stderr.strip()}")
+        if debug:
+            logger.debug(f"Command completed with return code: {result.returncode}")
+            if result.stdout:
+                logger.debug(f"stdout: {result.stdout.strip()}")
+            if result.stderr:
+                logger.debug(f"stderr: {result.stderr.strip()}")
 
         return result
 
