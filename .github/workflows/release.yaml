@@ -19,26 +19,27 @@ defaults:
 run-name: "Services Release - ${{ inputs.version }}"
 
 jobs:
-  start:
-    uses: ./.github/workflows/slack-notification.yaml
-    with:
-      status: 'starting'
-      workflow_name: 'Services Release'
-      message: 'Starting services release'
-      branch: ${{ github.ref_name }}
-      actor: ${{ github.actor }}
-      channel: '#builds'
-    secrets: inherit
+  # start:
+  #   uses: ./.github/workflows/slack-notification.yaml
+  #   with:
+  #     status: 'starting'
+  #     workflow_name: 'Services Release'
+  #     message: 'Starting services release'
+  #     branch: ${{ github.ref_name }}
+  #     actor: ${{ github.actor }}
+  #     channel: '#builds'
+  #   secrets: inherit
 
   build:
-    needs: start
+    # needs: start
     runs-on: self-hosted
-    strategy:
-      matrix: ${{ inputs.services }}
+    # strategy:
+    #   matrix: ${{ fromJson(inputs.services) }}
     steps:
       - name: print services names
         run: |
-          ${{ matrix.service }}
+          # ${{ matrix.service }}
+          echo hello world
 
   # call:
   #   needs: build
