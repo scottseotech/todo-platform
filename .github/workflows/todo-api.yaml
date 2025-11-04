@@ -1,14 +1,19 @@
 name: Todo API Image Build
 
 on:
-  push:
-    branches:
-      - "main"
-    paths:
-      - "services/todo-api/**"
-      - "!services/todo-api/openapi.json"
-      - "!services/todo-api/Dockerfile.swagger"
+  # push:
+  #   branches:
+  #     - "main"
+  #   paths:
+  #     - "services/todo-api/**"
+  #     - "!services/todo-api/openapi.json"
+  #     - "!services/todo-api/Dockerfile.swagger"
   workflow_dispatch:
+    inputs:
+      version: 
+        type: string
+        required: true
+        description: git tag
 
 defaults:
   run:
@@ -41,6 +46,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.version }}
 
       - name: Docker metadata
         id: metadata

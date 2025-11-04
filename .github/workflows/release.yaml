@@ -41,15 +41,14 @@ jobs:
           echo ${{ matrix.service }}
           echo hello world
 
-  # call:
-  #   needs: build
-  #   uses: scottseotech/todo-platform/.github/workflows/argocd-update.yaml@main
-  #   with:
-  #     namespace: default
-  #     app_path: deploy/applications
-  #     app: todo-api
-  #     version: ${{ inputs.version }}
-  #   secrets: inherit
+  call:
+    needs: build
+    strategy:
+      matrix: ${{ fromJson(inputs.services) }}    
+    uses: scottseotech/todo-platform/.github/workflows/${{ matrix.service }}.yaml@main
+    with:
+      version: ${{ inputs.version }}
+    secrets: inherit
 
   # success:
   #   needs: [build, call]
