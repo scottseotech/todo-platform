@@ -54,7 +54,7 @@ def run_command(
         cmd_str = cmd
 
     if debug:
-        logger.debug(f"Running command: {cmd_str}")
+        logger.info(f"Running command: {cmd_str}")
 
     try:
         result = subprocess.run(

@@ -133,19 +133,19 @@ def handle_deploy_submission(ack, body, client, logger):
         ]
         run_command(cmds)
 
-        search_cmd = f'gh run list --workflow=deployment.yaml --limit=10 --json databaseId,displayTitle --jq ".[] | select(.displayTitle | ascii_downcase | contains(\"{version}\" | ascii_downcase)) | .databaseId" | head -1'
+        search_cmd = f'gh run list --workflow=deployment.yaml --limit=10 --json databaseId,displayTitle --jq ".[] | select(.displayTitle | ascii_downcase | contains(\\"{version}\\" | ascii_downcase)) | .databaseId" | head -1'
         
         run_id = ""
         for i in range(10):
             sleep(1)
-            result = run_command(search_cmd, shell=True)
+            result = run_command(search_cmd, shell=True, debug=False)
             output = result.stdout.strip()
-            logger.info(f"output={output}")
             if output:
                 run_id=output
+                break
 
         # Format services list for display
-        services_list = "\n".join([f"{svc}" for svc in services])
+        services_list = ",".join([f"{svc}" for svc in services])
 
         # Send a message to the user
         client.chat_postMessage(
@@ -156,7 +156,7 @@ def handle_deploy_submission(ack, body, client, logger):
                     "type": "header",
                     "text": {
                         "type": "plain_text",
-                        "text": "Service Deployment Initiated"
+                        "text": ":information_source: Service Deployment Initiated"
                     }
                 },
                 {
