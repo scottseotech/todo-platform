@@ -64,7 +64,8 @@ jobs:
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
         with:
-          context: services/${{ inputs.service }}
+          context: .
+          file: 'services/${{ inputs.service }}/Dockerfile'
           push: true
           tags: ${{ steps.metadata.outputs.tags }}
           labels: ${{ steps.metadata.outputs.labels }}
