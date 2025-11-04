@@ -11,9 +11,9 @@
 # fix!: fixed something	Major
 # feat!: added blah	Major
 
-part=$(gum choose next patch minor major)
+# part=$(gum choose next patch minor major)
 
-version=$(svu ${part})
+version=$(svu next)
 
 echo "Creating git tag ${version}..."
 git tag "${version}"
