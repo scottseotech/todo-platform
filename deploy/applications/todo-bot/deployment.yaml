@@ -20,9 +20,9 @@ spec:
             - name: PYTHONUNBUFFERED
               value: "1"
             - name: TODO_API_URL
-              value: http://todo-api.default.svc.cluster.local
+              value: http://todo-api.default.svc.cluster.local:8080
             - name: TODO_MCP_URL
-              value: http://todo-mcp.default.svc.cluster.local
+              value: http://todo-mcp.default.svc.cluster.local:8081
             - name: FLASK_ENV
               value: development
             - name: SLACK_BOT_TOKEN
@@ -50,5 +50,5 @@ spec:
             - containerPort: 8082
           resources:
             limits:
-              memory: "1024Mi"
+              memory: "512Mi"
 
