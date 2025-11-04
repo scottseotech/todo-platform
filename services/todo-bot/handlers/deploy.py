@@ -151,6 +151,7 @@ def handle_deploy_submission(ack, body, client, logger):
         client.chat_postMessage(
             channel=user_id,
             text=f"Service Deployment initiated",
+            unfurl_links=False,
             blocks=[
                 {
                     "type": "header",
