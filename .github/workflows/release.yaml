@@ -30,24 +30,13 @@ jobs:
   #     channel: '#builds'
   #   secrets: inherit
 
-  build:
-    # needs: start
-    runs-on: self-hosted
-    strategy:
-      matrix: ${{ fromJson(inputs.services) }}
-    steps:
-      - name: print services names
-        run: |
-          echo ${{ matrix.service }}
-          echo hello world
-
   call:
-    needs: build
     strategy:
       matrix: ${{ fromJson(inputs.services) }}
-    uses: ./.github/workflows/todo-api.yaml
+    uses: ./.github/workflows/deploy-service.yaml
     with:
-      service_version: ${{ inputs.version }}
+      service: ${{ matrix.service }}
+      version: ${{ inputs.version }}
     secrets: inherit
 
   # success:
