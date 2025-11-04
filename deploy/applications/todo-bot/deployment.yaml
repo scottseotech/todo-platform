@@ -17,6 +17,8 @@ spec:
         - name: todo-bot
           image: todo-bot
           env:
+            - name: PYTHONUNBUFFERED
+              value: "1"
             - name: TODO_API_URL
               value: http://todo-api.default.svc.cluster.local
             - name: TODO_MCP_URL

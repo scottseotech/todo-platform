@@ -33,7 +33,6 @@ logger = logging.getLogger(__name__)
 # Initialize Flask web server for health checks
 web_app = Flask(__name__)
 
-# Disable Flask's default logger to reduce noise
 log = logging.getLogger('werkzeug')
 log.setLevel(logging.WARNING)
 
