@@ -44,11 +44,11 @@ spec:
             httpGet:
               path: /health
               port: 8082
-            initialDelaySeconds: 15
+            initialDelaySeconds: 30
             periodSeconds: 10 
           ports:
             - containerPort: 8082
           resources:
             limits:
-              memory: "512Mi"
+              memory: "1024Mi"
 
