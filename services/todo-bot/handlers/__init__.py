@@ -2,11 +2,14 @@
 Handlers package for todo-bot
 """
 
-from .todo_handler import handle_todo_command
-from .events_handler import handle_app_mention, set_chat_backend
+from .todos import todo_slash_command
+from .events import app_mention, set_chat_backend
+from .deploy import deploy_slash_command, handle_deploy_submission
 
 __all__ = [
-    'handle_todo_command',
-    'handle_app_mention',
-    'set_chat_backend'
+    'todo_slash_command',
+    'app_mention',
+    'set_chat_backend',
+    'deploy_slash_command',
+    'handle_deploy_submission'
 ]

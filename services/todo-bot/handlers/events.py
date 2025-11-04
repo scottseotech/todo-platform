@@ -18,7 +18,7 @@ def set_chat_backend(backend: ChatBackend):
     global _chat_backend
     _chat_backend = backend
 
-def handle_app_mention(event, say):
+def app_mention(event, say):
     """
     Handle app mentions
     Responds when the bot is mentioned in a channel by relaying to LLM

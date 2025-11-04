@@ -16,7 +16,7 @@ TODO_API_URL = os.environ.get("TODO_API_URL", "http://localhost:8080")
 client = TodoClient(base_url=TODO_API_URL)
 
 
-def handle_todo_command(ack, command, respond):
+def todo_slash_command(ack, command, respond):
     """
     Handle /todo slash command with subcommands
 

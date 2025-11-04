@@ -13,13 +13,12 @@ from flask import Flask, jsonify
 from slack_bolt import App
 from slack_bolt.adapter.socket_mode import SocketModeHandler
 from dotenv import load_dotenv
+
 from handlers import set_chat_backend
 from backends import OpenAIBackend
-
-
-# Import handler functions
-from handlers.todo_handler import handle_todo_command
-from handlers.events_handler import handle_app_mention
+from handlers.todos import todo_slash_command
+from handlers.events import app_mention
+from handlers.deploy import deploy_slash_command, handle_deploy_submission
 
 # Load environment variables
 load_dotenv()
@@ -44,11 +43,13 @@ app = App(
 )
 
 # Register all handlers explicitly
-# Commands
-app.command("/todo")(handle_todo_command)
 
-# Events
-app.event("app_mention")(handle_app_mention)
+app.command("/deploy")(deploy_slash_command)
+app.command("/todo")(todo_slash_command)
+app.event("app_mention")(app_mention)
+
+# Register modal submission handler
+app.view("deploy_modal")(handle_deploy_submission)
 
 # Configuration
 TODO_API_URL = os.environ.get("TODO_API_URL", "http://localhost:8080")
