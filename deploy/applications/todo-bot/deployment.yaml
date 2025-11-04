@@ -21,6 +21,8 @@ spec:
               value: http://todo-api.default.svc.cluster.local
             - name: TODO_MCP_URL
               value: http://todo-mcp.default.svc.cluster.local
+            - name: FLASK_ENV
+              value: development
             - name: SLACK_BOT_TOKEN
               valueFrom:
                 secretKeyRef:
