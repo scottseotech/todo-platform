@@ -11,8 +11,8 @@ on:
         description: 'Name of the calling workflow'
         required: true
         type: string
-      message:
-        description: 'Custom message to include in notification'
+      services:
+        description: 'Services deployed'
         required: false
         type: string
         default: ''
@@ -121,11 +121,11 @@ jobs:
                   "fields": [
                     {
                       "type": "mrkdwn",
-                      "text": "*Message:*"
+                      "text": "*Services:*"
                     },
                     {
                       "type": "plain_text",
-                      "text": "${{ inputs.message }}"
+                      "text": "${{ inputs.services }}"
                     }
                   ]
                 }
