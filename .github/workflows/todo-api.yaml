@@ -10,7 +10,7 @@ on:
   #     - "!services/todo-api/Dockerfile.swagger"
   workflow_call:
     inputs:
-      version: 
+      service_version: 
         type: string
         required: true
         description: git tag
@@ -47,7 +47,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          ref: ${{ inputs.version }}
+          ref: ${{ inputs.service_version }}
 
       - name: Docker metadata
         id: metadata
