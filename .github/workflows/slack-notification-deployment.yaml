@@ -95,19 +95,6 @@ jobs:
                   "fields": [
                     {
                       "type": "mrkdwn",
-                      "text": "*Triggered by:*"
-                    },
-                    {
-                      "type": "plain_text",
-                      "text": "${{ inputs.actor }}"
-                    }
-                  ]
-                },
-                {
-                  "type": "section",
-                  "fields": [
-                    {
-                      "type": "mrkdwn",
                       "text": "*Github Workflow Run:*"
                     },
                     {
@@ -126,6 +113,19 @@ jobs:
                     {
                       "type": "plain_text",
                       "text": "${{ inputs.services }}"
+                    }
+                  ]
+                },
+                {
+                  "type": "section",
+                  "fields": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Triggered by:*"
+                    },
+                    {
+                      "type": "plain_text",
+                      "text": "${{ inputs.actor }}"
                     }
                   ]
                 }
