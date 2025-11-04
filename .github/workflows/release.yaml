@@ -33,12 +33,12 @@ jobs:
   build:
     # needs: start
     runs-on: self-hosted
-    # strategy:
-    #   matrix: ${{ fromJson(inputs.services) }}
+    strategy:
+      matrix: ${{ fromJson(inputs.services) }}
     steps:
       - name: print services names
         run: |
-          # ${{ matrix.service }}
+          echo ${{ matrix.service }}
           echo hello world
 
   # call:
