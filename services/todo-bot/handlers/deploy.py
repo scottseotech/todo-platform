@@ -139,8 +139,8 @@ def handle_deploy_submission(ack, body, client, logger):
         for i in range(10):
             sleep(1)
             result = run_command(search_cmd, shell=True)
-            output = result.stdout.decode().strip("\n")
-            logger.inf(f"output={output}")
+            output = result.stdout.strip()
+            logger.info(f"output={output}")
             if output:
                 run_id=output
 
