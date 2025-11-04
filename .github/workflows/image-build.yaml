@@ -66,7 +66,6 @@ jobs:
         with:
           context: services/${{ inputs.service }}
           push: true
-          # push: ${{ github.ref_type == 'tag' && !startsWith(github.ref, 'refs/tags/v0.') }}
           tags: ${{ steps.metadata.outputs.tags }}
           labels: ${{ steps.metadata.outputs.labels }}
 

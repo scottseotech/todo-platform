@@ -10,7 +10,8 @@ on:
       services:
         type: string
         required: true
-        description: service names matrix
+        description: service names matrix 
+        # e.g. { "service": [ "todo-api", "todo-mcp", "todo-bot" ] }
 
 defaults:
   run:
@@ -19,48 +20,12 @@ defaults:
 run-name: "Services Release - ${{ inputs.version }}"
 
 jobs:
-  # start:
-  #   uses: ./.github/workflows/slack-notification.yaml
-  #   with:
-  #     status: 'starting'
-  #     workflow_name: 'Services Release'
-  #     message: 'Starting services release'
-  #     branch: ${{ github.ref_name }}
-  #     actor: ${{ github.actor }}
-  #     channel: '#builds'
-  #   secrets: inherit
 
   call:
     strategy:
       matrix: ${{ fromJson(inputs.services) }}
-    uses: ./.github/workflows/deploy-service.yaml
+    uses: ./.github/workflows/image-build.yaml
     with:
       service: ${{ matrix.service }}
       version: ${{ inputs.version }}
     secrets: inherit
-
-  # success:
-  #   needs: [build, call]
-  #   if: success()
-  #   uses: ./.github/workflows/slack-notification.yaml
-  #   with:
-  #     status: 'success'
-  #     workflow_name: 'Services Release'
-  #     message: 'Release completed'
-  #     branch: ${{ github.ref_name }}
-  #     actor: ${{ github.actor }}
-  #     channel: '#builds'
-  #   secrets: inherit
-
-  # failure:
-  #   needs: [build, call]
-  #   if: failure()
-  #   uses: ./.github/workflows/slack-notification.yaml
-  #   with:
-  #     status: 'failure'
-  #     workflow_name: 'Services Release'
-  #     message: 'Release failed - check logs for details'
-  #     branch: ${{ github.ref_name }}
-  #     actor: ${{ github.actor }}
-  #     channel: '#builds'
-  #   secrets: inherit

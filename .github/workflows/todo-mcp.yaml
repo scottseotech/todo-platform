@@ -1,13 +1,14 @@
 name: Todo MCP Image Build
 
 on:
-  push:
-    branches:
-      - "main"
-    paths:
-      - "services/todo-mcp/**"
-      - "!services/todo-mcp/openapi.json"
-      - "!services/todo-mcp/Dockerfile.swagger"
+  # push:
+  #   branches:
+  #     - "main"
+  #   paths:
+  #     - "services/todo-mcp/**"
+  #     - "!services/todo-mcp/openapi.json"
+  #     - "!services/todo-mcp/Dockerfile.swagger"
+  workflow_dispatch:
 
 defaults:
   run:
