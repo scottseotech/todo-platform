@@ -144,7 +144,6 @@ def handle_deploy_submission(ack, body, client, logger):
                 run_id=output
                 break
 
-        # Format services list for display
         services_list = ", ".join([f"{svc}" for svc in services])
 
         # Send a message to the user
