@@ -24,16 +24,17 @@ Before you begin, ensure you have the following installed:
 - **PostgreSQL** - for local database development (optional)
 - **Git** - for version control
 
-## Repository Overview
+## What You'll Work With
 
-This repository contains:
+This platform is organized around **production patterns**, not just application code:
 
-- **Go Services** (`services/`): REST API services built with Go
-  - `todo-api/`: Main todo REST API service
-- **Python Tools** (`apps/`): CLI tools built with Python
-  - `todops-cli/`: Operations CLI for the todo platform
-- **Infrastructure** (`infra/`): Container images for infrastructure components
-- **Deployments** (`deploy/`): Kubernetes manifests and GitOps configurations
+**Application code** - Go REST API with OpenTelemetry tracing, MCP server for AI integration, Python operational tools. You'll see how to structure services for observability and maintainability.
+
+**Infrastructure as code** - ArgoCD applications, Kustomize overlays, CloudNativePG database configs. You'll learn how infrastructure is declared, versioned, and deployed through GitOps.
+
+**Automated operations** - Bootstrap scripts, GitHub Actions workflows with self-hosted runners, backup automation. You'll understand how to automate the operational complexity of production systems.
+
+The repository structure reflects how production systems are actually built and operated, not just how code is written.
 
 ## Local Kubernetes Setup
 

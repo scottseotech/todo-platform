@@ -21,36 +21,19 @@ All deployments are automated, version-controlled, and follow a consistent patte
 sequenceDiagram
     participant Dev as Developer
     participant GH as GitHub
-    participant Runner as Self-hosted Runner<br/>(ARC)
-    participant DH as DockerHub
-    participant Repo as Git Repository
-    participant ArgoCD as ArgoCD
-    participant K8s as Kubernetes Cluster
-    participant Slack as Slack (#builds)
+    participant Runner as ARC Runner
+    participant Hub as Docker Hub
+    participant Argo as ArgoCD
+    participant K8s as Kubernetes
 
-    Dev->>GH: 1. Push code to main
-    GH->>Runner: 2. Trigger workflow
-    Note over Runner: runs-on: self-hosted
-
-    Runner->>Runner: 3. Acquire ARGOCD_LOCK
-    Note over Runner: Lock: <app>-<run-id>
-
-    Runner->>Runner: 4. Build Docker image
-    Runner->>DH: 5. Push image<br/>curiosinauts/scottseotech-<app>:<version>
-
-    Runner->>Runner: 6. Update Kustomization<br/>kustomize edit set image
-    Runner->>Repo: 7. Commit & push changes<br/>deploy/applications/<app>/
-
-    ArgoCD->>Repo: 8. Detect changes (auto-sync)
-    ArgoCD->>K8s: 9. Apply manifests
-
-    Runner->>K8s: 10. Wait for deployment stability
-    Runner->>K8s: 11. Verify image version
-
-    Runner->>Runner: 12. Release ARGOCD_LOCK
-    Runner->>Slack: 13. Post notification
-
-    Note over Slack: Success/Failure message<br/>in #builds channel
+    Dev->>GH: Push code
+    GH->>Runner: Trigger workflow
+    Runner->>Runner: Build image
+    Runner->>Hub: Push image
+    Runner->>GH: Update kustomization
+    GH->>Argo: Detect change
+    Argo->>K8s: Sync application
+    K8s->>K8s: Deploy pods
 ```
 
 ## Components
