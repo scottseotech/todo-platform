@@ -77,9 +77,11 @@ nav:
   - Development:
       - Getting Started: development/getting-started.md
   - Deployment:
-      - Kubernetes: deployment/kubernetes.md
+      - Gitops: deployment/kubernetes.md
+      - Chatops: deployment/slack-driven-release.md
   - Observability: 
       - Overview: observability/observability.md
+      - Log Monitoring & Alerting: observability/log-monitoring-and-alerting.md
   - API Reference:
       - Todo API: api/todo-api.md
       - Todo MCP: api/todo-mcp.md

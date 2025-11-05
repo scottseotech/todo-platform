@@ -1,4 +1,4 @@
-# Kubernetes Deployment
+# Gitops
 
 ## Why GitOps Matters
 
