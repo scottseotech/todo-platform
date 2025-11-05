@@ -80,6 +80,7 @@ nav:
   - Deployment:
       - Kubernetes: deployment/kubernetes.md
   - Observability:
+      - Overview: observability/overview.md
       - OpenTelemetry: observability/opentelemetry.md
       - Troubleshooting: observability/troubleshooting.md
   - API Reference:
