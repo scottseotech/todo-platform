@@ -22,6 +22,68 @@ All telemetry flows to Grafana for unified visualization and correlation.
 | **Prometheus** | Metrics collection | Time-series monitoring, alerting rules |
 | **Grafana** | Visualization | Unified dashboards, trace/log/metric correlation |
 
+## Observability Architecture
+
+```mermaid
+graph TB
+    subgraph "Application Layer"
+        MCP[MCP Server<br/>Port 8081]
+        API[Todo API<br/>Port 8080]
+        DB[(PostgreSQL<br/>CNPG)]
+    end
+
+    subgraph "Instrumentation"
+        OTEL[OpenTelemetry SDK<br/>OTLP Exporter]
+    end
+
+    subgraph "Telemetry Collection"
+        FB[Fluent Bit<br/>Log Collector]
+        PROM[Prometheus<br/>Metrics Scraper]
+        TEMPO[Tempo<br/>Trace Collector]
+    end
+
+    subgraph "Storage & Processing"
+        LOKI[Loki<br/>Log Storage]
+        PROMDB[(Prometheus<br/>TSDB)]
+        TEMPODB[(Tempo<br/>Trace DB)]
+    end
+
+    subgraph "Visualization"
+        GRAFANA[Grafana<br/>Unified Dashboard]
+    end
+
+    MCP -->|traces| OTEL
+    API -->|traces| OTEL
+    API --> DB
+
+    MCP -->|logs| FB
+    API -->|logs| FB
+    DB -->|logs| FB
+
+    MCP -->|/metrics| PROM
+    API -->|/metrics| PROM
+    DB -->|/metrics| PROM
+
+    OTEL -->|OTLP/gRPC<br/>:4317| TEMPO
+    FB -->|HTTP<br/>:3100| LOKI
+    PROM -->|scrape| PROMDB
+    TEMPO --> TEMPODB
+
+    TEMPODB -->|query| GRAFANA
+    LOKI -->|query| GRAFANA
+    PROMDB -->|query| GRAFANA
+
+
+```
+
+**Data Flow:**
+
+- **Traces**: Applications emit OTLP traces → Tempo → Grafana
+- **Logs**: Applications write JSON logs → Fluent Bit → Loki → Grafana
+- **Metrics**: Applications expose `/metrics` → Prometheus scrapes → Grafana
+
+All three signals are correlated(TODO) in Grafana by trace ID for unified debugging.
+
 ## OpenTelemetry Implementation
 
 OpenTelemetry provides vendor-neutral instrumentation for traces, logs, and metrics.
