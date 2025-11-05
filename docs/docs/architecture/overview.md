@@ -9,7 +9,7 @@ The Todo Platform is a cloud-native Kubernetes application demonstrating product
 
 ```mermaid
 graph TB
-    subgraph "Clients"
+    subgraph "Interface Layer"
         SU[Slack App]
         SS[Slack Server]
         AI[AI Assistant]
@@ -53,10 +53,10 @@ graph TB
     click MCP "/architecture/overview/#todo-mcp-server" "tool tip"
     click API "/architecture/overview/#todo-rest-api" "tool tip"
 
-    click SU "/architecture/overview/#clients" "tool tip"
-    click SS "/architecture/overview/#clients" "tool tip"
-    click AI "/architecture/overview/#clients" "tool tip"
-    click AM "/architecture/overview/#clients" "tool tip"
+    click SU "/architecture/overview/#interface-layer" "tool tip"
+    click SS "/architecture/overview/#interface-layer" "tool tip"
+    click AI "/architecture/overview/#interface-layer" "tool tip"
+    click AM "/architecture/overview/#interface-layer" "tool tip"
 
     click PG "/architecture/overview/#postgresql-database" "tool tip"
     click MIN "/architecture/overview/#minio-s3" "tool tip"
@@ -66,9 +66,29 @@ graph TB
     click Prom "/architecture/overview/#prometheus-metrics" "tool tip"
     click Graf "/architecture/overview/#grafana-dashboard" "tool tip"
 ```
-## Clients
+## Interface Layer
+
+The interface layer provides user-facing access to the todo platform through AI-powered natural language interaction via Slack.
+
 ??? note "Show more details"
-    AI assistant integration using the Model Context Protocol (MCP). Users interact with todos through natural language in Slack, with requests routed through the MCP server.
+    **Components:**
+
+    - **Slack App** - User-facing Slack application where users send natural language commands and receive responses
+    - **Slack Server** - Slack's infrastructure that receives events and routes messages between users and the AI assistant
+    - **AI Assistant** - Intelligent agent that interprets user intent, invokes MCP tools, and formats responses in natural language
+    - **LLM (OpenAI)** - Large language model that powers the AI assistant's natural language understanding and generation capabilities
+
+    **User Flow:**
+
+    1. User sends a message in Slack (e.g., "Add buy groceries to my todo list")
+    2. Slack Server forwards the event to the AI Assistant
+    3. AI Assistant uses the LLM to interpret the user's intent
+    4. LLM determines which MCP tool to invoke (e.g., `todos-add`)
+    5. AI Assistant calls the MCP Server with structured parameters
+    6. Response flows back through the AI Assistant, which formats a natural language reply
+    7. User receives the result in Slack
+
+    This architecture enables users to manage todos through conversational AI without needing to learn commands or syntax.
 
 ## Application Layer
 
@@ -108,8 +128,12 @@ graph TB
     - Database connection pooling
 
 ## Data Layer
-### PostgreSQL Database
+### Backup Flow
 
+- CNPG operator performs daily PostgreSQL backups
+- Point-in-time recovery available from backup archives
+
+### PostgreSQL Database
 ??? note "Show more details"
     High-availability PostgreSQL cluster managed by the CloudNativePG operator:
 
@@ -127,6 +151,13 @@ graph TB
     - **Log Storage**: Loki long-term log retention
 
 ## Observability Layer
+
+### Observability Flow
+
+- **Traces**: Each request generates spans across MCP → API → Database, collected by Tempo
+- **Metrics**: Prometheus scrapes all services, storing time-series data
+- **Logs**: Fluent Bit ships logs to Loki, which stores in MinIO
+- **Alerts**: Grafana evaluates alert rules and notifies Slack on threshold violations
 
 ### Tempo - Traces
 
@@ -167,25 +198,3 @@ graph TB
     - Queries Loki for log analysis
     - Alert routing to Slack for critical events
     - Correlation between traces, metrics, and logs
-
-## Data Flows
-
-### Request Flow
-
-1. User sends natural language command via SlackBot
-2. MCP Server interprets intent and invokes appropriate tool
-3. Tool handler makes HTTP request to Todo API
-4. API validates request and executes database operation
-5. Response flows back through MCP to Slack
-
-### Observability Flow
-
-- **Traces**: Each request generates spans across MCP → API → Database, collected by Tempo
-- **Metrics**: Prometheus scrapes all services, storing time-series data
-- **Logs**: Fluent Bit ships logs to Loki, which stores in MinIO
-- **Alerts**: Grafana evaluates alert rules and notifies Slack on threshold violations
-
-### Backup Flow
-
-- CNPG operator performs daily PostgreSQL backups
-- Point-in-time recovery available from backup archives
