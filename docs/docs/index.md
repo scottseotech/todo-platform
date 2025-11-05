@@ -1,58 +1,97 @@
-# Todo Platform Documentation
+# Building Production-Grade Systems
 
-Welcome to the Todo Platform documentation! A cloud-native Kubernetes application demonstrating GitOps with ArgoCD, self-hosted GitHub Actions runners, OpenTelemetry distributed tracing, automated PostgreSQL HA with
-  CloudNativePG, and Model Context Protocol (MCP) integration.
+## The Challenge
 
-## Quick Links
+Modern applications need more than just working code—they need **reliability at scale**, **observable behavior**, and **automated operations**. This platform demonstrates how to build a production-ready system that handles the complexity of cloud-native infrastructure while maintaining developer velocity.
 
-- [Architecture Overview](architecture/overview.md)
-- [Getting Started](development/getting-started.md)
-- [API Reference](api/todo-api.md)
-- [Deployment Guide](deployment/kubernetes.md)
+## What This Platform Demonstrates
 
-## Features
+This is a **fully-instrumented Kubernetes application** that shows how different pieces of production infrastructure work together:
 
-- **MCP Integration** - AI assistant integration via todo-mcp
-- **GitOps Workflow** - ArgoCD for continuous delivery
-- **Self-Hosted CI** - GitHub Actions with ARC runners
-- **Observability** - OpenTelemetry distributed tracing
-- **RESTful API** - Todo CRUD operations via todo-api
-- **PostgreSQL** - CloudNativePG operator for database
-- **Load Testing** - k6 performance testing
+```mermaid
+graph TB
+    subgraph "Interface Layer"
+        AI[AI Assistant<br/>Natural Language]
+    end
+
+    subgraph "Application Layer"
+        MCP[MCP Server<br/>AI Integration]
+        API[REST API<br/>Go + Gin]
+    end
+
+    subgraph "Data Layer"
+        DB[(PostgreSQL<br/>High Availability)]
+    end
+
+    subgraph "Infrastructure"
+        GitOps[ArgoCD<br/>GitOps]
+        CI[GitHub Actions<br/>Self-Hosted]
+        Obs[Observability<br/>Full Stack]
+    end
+
+    AI --> MCP --> API --> DB
+    GitOps -.manages.-> API
+    CI -.builds.-> API
+    Obs -.monitors.-> API
+    Obs -.monitors.-> MCP
+    Obs -.monitors.-> DB
+```
+
+## Key Technical Decisions
+
+Each component was chosen to demonstrate a different production skill:
+
+**AI Integration via Model Context Protocol (MCP)**
+Instead of hard-coding AI features, this uses the emerging MCP standard. Shows understanding of: abstraction layers, protocol design, and future-proofing integrations.
+
+**GitOps with ArgoCD**
+Deployments happen through Git commits, not manual kubectl commands. Demonstrates: infrastructure as code, declarative configuration, and audit trails.
+
+**Self-Hosted CI/CD Runners**
+GitHub Actions runners run inside the Kubernetes cluster using Actions Runner Controller. Shows: cost optimization, security isolation, and in-cluster integration.
+
+**Full-Stack Observability**
+OpenTelemetry traces flow from Slack → MCP → API → Database → Grafana. Demonstrates: distributed tracing, correlation IDs, metrics collection, and debugging production systems.
+
+**Automated Database Operations**
+CloudNativePG handles PostgreSQL high availability, backups, and failover automatically. Shows: operator patterns, stateful workloads, and database reliability.
 
 
 
-## Getting Started
+## Technology Stack
 
-1. [Set up your local environment](development/getting-started.md)
-2. [Deploy to Kubernetes](deployment/kubernetes.md)
+| Layer | Technology | Why It Matters |
+|-------|-----------|----------------|
+| **Interface** | Slack + OpenAI | Natural language interaction, modern AI integration |
+| **Application** | Go, Gin, MCP | Performance, type safety, emerging AI protocols |
+| **Data** | PostgreSQL, CloudNativePG | Production-grade database with automated HA |
+| **Deployment** | ArgoCD, Kustomize | GitOps workflow, declarative infrastructure |
+| **CI/CD** | GitHub Actions (ARC) | Self-hosted runners, cost control, in-cluster access |
+| **Observability** | OpenTelemetry, Tempo, Loki, Prometheus | End-to-end tracing, full telemetry stack |
 
-## Services
+## Explore the Architecture
 
-### todo-api
-REST API for todo management built with Go and Gin framework.
+**[Architecture Overview →](architecture/overview.md)**
+See the full system design with detailed component descriptions and data flows.
 
-- CRUD operations for todos
-- OpenTelemetry instrumentation
-- GORM database integration
+**[Deployment Guide →](deployment/kubernetes.md)**
+Learn how GitOps, self-hosted runners, and ArgoCD work together for automated deployments.
 
-[Learn more →](api/todo-api.md)
+**[Observability Stack →](observability/opentelemetry.md)**
+Understand how distributed tracing connects requests from Slack to the database.
 
-### todo-mcp
-Model Context Protocol server for AI assistant integration.
+**[Development Setup →](development/getting-started.md)**
+Get the platform running locally with hot reloading and development tools.
 
-- MCP tools for todo operations
-- HTTP and SSE transports
-- OpenTelemetry distributed tracing
+## Why This Matters
 
-[Learn more →](api/todo-mcp.md)
+Building a todo app is simple. Building a **production-ready platform** that demonstrates:
 
-## Observability
+- How to integrate AI without vendor lock-in
+- How to automate deployments with zero downtime
+- How to debug distributed systems in production
+- How to manage stateful workloads reliably
 
-The platform includes comprehensive observability:
+...that's what separates senior engineers from the rest.
 
-- **Traces**: OpenTelemetry → Tempo → Grafana
-- **Logs**: Fluent Bit → Loki → Grafana
-- **Metrics**: Prometheus → Grafana
-
-[View observability docs →](observability/opentelemetry.md)
+This platform shows those skills in action.
