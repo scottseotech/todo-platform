@@ -68,8 +68,6 @@ markdown_extensions:
 plugins:
   - search
   - tags
-  - neoteroi.mkdocsoad
-  - swagger-ui-tag
 
 nav:
   - Home: index.md
