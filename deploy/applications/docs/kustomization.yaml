@@ -22,4 +22,4 @@ kind: Kustomization
 images:
 - name: docs
   newName: curiosinauts/scottseotech-docs
-  newTag: da445eb
+  newTag: 08c8090
