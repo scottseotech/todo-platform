@@ -2,126 +2,171 @@
 
 The Todo Platform is a cloud-native Kubernetes application demonstrating production-ready DevOps practices including GitOps, comprehensive observability, and automated database operations.
 
+!!! tip "Tip"
+    Click the node description to jump to the detailed explanation section.
+
 ## System Architecture
 
 ```mermaid
-graph LR
-    A[SlackBot\n\nAI Agent] -- prompt --> K[LLM]
-    K -- reponse --> A
-    A -->|tools| B[Todo MCP Server]
-    B --> C[Todo API]
-    C --> D[(PostgreSQL<br/>CNPG)]
-    D -->|backups| F[(MinIO\nS3)]
-    C -->|traces| E[Tempo\nTelemetry]
-    B -->|traces| E
-    G[Prometheus] -.scrapes.-> B
-    G -.scrapes.-> C
-    G -.scrapes.-> D
-    H[Grafana] --> G
-    H -.retrieves distributed traces.-> E
-    H -.alerts.-> I[Slack]
-    B -->|logs| J[Loki\nLogs]
-    C -->|logs| J
-    D -->|logs| J
-    J -->|storage| F
-    H -.retrieves logs.-> J
+graph TB
+    subgraph "Clients"
+        SU[Slack App]
+        SS[Slack Server]
+        AI[AI Assistant]
+        AM[LLM]
+    end
+
+    subgraph "Application Layer"
+        MCP[MCP Server]
+        API[REST API]
+    end
+
+    subgraph "Data Layer"
+        PG[(PostgreSQL<br/>Database)]
+        MIN[(MinIO/S3)]
+    end
+
+    subgraph "Observability Layer"
+        Tempo[Tempo<br/>Traces]
+        Loki[Loki<br/>Logs]
+        Prom[Prometheus<br/>Metrics]
+        Graf[Grafana<br/>Dashboards]
+    end
+
+    SU --> SS
+
+    SS --> AI
+    AI --> MCP
+    MCP --> API
+    API --> PG
+
+    API -.traces.-> Tempo
+    MCP -.traces.-> Tempo
+    API -.logs.-> Loki
+    MCP -.logs.-> Loki
+    API -.metrics.-> Prom
+
+    Tempo --> Graf
+    Loki --> Graf
+    Prom --> Graf
+
+    click MCP "/architecture/overview/#todo-mcp-server" "tool tip"
+    click API "/architecture/overview/#todo-rest-api" "tool tip"
+
+    click SU "/architecture/overview/#clients" "tool tip"
+    click SS "/architecture/overview/#clients" "tool tip"
+    click AI "/architecture/overview/#clients" "tool tip"
+    click AM "/architecture/overview/#clients" "tool tip"
+
+    click PG "/architecture/overview/#postgresql-database" "tool tip"
+    click MIN "/architecture/overview/#minio-s3" "tool tip"
+
+    click Tempo "/architecture/overview/#tempo-traces" "tool tip"
+    click Loki "/architecture/overview/#loki-logs" "tool tip"
+    click Prom "/architecture/overview/#prometheus-metrics" "tool tip"
+    click Graf "/architecture/overview/#grafana-dashboard" "tool tip"
 ```
+## Clients
+??? note "Show more details"
+    AI assistant integration using the Model Context Protocol (MCP). Users interact with todos through natural language in Slack, with requests routed through the MCP server.
 
 ## Application Layer
 
-### SlackBot Client
-AI assistant integration using the Model Context Protocol (MCP). Users interact with todos through natural language in Slack, with requests routed through the MCP server.
-
 ### Todo MCP Server
 
-MCP server providing AI-friendly tool interfaces for todo operations. Implements the full MCP specification including:
+??? note "Show more details"
+    MCP server providing AI-friendly tool interfaces for todo operations. Implements the full MCP specification including:
 
-**Tools** - Four core operations:
+    **Tools** - Four core operations:
 
-- `todos-add` - Create new todos
-- `todos-list` - Query existing todos
-- `todos-update` - Modify todo status/details
-- `todos-delete` - Remove todos
+    - `todos-add` - Create new todos
+    - `todos-list` - Query existing todos
+    - `todos-update` - Modify todo status/details
+    - `todos-delete` - Remove todos
 
-**Resources** - Dynamic todo data exposure:
+    **Resources** - Dynamic todo data exposure:
 
-- `todos://with-due-date` - Real-time todo list with due date as structured resource
+    - `todos://with-due-date` - Real-time todo list with due date as structured resource
 
-**Prompts** - Pre-configured interaction templates for AI assistants:
+    **Prompts** - Pre-configured interaction templates for AI assistants:
 
-- `todos-add` - Guided prompt for creating new todos with proper context
-- `todos-update` - Guided prompt for updating existing todos
+    - `todos-add` - Guided prompt for creating new todos with proper context
+    - `todos-update` - Guided prompt for updating existing todos
 
-Prompts demonstrate full MCP specification compliance and can be tested directly in VS Code with GitHub Copilot's MCP integration.
+    Prompts demonstrate full MCP specification compliance and can be tested directly in VS Code with GitHub Copilot's MCP integration.
 
-Built with Go, supports both HTTP and SSE transports, and instrumented with OpenTelemetry for distributed tracing.
+    Built with Go, supports both HTTP and SSE transports, and instrumented with OpenTelemetry for distributed tracing.
 
-### Todo API
+### Todo Rest API
 
-RESTful API service built with Go and the Gin framework. Provides CRUD endpoints for todo management with:
+??? note "Show more details"
+    RESTful API service built with Go and the Gin framework. Provides CRUD endpoints for todo management with:
 
-- GORM ORM for database operations
-- OpenTelemetry instrumentation for traces
-- Automatic Prometheus metrics exposure
-- Database connection pooling
+    - GORM ORM for database operations
+    - OpenTelemetry instrumentation for traces
+    - Automatic Prometheus metrics exposure
+    - Database connection pooling
 
-### PostgreSQL (CloudNativePG)
+## Data Layer
+### PostgreSQL Database
 
-High-availability PostgreSQL cluster managed by the CloudNativePG operator:
+??? note "Show more details"
+    High-availability PostgreSQL cluster managed by the CloudNativePG operator:
 
-- 2-instance cluster for redundancy
-- Automated daily backups to MinIO S3 (2 AM UTC)
-- Point-in-time recovery capability
-- Read-write service: `todo-db-rw.cnpg.svc.cluster.local`
-
-## Observability Stack
-
-The platform implements the three pillars of observability with full integration:
-
-### Metrics - Prometheus
-
-Scrapes metrics from all services every 15 seconds:
-
-- **Todo MCP Server**: General golang runtime metrics
-- **Todo API**: General golang runtime metrics
-- **PostgreSQL**: Database performance, replication lag, operational stats
-
-### Traces - Tempo
-
-Collects distributed traces via OpenTelemetry:
-
-- End-to-end request tracing from SlackBot → MCP → API → Database
-- W3C Trace Context propagation
-- OTLP gRPC ingestion (port 4317)
-- Trace correlation with logs and metrics (TODO)
-
-### Logs - Loki
-
-Centralized log aggregation with S3 storage:
-
-- Collects structured logs from all services
-- Fluent Bit agents for log shipping
-- MinIO S3 backend for long-term retention
-- Full-text search and filtering in Grafana
-
-### Grafana
-
-Unified observability dashboard:
-
-- Queries Prometheus for metrics visualization
-- Queries Tempo for trace exploration
-- Queries Loki for log analysis
-- Alert routing to Slack for critical events
-- Correlation between traces, metrics, and logs
-
-## Storage Layer
+    - 2-instance cluster for redundancy
+    - Automated daily backups to MinIO S3 (2 AM UTC)
+    - Point-in-time recovery capability
+    - Read-write service: `todo-db-rw.cnpg.svc.cluster.local`
 
 ### MinIO S3
 
-S3-compatible object storage serving dual purposes:
+??? note "Show more details"
+    S3-compatible object storage serving dual purposes:
 
-- **PostgreSQL Backups**: Daily CNPG automated backups with retention policies
-- **Log Storage**: Loki long-term log retention
+    - **PostgreSQL Backups**: Daily CNPG automated backups with retention policies
+    - **Log Storage**: Loki long-term log retention
+
+## Observability Layer
+
+### Tempo - Traces
+
+??? note "Show more details"
+    Collects distributed traces via OpenTelemetry:
+
+    - End-to-end request tracing from SlackBot → MCP → API → Database
+    - W3C Trace Context propagation
+    - OTLP gRPC ingestion (port 4317)
+    - Trace correlation with logs and metrics (TODO)
+
+### Loki - Logs
+
+??? note "Show more details"
+    Centralized log aggregation with S3 storage:
+
+    - Collects structured logs from all services
+    - Fluent Bit agents for log shipping
+    - MinIO S3 backend for long-term retention
+    - Full-text search and filtering in Grafana
+
+### Prometheus - Metrics
+
+??? note "Show more details"
+    Scrapes metrics from all services every 15 seconds:
+
+    - **Todo MCP Server**: General golang runtime metrics
+    - **Todo API**: General golang runtime metrics
+    - **PostgreSQL**: Database performance, replication lag, operational stats
+
+### Grafana - Dashboard
+
+??? note "Show more details"
+    Unified observability dashboard:
+
+    - Queries Prometheus for metrics visualization
+    - Queries Tempo for trace exploration
+    - Queries Loki for log analysis
+    - Alert routing to Slack for critical events
+    - Correlation between traces, metrics, and logs
 
 ## Data Flows
 
