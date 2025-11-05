@@ -234,6 +234,5 @@ kubectl port-forward -n monitoring svc/kube-prometheus-stack-grafana 3000:80
 ## Next Steps
 
 - Review the [Architecture Overview](../architecture/overview.md)
-- Learn about [GitOps Workflow](../deployment/gitops.md)
+- Learn about [Kubernetes Deployment](../deployment/kubernetes.md)
 - Explore [API Documentation](../api/todo-api.md)
-- Read [Testing Guidelines](./testing.md)

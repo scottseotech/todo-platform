@@ -634,4 +634,4 @@ Update ARC configuration to use new image.
 
 - [Getting Started - Development Setup](../development/getting-started.md)
 - [Architecture Overview](../architecture/overview.md)
-- [Troubleshooting Guide](../troubleshooting/common-issues.md)
+- [Observability & Troubleshooting](../observability/troubleshooting.md)
