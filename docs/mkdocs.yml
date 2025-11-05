@@ -73,6 +73,7 @@ nav:
   - Home: index.md
   - Architecture:
       - Overview: architecture/overview.md
+      - ADRs: architecture/adr.md
   - Development:
       - Getting Started: development/getting-started.md
   - Deployment:
