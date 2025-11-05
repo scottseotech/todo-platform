@@ -76,7 +76,7 @@ The interface layer provides user-facing access to the todo platform through AI-
     - **Slack App** - User-facing Slack application where users send natural language commands and receive responses
     - **Slack Server** - Slack's infrastructure that receives events and routes messages between users and the AI assistant
     - **AI Assistant** - Intelligent agent that interprets user intent, invokes MCP tools, and formats responses in natural language
-    - **LLM (OpenAI)** - Large language model that powers the AI assistant's natural language understanding and generation capabilities
+    - **LLM** - Large language model that powers the AI assistant's natural language understanding and generation capabilities
 
     **User Flow:**
 
@@ -157,14 +157,14 @@ The interface layer provides user-facing access to the todo platform through AI-
 - **Traces**: Each request generates spans across MCP → API → Database, collected by Tempo
 - **Metrics**: Prometheus scrapes all services, storing time-series data
 - **Logs**: Fluent Bit ships logs to Loki, which stores in MinIO
-- **Alerts**: Grafana evaluates alert rules and notifies Slack on threshold violations
+- **Alerts**: Grafana evaluates alert rules and notifies Slack on threshold violations(TODO)
 
 ### Tempo - Traces
 
 ??? note "Show more details"
     Collects distributed traces via OpenTelemetry:
 
-    - End-to-end request tracing from SlackBot → MCP → API → Database
+    - End-to-end request tracing from SlackBot(TODO) → MCP → API → Database
     - W3C Trace Context propagation
     - OTLP gRPC ingestion (port 4317)
     - Trace correlation with logs and metrics (TODO)
@@ -196,5 +196,5 @@ The interface layer provides user-facing access to the todo platform through AI-
     - Queries Prometheus for metrics visualization
     - Queries Tempo for trace exploration
     - Queries Loki for log analysis
-    - Alert routing to Slack for critical events
-    - Correlation between traces, metrics, and logs
+    - Alert routing to Slack for critical events(TODO)
+    - Correlation between traces, metrics, and logs(TODO)

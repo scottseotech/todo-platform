@@ -51,7 +51,7 @@ Deployments happen through Git commits, not manual kubectl commands. Demonstrate
 GitHub Actions runners run inside the Kubernetes cluster using Actions Runner Controller. Shows: cost optimization, security isolation, and in-cluster integration.
 
 **Full-Stack Observability**
-OpenTelemetry traces flow from Slack → MCP → API → Database → Grafana. Demonstrates: distributed tracing, correlation IDs, metrics collection, and debugging production systems.
+OpenTelemetry traces flow from Slack(TODO) → MCP → API → Database → Grafana. Demonstrates: distributed tracing, correlation IDs(TODO), metrics collection, and debugging production systems.
 
 **Automated Database Operations**
 CloudNativePG handles PostgreSQL high availability, backups, and failover automatically. Shows: operator patterns, stateful workloads, and database reliability.
