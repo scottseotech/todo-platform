@@ -341,7 +341,7 @@ See how components connect, understand data flows, and learn why architectural d
 **[Deploy Like Production →](../deployment/kubernetes.md)**
 Experience the full GitOps workflow: make a code change, push to Git, watch ArgoCD sync, verify deployment, see observability data flow. This is how real deployments work.
 
-**[Debug with Observability →](../observability/opentelemetry.md)**
+**[Debug with Observability →](../observability/observability.md)**
 Make an API call and watch the trace flow from MCP → API → Database → Grafana. Practice using distributed tracing to debug issues before they hit production.
 
 **Practice makes permanent** - The more you experiment with this stack locally, the more comfortable you'll be building and operating production systems.

@@ -77,7 +77,7 @@ See the full system design with detailed component descriptions and data flows.
 **[Deployment Guide →](deployment/kubernetes.md)**
 Learn how GitOps, self-hosted runners, and ArgoCD work together for automated deployments.
 
-**[Observability Stack →](observability/opentelemetry.md)**
+**[Observability Stack →](observability/observability.md)**
 Understand how distributed tracing connects requests from Slack to the database.
 
 **[Development Setup →](development/getting-started.md)**

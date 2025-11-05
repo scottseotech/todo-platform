@@ -79,10 +79,7 @@ nav:
       - Getting Started: development/getting-started.md
   - Deployment:
       - Kubernetes: deployment/kubernetes.md
-  - Observability:
-      - Overview: observability/overview.md
-      - OpenTelemetry: observability/opentelemetry.md
-      - Troubleshooting: observability/troubleshooting.md
+  - Observability: observability/observability.md
   - API Reference:
       - Todo API: api/todo-api.md
       - Todo MCP: api/todo-mcp.md
