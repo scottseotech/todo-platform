@@ -24,9 +24,8 @@ Welcome to the Todo Platform documentation! A cloud-native Kubernetes applicatio
 
 ## Getting Started
 
-1. [Set up your local environment](development/local-setup.md)
-2. [Build and run services](development/building.md)
-3. [Deploy to Kubernetes](deployment/kubernetes.md)
+1. [Set up your local environment](development/getting-started.md)
+2. [Deploy to Kubernetes](deployment/kubernetes.md)
 
 ## Services
 
