@@ -44,18 +44,24 @@ func main() {
 	router := gin.New()
 	router.Use(gin.Recovery())
 
-	// Custom logger that skips /health and /metrics endpoints
-	router.Use(gin.LoggerWithConfig(gin.LoggerConfig{
-		SkipPaths: []string{"/health", "/metrics"},
-	}))
-
-	// Add OpenTelemetry middleware with filter to exclude health/metrics
+	// Add OpenTelemetry middleware FIRST (must run before logger to inject trace context)
 	router.Use(otelgin.Middleware("todo-mcp",
 		otelgin.WithFilter(func(r *http.Request) bool {
 			// Exclude health and metrics endpoints from tracing
 			return r.URL.Path != "/health" && r.URL.Path != "/metrics"
 		}),
 	))
+
+	// Custom logger with trace correlation that skips /health and /metrics
+	// This runs AFTER otelgin so it can extract trace_id and span_id
+	router.Use(func(c *gin.Context) {
+		// Skip logging for health and metrics endpoints
+		if c.Request.URL.Path == "/health" || c.Request.URL.Path == "/metrics" {
+			c.Next()
+			return
+		}
+		middleware.LoggerWithTraceID()(c)
+	})
 
 	router.Use(cors.New(cors.Config{
 		AllowOrigins: []string{
