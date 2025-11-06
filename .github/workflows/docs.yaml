@@ -1,103 +1,36 @@
-name: Docs Image Build
+  name: Deploy Documentation
 
-on:
-  push:
-    branches:
-      - "main"
-    paths:
-      - "docs/**"
-  workflow_dispatch:
+  on:
+    push:
+      branches: [main]
+      paths:
+        - 'docs/**'
+        - '.github/workflows/docs.yaml'
 
-defaults:
-  run:
-    shell: bash -leo pipefail {0}
+  jobs:
+    deploy:
+      runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v4
 
-env:
-  IMG_NAME: curiosinauts/scottseotech-docs
-  DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-  DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+        - name: Set up Python
+          uses: actions/setup-python@v5
+          with:
+            python-version: '3.11'
 
-run-name: "Docs Image Build - ${{ github.run_id }}"
+        - name: Install dependencies
+          run: |
+            cd docs
+            pip install -r requirements.txt
 
-jobs:
-  start:
-    uses: ./.github/workflows/slack-notification.yaml
-    with:
-      status: 'starting'
-      workflow_name: 'Docs Image Build'
-      message: 'Starting build and deployment'
-      branch: ${{ github.ref_name }}
-      actor: ${{ github.actor }}
-      channel: '#builds'
-    secrets: inherit
+        - name: Generate API docs
+          run: |
+            cd docs
+            ./generate-api-docs.sh
 
-  build:
-    needs: start
-    runs-on: ubuntu-latest
-    outputs:
-      image_version: ${{ steps.metadata.outputs.version }}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Docker metadata
-        id: metadata
-        uses: docker/metadata-action@v5
-        with:
-          images: ${{ env.IMG_NAME }}
-          tags: |
-            type=semver,pattern={{version}}
-            type=semver,pattern={{major}}.{{minor}}
-            type=raw,value={{sha}},enable=${{ github.ref_type != 'tag' }}
-
-      - name: Login to Docker Hub
-        uses: docker/login-action@v3
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-
-      - name: Build and push Docker image
-        uses: docker/build-push-action@v5
-        with:
-          context: docs
-          file: 'docs/Dockerfile'
-          push: true
-          # push: ${{ github.ref_type == 'tag' && !startsWith(github.ref, 'refs/tags/v0.') }}
-          tags: ${{ steps.metadata.outputs.tags }}
-          labels: ${{ steps.metadata.outputs.labels }}
-
-  call:
-    needs: build
-    uses: scottseotech/todo-platform/.github/workflows/argocd-update.yaml@main
-    with:
-      namespace: default
-      app_path: deploy/applications
-      app: docs
-      version: ${{ needs.build.outputs.image_version }}
-    secrets: inherit
-
-  success:
-    needs: [build, call]
-    if: success()
-    uses: ./.github/workflows/slack-notification.yaml
-    with:
-      status: 'success'
-      workflow_name: 'Docs Image Build'
-      message: 'Build and deployment completed'
-      branch: ${{ github.ref_name }}
-      actor: ${{ github.actor }}
-      channel: '#builds'
-    secrets: inherit
-
-  failure:
-    needs: [build, call]
-    if: failure()
-    uses: ./.github/workflows/slack-notification.yaml
-    with:
-      status: 'failure'
-      workflow_name: 'Docs Image Build'
-      message: 'Build pipeline failed - check logs for details'
-      branch: ${{ github.ref_name }}
-      actor: ${{ github.actor }}
-      channel: '#builds'
-    secrets: inherit
+        - name: Deploy to GitHub Pages
+          run: |
+            cd docs
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+            mkdocs gh-deploy --force
