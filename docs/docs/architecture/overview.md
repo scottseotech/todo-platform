@@ -157,7 +157,7 @@ The interface layer provides user-facing access to the todo platform through AI-
 - **Traces**: Each request generates spans across MCP → API → Database, collected by Tempo
 - **Metrics**: Prometheus scrapes all services, storing time-series data
 - **Logs**: Fluent Bit ships logs to Loki, which stores in MinIO
-- **Alerts**: Grafana evaluates alert rules and notifies Slack on threshold violations(TODO)
+- **Alerts**: Grafana evaluates alert rules and notifies Slack on threshold violations
 
 ### Tempo - Traces
 
@@ -197,5 +197,5 @@ The interface layer provides user-facing access to the todo platform through AI-
     - Queries Prometheus for metrics visualization
     - Queries Tempo for trace exploration
     - Queries Loki for log analysis
-    - Alert routing to Slack for critical events(TODO)
+    - Alert routing to Slack for critical events
     - Correlation between traces, metrics, and logs
