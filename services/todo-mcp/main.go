@@ -43,7 +43,11 @@ func main() {
 	// Create Gin router
 	router := gin.New()
 	router.Use(gin.Recovery())
-	router.Use(gin.Logger())
+
+	// Custom logger that skips /health and /metrics endpoints
+	router.Use(gin.LoggerWithConfig(gin.LoggerConfig{
+		SkipPaths: []string{"/health", "/metrics"},
+	}))
 
 	// Add OpenTelemetry middleware with filter to exclude health/metrics
 	router.Use(otelgin.Middleware("todo-mcp",

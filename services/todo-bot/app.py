@@ -38,8 +38,14 @@ web_app = Flask(__name__)
 # This sets up the global TracerProvider via trace.set_tracer_provider(provider)
 tracer = init_telemetry(app=web_app)
 
-log = logging.getLogger('werkzeug')
-log.setLevel(logging.WARNING)
+# Suppress /health endpoint logging
+class HealthCheckFilter(logging.Filter):
+    def filter(self, record):
+        return '/health' not in record.getMessage()
+
+werkzeug_logger = logging.getLogger('werkzeug')
+werkzeug_logger.setLevel(logging.WARNING)
+werkzeug_logger.addFilter(HealthCheckFilter())
 
 # Initialize Slack app with Socket Mode
 app = App(
