@@ -37,3 +37,26 @@ sequenceDiagram
     API->>GH: Poll for workflow run completion
     API-->>Bot: Post on 'deployments' channel when run completes
 ```
+
+## Example: Release Modal in Slack
+
+??? note "View Screenshots"
+    <figure markdown="span">
+      ![Slack Release Modal](../assets/images/slack-release-modal.png){ width="600" }
+      <figcaption>Slack interactive modal for triggering releases</figcaption>
+    </figure>
+
+    <figure markdown="span">
+      ![Slack Release Modal](../assets/images/slack-release-workflow-dispatch.png){ width="600" }
+      <figcaption>Dispatch workflow</figcaption>
+    </figure>
+
+    <figure markdown="span">
+      ![Slack Release Modal](../assets/images/slack-release-run-id.png){ width="600" }
+      <figcaption>Post message with run id</figcaption>
+    </figure>
+
+    <figure markdown="span">
+      ![Slack Release Modal](../assets/images/slack-release-result.png){ width="600" }
+      <figcaption>Post on deployment channel when run completes</figcaption>
+    </figure>
