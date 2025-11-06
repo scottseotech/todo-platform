@@ -93,13 +93,14 @@ OpenTelemetry provides vendor-neutral instrumentation for traces, logs, and metr
 
     ```
     SlackBot → MCP Server → API → Database
-       ↓           ↓         ↓        ↓
-    TraceID: abc123 (same across all services)
+       ↓           ↓         ↓ 
+    TraceID: abc123 (same across all services) (TODO)
     ```
 
     Each service extracts the trace context from incoming requests and injects it into outgoing requests.
 
     **Implementation:**
+
     ```go
     // In todo-api and todo-mcp
     import "go.opentelemetry.io/otel"
