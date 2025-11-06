@@ -90,7 +90,7 @@ graph TB
 - **Logs**: Applications write JSON logs → Fluent Bit → Loki → Grafana
 - **Metrics**: Applications expose `/metrics` → Prometheus scrapes → Grafana
 
-All three signals are correlated(TODO) in Grafana by trace ID for unified debugging.
+All three signals are correlated in Grafana by trace ID for unified debugging.
 
 ## OpenTelemetry Implementation
 
@@ -100,12 +100,20 @@ OpenTelemetry provides vendor-neutral instrumentation for traces, logs, and metr
     **W3C Trace Context** propagates trace IDs across service boundaries:
 
     ```
-    SlackBot → MCP Server → API → Database
-       ↓           ↓         ↓ 
-    TraceID: abc123 (same across all services) (TODO)
+    Trace Flow 1: Slack Bot → MCP Server (HTTP/SSE)
+                  TraceID: abc123
+
+    Trace Flow 2: MCP Server → API → Database (HTTP/REST)
+                  TraceID: def456 (new trace, MCP protocol boundary)
+
+    Trace-to-Log Correlation:
+    - All logs include trace_id and span_id
+    - Search Loki by trace_id to see all logs for a request
     ```
 
-    Each service extracts the trace context from incoming requests and injects it into outgoing requests.
+    **Why two trace flows?** The MCP protocol runs JSON-RPC over Server-Sent Events (SSE), which is a long-lived streaming connection. Trace context is not propagated through the JSON-RPC message payloads, creating a natural boundary. However, each flow is fully traced and correlated with logs.
+
+    Each service extracts the trace context from incoming HTTP requests and injects it into outgoing HTTP requests.
 
     **Implementation:**
 
@@ -288,7 +296,7 @@ Single pane of glass for traces, logs, and metrics.
     - **Tempo**: Distributed traces
     - **Loki**: Log aggregation
 
-??? note "Trace-to-Log Correlation(TODO)"
+??? note "Trace-to-Log Correlation"
     Click on a trace span in Grafana to see associated logs:
 
     1. View trace in Tempo

@@ -20,14 +20,37 @@ from handlers.todos import todo_slash_command
 from handlers.events import app_mention
 from handlers.deploy import deploy_slash_command, handle_deploy_submission
 from otel_config import init_telemetry
+from opentelemetry import trace
 
 # Load environment variables
 load_dotenv()
 
-# Configure logging
+# Custom log formatter that includes trace_id and span_id
+class TraceContextFormatter(logging.Formatter):
+    def format(self, record):
+        # Get current span context
+        span = trace.get_current_span()
+        span_context = span.get_span_context()
+
+        # Add trace_id and span_id to log record if valid
+        if span_context and span_context.is_valid:
+            record.trace_id = format(span_context.trace_id, '032x')
+            record.span_id = format(span_context.span_id, '016x')
+        else:
+            record.trace_id = "no-trace"
+            record.span_id = "no-span"
+
+        return super().format(record)
+
+# Configure logging with trace context
+log_format = '%(asctime)s - %(name)s - %(levelname)s - %(message)s | trace_id=%(trace_id)s span_id=%(span_id)s'
+
+handler = logging.StreamHandler()
+handler.setFormatter(TraceContextFormatter(log_format))
+
 logging.basicConfig(
     level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+    handlers=[handler]
 )
 logger = logging.getLogger(__name__)
 

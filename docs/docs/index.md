@@ -64,7 +64,7 @@ Deployments happen through Git commits, not manual kubectl commands. Demonstrate
 GitHub Actions runners execute inside the Kubernetes cluster using Actions Runner Controller. Demonstrates: cost optimization, security isolation, in-cluster integration.
 
 **Full-Stack Observability**
-OpenTelemetry traces flow from Slack → MCP → API → Database → Grafana. Demonstrates: distributed tracing, W3C trace propagation, metrics collection, and correlation across signals.
+OpenTelemetry distributed tracing with two trace flows: (1) Slack Bot → MCP Server, (2) MCP Server → API → Database. Complete trace-to-log correlation across all services. Demonstrates: distributed tracing, W3C trace propagation, trace-to-log correlation, metrics collection, and correlation across signals.
 
 **Automated Database Operations**
 CloudNativePG handles PostgreSQL high availability, backups, and failover automatically. Demonstrates: Kubernetes operator patterns, stateful workloads, and database reliability.
@@ -101,7 +101,7 @@ Detailed system design with component descriptions and data flows.
 See how GitOps, self-hosted runners, and ArgoCD work together for automated deployments.
 
 **[Observability Stack →](observability/observability.md)**
-Explore how distributed tracing connects requests from Slack to the database.
+Explore distributed tracing with two trace flows and complete trace-to-log correlation across all services.
 
 **[Development Setup →](development/getting-started.md)**
 Run the platform locally with hot reloading and development tools.

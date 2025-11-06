@@ -164,10 +164,11 @@ The interface layer provides user-facing access to the todo platform through AI-
 ??? note "Show more details"
     Collects distributed traces via OpenTelemetry:
 
-    - End-to-end request tracing from SlackBot → MCP → API → Database
-    - W3C Trace Context propagation
+    - Two distributed trace flows: (1) Slack Bot → MCP Server via HTTP/SSE, (2) MCP Server → API → Database via HTTP/REST
+    - MCP protocol creates a natural trace boundary between flows
+    - W3C Trace Context propagation within each flow
     - OTLP gRPC ingestion (port 4317)
-    - Trace correlation with logs and metrics (TODO)
+    - Complete trace-to-log correlation: logs include trace_id and span_id for all services (todo-bot, todo-mcp, todo-api)
 
 ### Loki - Logs
 
@@ -197,4 +198,4 @@ The interface layer provides user-facing access to the todo platform through AI-
     - Queries Tempo for trace exploration
     - Queries Loki for log analysis
     - Alert routing to Slack for critical events(TODO)
-    - Correlation between traces, metrics, and logs(TODO)
+    - Correlation between traces, metrics, and logs

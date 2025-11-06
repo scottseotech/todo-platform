@@ -162,7 +162,7 @@ This prevents repeated debates, helps onboard new team members, and provides his
     Distributed systems need comprehensive observability:
     
     - Trace requests across service boundaries
-    - Correlate logs with traces(TODO)
+    - Correlate logs with traces
     - Monitor performance metrics
     - Avoid vendor lock-in with proprietary agents
 
