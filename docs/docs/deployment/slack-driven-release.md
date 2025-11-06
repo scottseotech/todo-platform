@@ -34,6 +34,6 @@ sequenceDiagram
     API->>GH: Dispatch workflow (workflow_dispatch)
     GH-->>API: 202 Accepted (run_id)
     API-->>Bot: Ack + post message with run link
-    API->>GH: Polls for workflow run completion
+    API->>GH: Poll for workflow run completion
     API-->>Bot: Post on 'deployments' channel when run completes
 ```

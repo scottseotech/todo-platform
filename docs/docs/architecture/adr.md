@@ -26,6 +26,7 @@ This prevents repeated debates, helps onboard new team members, and provides his
     **Decision:**
 
     Use a simple todo list application as the reference workload for demonstrating:
+
     - Kubernetes-based deployment
     - ArgoCD-driven GitOps workflows
     - ChatOps integrations via Slack for operational feedback and control
@@ -43,12 +44,14 @@ This prevents repeated debates, helps onboard new team members, and provides his
     **Consequences:**
 
     ✅ **Positive:**
+    
     - Keeps cognitive load low while demonstrating full production-grade DevOps stack
     - Enables reproducible demos of CI/CD, GitOps, and ChatOps workflows
     - Clear isolation of infrastructure competency from application logic
     - Simplifies troubleshooting, monitoring, and performance testing
 
     ❌ **Negative:**
+
     - Application is not innovative or feature-rich, so less compelling as a product demo
     - May undersell application-level engineering depth to non-technical audiences
     - Requires extra explanation that the value lies in platform automation, not app features
@@ -63,6 +66,7 @@ This prevents repeated debates, helps onboard new team members, and provides his
     **Context:**
 
     Deployments need to be:
+
     - Reproducible and auditable
     - Automated without manual kubectl commands
     - Version-controlled with rollback capability
@@ -71,6 +75,7 @@ This prevents repeated debates, helps onboard new team members, and provides his
     **Decision:**
 
     Use ArgoCD for GitOps-based continuous deployment where:
+    
     - Git repository is the single source of truth
     - All infrastructure and application manifests are declared in Git
     - ArgoCD automatically syncs cluster state to match Git
@@ -78,13 +83,13 @@ This prevents repeated debates, helps onboard new team members, and provides his
 
     **Alternatives Considered:**
 
-    1. **FluxCD** - Another GitOps tool, but ArgoCD has better UI and visualization
-    2. **Manual kubectl** - Not scalable, no audit trail, requires cluster access
-    3. **Helm + CI/CD** - Imperative, doesn't continuously reconcile state
+    1. **Manual kubectl** - Not scalable, no audit trail, requires cluster access
+    2. **Helm + CI/CD** - Imperative, doesn't continuously reconcile state
 
     **Consequences:**
 
     ✅ **Positive:**
+
     - Complete audit trail of all changes
     - Easy rollback via Git revert
     - No need to distribute kubeconfig
@@ -92,6 +97,7 @@ This prevents repeated debates, helps onboard new team members, and provides his
     - Visual UI for deployment status
 
     ❌ **Negative:**
+
     - Additional component to manage
     - Learning curve for GitOps workflow
     - Slightly slower than direct kubectl apply
@@ -106,16 +112,18 @@ This prevents repeated debates, helps onboard new team members, and provides his
     **Context:**
 
     CI/CD pipelines need to:
+    
     - Build and push Docker images
     - Update Kubernetes manifests
     - Verify deployments in the cluster
     - Control costs for high-frequency builds
 
     GitHub-hosted runners have limitations:
+
     - No access to in-cluster resources
     - Limited to public IP addresses
     - No persistent caching
-    - Can be expensive at scale
+    - Can be expensive at scale for private repos
 
     **Decision:**
 
@@ -130,6 +138,7 @@ This prevents repeated debates, helps onboard new team members, and provides his
     **Consequences:**
 
     ✅ **Positive:**
+    
     - Direct kubectl access for deployment verification
     - Faster builds with Docker layer caching
     - Lower cost (runs on existing cluster resources)
@@ -137,8 +146,8 @@ This prevents repeated debates, helps onboard new team members, and provides his
     - Auto-scaling based on job queue
 
     ❌ **Negative:**
+    
     - Additional infrastructure to maintain
-    - Security considerations (runners have cluster access)
     - Need to manage runner lifecycle
 
 ---
@@ -151,14 +160,16 @@ This prevents repeated debates, helps onboard new team members, and provides his
     **Context:**
 
     Distributed systems need comprehensive observability:
+    
     - Trace requests across service boundaries
-    - Correlate logs with traces
+    - Correlate logs with traces(TODO)
     - Monitor performance metrics
     - Avoid vendor lock-in with proprietary agents
 
     **Decision:**
 
     Use OpenTelemetry SDK for instrumentation with:
+    
     - OTLP protocol for traces → Tempo
     - Structured JSON logs → Fluent Bit → Loki
     - Prometheus metrics exposition
@@ -166,13 +177,12 @@ This prevents repeated debates, helps onboard new team members, and provides his
 
     **Alternatives Considered:**
 
-    1. **Datadog/New Relic APM** - Proprietary, expensive, vendor lock-in
-    2. **Jaeger SDK** - Traces only, not the industry standard going forward
-    3. **Custom logging** - No standardization, difficult to correlate
+    1. **New Relic APM** - Proprietary, expensive, vendor lock-in
 
     **Consequences:**
 
     ✅ **Positive:**
+
     - Vendor-neutral (can swap backends without code changes)
     - Industry standard (CNCF graduated project)
     - Single SDK for traces, metrics, and logs
@@ -180,6 +190,7 @@ This prevents repeated debates, helps onboard new team members, and provides his
     - Strong community and tooling support
 
     ❌ **Negative:**
+
     - Slightly more complex than vendor SDKs
     - Performance overhead (mitigated with sampling)
     - Need to run backend infrastructure (Tempo, Loki, Prometheus)
@@ -194,6 +205,7 @@ This prevents repeated debates, helps onboard new team members, and provides his
     **Context:**
 
     Application needs a production-grade PostgreSQL database with:
+
     - High availability and automatic failover
     - Automated backups and point-in-time recovery
     - Declarative Kubernetes-native configuration
@@ -202,6 +214,7 @@ This prevents repeated debates, helps onboard new team members, and provides his
     **Decision:**
 
     Use CloudNativePG operator to manage PostgreSQL clusters:
+
     - Declarative cluster definition
     - Automatic failover and self-healing
     - Continuous backup to S3 (MinIO)
@@ -210,13 +223,11 @@ This prevents repeated debates, helps onboard new team members, and provides his
     **Alternatives Considered:**
 
     1. **StatefulSet + manual setup** - No automation, complex failover
-    2. **Zalando Postgres Operator** - More complex, less active development
-    3. **Managed RDS/Cloud SQL** - Vendor lock-in, higher cost, external dependency
-    4. **CrunchyData Operator** - Commercial focus, heavier resource usage
 
     **Consequences:**
 
     ✅ **Positive:**
+
     - Fully automated HA with no manual intervention
     - Backup automation with retention policies
     - Kubernetes-native (CRDs and operators)
@@ -224,9 +235,9 @@ This prevents repeated debates, helps onboard new team members, and provides his
     - Great documentation and community
 
     ❌ **Negative:**
+
     - Operator adds complexity
     - Learning curve for CNPG concepts
-    - Resource overhead (multiple pods for HA)
 
 ---
 
@@ -238,6 +249,7 @@ This prevents repeated debates, helps onboard new team members, and provides his
     **Context:**
 
     Platform needs AI-powered natural language interface:
+
     - Allow users to manage todos via conversation
     - Integrate with modern LLMs (OpenAI, Claude, etc.)
     - Avoid tight coupling to specific AI vendors
@@ -246,6 +258,7 @@ This prevents repeated debates, helps onboard new team members, and provides his
     **Decision:**
 
     Implement Model Context Protocol (MCP) server:
+
     - Standardized protocol for AI-application integration
     - Tool-based interface for todo operations
     - Compatible with any MCP-compliant AI system
@@ -253,22 +266,20 @@ This prevents repeated debates, helps onboard new team members, and provides his
 
     **Alternatives Considered:**
 
-    1. **Direct OpenAI API integration** - Vendor lock-in, no portability
-    2. **LangChain** - Heavy framework, Python-centric
-    3. **Custom REST API + prompting** - No standardization, reinventing the wheel
+    1. **LangChain** - Heavy framework
 
     **Consequences:**
 
     ✅ **Positive:**
+
     - Future-proof against AI vendor changes
-    - Industry standard protocol (Anthropic-backed)
+    - Industry standard protocol
     - Clean separation of concerns
     - Reusable across different AI frontends
     - Demonstrates modern AI integration patterns
 
     ❌ **Negative:**
     - Emerging standard (not fully mature)
-    - Limited tooling compared to established frameworks
     - Additional service to maintain
 
 ---
@@ -281,6 +292,7 @@ This prevents repeated debates, helps onboard new team members, and provides his
     **Context:**
 
     Kubernetes manifests need:
+
     - Environment-specific customization (dev, staging, prod)
     - Image version management
     - No complex templating logic
@@ -289,6 +301,7 @@ This prevents repeated debates, helps onboard new team members, and provides his
     **Decision:**
 
     Use Kustomize for manifest management:
+
     - Declarative patches over base manifests
     - Built-in image tag management
     - Native kubectl integration
@@ -296,9 +309,8 @@ This prevents repeated debates, helps onboard new team members, and provides his
 
     **Alternatives Considered:**
 
-    1. **Helm** - Template complexity, values.yaml indirection, package management not needed
+    1. **Helm** - Template complexity, values.yaml indirection
     2. **Plain YAML** - No reusability, duplication across environments
-    3. **Jsonnet/Dhall** - Requires learning new language, less ecosystem support
 
     **Consequences:**
 
@@ -324,6 +336,7 @@ This prevents repeated debates, helps onboard new team members, and provides his
     **Context:**
 
     Platform needs object storage for:
+
     - PostgreSQL continuous backups (CNPG)
     - Log archival (Loki)
     - Potential future use cases (file uploads, exports)
@@ -333,6 +346,7 @@ This prevents repeated debates, helps onboard new team members, and provides his
     **Decision:**
 
     Use MinIO as S3-compatible object storage:
+
     - Self-hosted within Kubernetes cluster
     - S3 API compatibility
     - Integrated with CNPG and Loki
@@ -341,20 +355,19 @@ This prevents repeated debates, helps onboard new team members, and provides his
 
     1. **AWS S3** - Vendor lock-in, requires AWS account, egress costs
     2. **Local filesystem** - Not durable, no replication
-    3. **Longhorn** - Block storage, not object storage
 
     **Consequences:**
 
     ✅ **Positive:**
+
     - S3 API compatibility (portable to cloud if needed)
     - Self-contained (no external dependencies)
     - No egress costs
     - Great for local development
-    - Production-ready with replication
 
     ❌ **Negative:**
+
     - Additional service to manage
-    - Storage capacity limited by cluster nodes
     - Need to handle backup/disaster recovery for MinIO itself
 
 ---
@@ -391,10 +404,12 @@ When adding new ADRs, use this structure:
     **Consequences:**
 
     ✅ **Positive:**
+
     - What becomes easier
     - What improves
 
     ❌ **Negative:**
+
     - What becomes more difficult
     - What tradeoffs we're accepting
 ```
