@@ -1,0 +1,1604 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Documentation for the Todo Platform - A Kubernetes-based todo application with GitOps workflow">
+      
+      
+        <meta name="author" content="Todo Platform Team">
+      
+      
+        <link rel="canonical" href="https://docs.scottseo.tech/architecture/adr/">
+      
+      
+        <link rel="prev" href="../overview/">
+      
+      
+        <link rel="next" href="../../development/getting-started/">
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.4.14">
+    
+    
+      
+        <title>ADRs - Todo Platform</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.fad675c6.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.356b1318.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&"object"==typeof palette.color)for(var key of Object.keys(palette.color))document.body.setAttribute("data-md-color-"+key,palette.color[key])</script>
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#architecture-decision-records" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Todo Platform" class="md-header__button md-logo" aria-label="Todo Platform" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Todo Platform
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              ADRs
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_2" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69Z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_2">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12c0-2.42-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69Z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/scottseotech/todo-platform" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    scottseotech/todo-platform
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../overview/" class="md-tabs__link">
+          
+  
+  Architecture
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../development/getting-started/" class="md-tabs__link">
+          
+  
+  Development
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../deployment/kubernetes/" class="md-tabs__link">
+          
+  
+  Deployment
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../observability/observability/" class="md-tabs__link">
+          
+  
+  Observability
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../chatops/chatops/" class="md-tabs__link">
+        
+  
+    
+  
+  ChatOps
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../api/todo-api/" class="md-tabs__link">
+          
+  
+  API Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Todo Platform" class="md-nav__button md-logo" aria-label="Todo Platform" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    Todo Platform
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/scottseotech/todo-platform" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    scottseotech/todo-platform
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Home
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+      
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Architecture
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Architecture
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../overview/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Overview
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    ADRs
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    ADRs
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#why-document-decisions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Why Document Decisions
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#adr-000-use-a-todo-list-application-as-the-core-demo" class="md-nav__link">
+    <span class="md-ellipsis">
+      ADR-000: Use a Todo List Application as the Core Demo
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#adr-001-gitops-with-argocd" class="md-nav__link">
+    <span class="md-ellipsis">
+      ADR-001: GitOps with ArgoCD
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#adr-002-self-hosted-github-actions-runners" class="md-nav__link">
+    <span class="md-ellipsis">
+      ADR-002: Self-Hosted GitHub Actions Runners
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#adr-003-opentelemetry-for-observability" class="md-nav__link">
+    <span class="md-ellipsis">
+      ADR-003: OpenTelemetry for Observability
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#adr-004-cloudnativepg-for-postgresql" class="md-nav__link">
+    <span class="md-ellipsis">
+      ADR-004: CloudNativePG for PostgreSQL
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#adr-005-model-context-protocol-mcp-for-ai-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      ADR-005: Model Context Protocol (MCP) for AI Integration
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#adr-006-kustomize-over-helm" class="md-nav__link">
+    <span class="md-ellipsis">
+      ADR-006: Kustomize over Helm
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#adr-007-minio-for-s3-compatible-storage" class="md-nav__link">
+    <span class="md-ellipsis">
+      ADR-007: MinIO for S3-Compatible Storage
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#future-adrs" class="md-nav__link">
+    <span class="md-ellipsis">
+      Future ADRs
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#adr-template" class="md-nav__link">
+    <span class="md-ellipsis">
+      ADR Template
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#related-documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Related Documentation
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+      
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Development
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Development
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../development/getting-started/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Getting Started
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+      
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Deployment
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            Deployment
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../deployment/kubernetes/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Gitops
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../deployment/slack-driven-release/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Chatops
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+      
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Observability
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            Observability
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../observability/observability/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Overview
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../observability/log-monitoring-and-alerting/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Log Monitoring & Alerting
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chatops/chatops/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    ChatOps
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+      
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    API Reference
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            API Reference
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/todo-api/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Todo API
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/todo-mcp/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Todo MCP
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#why-document-decisions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Why Document Decisions
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#adr-000-use-a-todo-list-application-as-the-core-demo" class="md-nav__link">
+    <span class="md-ellipsis">
+      ADR-000: Use a Todo List Application as the Core Demo
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#adr-001-gitops-with-argocd" class="md-nav__link">
+    <span class="md-ellipsis">
+      ADR-001: GitOps with ArgoCD
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#adr-002-self-hosted-github-actions-runners" class="md-nav__link">
+    <span class="md-ellipsis">
+      ADR-002: Self-Hosted GitHub Actions Runners
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#adr-003-opentelemetry-for-observability" class="md-nav__link">
+    <span class="md-ellipsis">
+      ADR-003: OpenTelemetry for Observability
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#adr-004-cloudnativepg-for-postgresql" class="md-nav__link">
+    <span class="md-ellipsis">
+      ADR-004: CloudNativePG for PostgreSQL
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#adr-005-model-context-protocol-mcp-for-ai-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      ADR-005: Model Context Protocol (MCP) for AI Integration
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#adr-006-kustomize-over-helm" class="md-nav__link">
+    <span class="md-ellipsis">
+      ADR-006: Kustomize over Helm
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#adr-007-minio-for-s3-compatible-storage" class="md-nav__link">
+    <span class="md-ellipsis">
+      ADR-007: MinIO for S3-Compatible Storage
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#future-adrs" class="md-nav__link">
+    <span class="md-ellipsis">
+      Future ADRs
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#adr-template" class="md-nav__link">
+    <span class="md-ellipsis">
+      ADR Template
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#related-documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Related Documentation
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+<h1 id="architecture-decision-records">Architecture Decision Records</h1>
+<h2 id="why-document-decisions">Why Document Decisions</h2>
+<p>Production systems evolve over time. <strong>Architecture Decision Records (ADRs)</strong> capture the reasoning behind key technical choices, making it easier for teams to understand:</p>
+<ul>
+<li><strong>What</strong> decisions were made</li>
+<li><strong>Why</strong> those decisions were made</li>
+<li><strong>What alternatives</strong> were considered</li>
+<li><strong>What tradeoffs</strong> were accepted</li>
+</ul>
+<p>This prevents repeated debates, helps onboard new team members, and provides historical context for future refactoring.</p>
+<h2 id="adr-000-use-a-todo-list-application-as-the-core-demo">ADR-000: Use a Todo List Application as the Core Demo</h2>
+<p><strong>Status:</strong> Accepted</p>
+<details class="note">
+<summary>Show details</summary>
+<p><strong>Context:</strong></p>
+<p>The goal of this project is not to build another task management application, but to demonstrate end-to-end production practices across modern DevOps disciplines — including infrastructure as code, GitOps, CI/CD, observability, and self-hosted automation runners.</p>
+<p>A lightweight app such as a todo list provides just enough complexity (API, database, UI) to anchor the supporting infrastructure while staying simple enough to keep focus on the platform engineering aspects.</p>
+<p><strong>Decision:</strong></p>
+<p>Use a simple todo list application as the reference workload for demonstrating:</p>
+<ul>
+<li>Kubernetes-based deployment</li>
+<li>ArgoCD-driven GitOps workflows</li>
+<li>ChatOps integrations via Slack for operational feedback and control</li>
+<li>Observability stack (Prometheus, Grafana, Tempo, Loki)</li>
+<li>CI/CD pipelines executing on a self-hosted GitHub Actions Runner Controller (ARC)</li>
+<li>Documentation and automation with MkDocs, Kustomzie, and IaC tooling</li>
+</ul>
+<p>The application itself remains minimal — serving as a stable target to validate automation, reliability, and environment consistency.</p>
+<p><strong>Alternatives Considered:</strong></p>
+<ol>
+<li><strong>Custom complex microservice project</strong> – Would showcase more application logic but obscure the infrastructure focus and slow iteration.</li>
+<li><strong>Off-the-shelf benchmark app (e.g., Sock Shop, Hipster Shop)</strong> – Provides realistic architecture but adds unnecessary moving parts and less control over the full lifecycle.</li>
+</ol>
+<p><strong>Consequences:</strong></p>
+<p>✅ <strong>Positive:</strong></p>
+<ul>
+<li>Keeps cognitive load low while demonstrating full production-grade DevOps stack</li>
+<li>Enables reproducible demos of CI/CD, GitOps, and ChatOps workflows</li>
+<li>Clear isolation of infrastructure competency from application logic</li>
+<li>Simplifies troubleshooting, monitoring, and performance testing</li>
+</ul>
+<p>❌ <strong>Negative:</strong></p>
+<ul>
+<li>Application is not innovative or feature-rich, so less compelling as a product demo</li>
+<li>May undersell application-level engineering depth to non-technical audiences</li>
+<li>Requires extra explanation that the value lies in platform automation, not app features</li>
+</ul>
+</details>
+<hr />
+<h2 id="adr-001-gitops-with-argocd">ADR-001: GitOps with ArgoCD</h2>
+<p><strong>Status:</strong> Accepted</p>
+<details class="note">
+<summary>Show details</summary>
+<p><strong>Context:</strong></p>
+<p>Deployments need to be:</p>
+<ul>
+<li>Reproducible and auditable</li>
+<li>Automated without manual kubectl commands</li>
+<li>Version-controlled with rollback capability</li>
+<li>Accessible to the entire team without requiring cluster credentials</li>
+</ul>
+<p><strong>Decision:</strong></p>
+<p>Use ArgoCD for GitOps-based continuous deployment where:</p>
+<ul>
+<li>Git repository is the single source of truth</li>
+<li>All infrastructure and application manifests are declared in Git</li>
+<li>ArgoCD automatically syncs cluster state to match Git</li>
+<li>Deployments happen through Git commits, not imperative commands</li>
+</ul>
+<p><strong>Alternatives Considered:</strong></p>
+<ol>
+<li><strong>Manual kubectl</strong> - Not scalable, no audit trail, requires cluster access</li>
+<li><strong>Helm + CI/CD</strong> - Imperative, doesn't continuously reconcile state</li>
+</ol>
+<p><strong>Consequences:</strong></p>
+<p>✅ <strong>Positive:</strong></p>
+<ul>
+<li>Complete audit trail of all changes</li>
+<li>Easy rollback via Git revert</li>
+<li>No need to distribute kubeconfig</li>
+<li>Self-healing (ArgoCD reconciles drift)</li>
+<li>Visual UI for deployment status</li>
+</ul>
+<p>❌ <strong>Negative:</strong></p>
+<ul>
+<li>Additional component to manage</li>
+<li>Learning curve for GitOps workflow</li>
+<li>Slightly slower than direct kubectl apply</li>
+</ul>
+</details>
+<hr />
+<h2 id="adr-002-self-hosted-github-actions-runners">ADR-002: Self-Hosted GitHub Actions Runners</h2>
+<p><strong>Status:</strong> Accepted</p>
+<details class="note">
+<summary>Show details</summary>
+<p><strong>Context:</strong></p>
+<p>CI/CD pipelines need to:</p>
+<ul>
+<li>Build and push Docker images</li>
+<li>Update Kubernetes manifests</li>
+<li>Verify deployments in the cluster</li>
+<li>Control costs for high-frequency builds</li>
+</ul>
+<p>GitHub-hosted runners have limitations:</p>
+<ul>
+<li>No access to in-cluster resources</li>
+<li>Limited to public IP addresses</li>
+<li>No persistent caching</li>
+<li>Can be expensive at scale for private repos</li>
+</ul>
+<p><strong>Decision:</strong></p>
+<p>Use Actions Runner Controller (ARC) to run self-hosted GitHub Actions runners inside the Kubernetes cluster.</p>
+<p><strong>Alternatives Considered:</strong></p>
+<ol>
+<li><strong>GitHub-hosted runners</strong> - No cluster access, higher cost, no caching</li>
+<li><strong>Jenkins</strong> - More complex, requires separate infrastructure</li>
+<li><strong>GitLab CI</strong> - Would require migrating from GitHub</li>
+</ol>
+<p><strong>Consequences:</strong></p>
+<p>✅ <strong>Positive:</strong></p>
+<ul>
+<li>Direct kubectl access for deployment verification</li>
+<li>Faster builds with Docker layer caching</li>
+<li>Lower cost (runs on existing cluster resources)</li>
+<li>Custom runner images with pre-installed tools</li>
+<li>Auto-scaling based on job queue</li>
+</ul>
+<p>❌ <strong>Negative:</strong></p>
+<ul>
+<li>Additional infrastructure to maintain</li>
+<li>Need to manage runner lifecycle</li>
+</ul>
+</details>
+<hr />
+<h2 id="adr-003-opentelemetry-for-observability">ADR-003: OpenTelemetry for Observability</h2>
+<p><strong>Status:</strong> Accepted</p>
+<details class="note">
+<summary>Show details</summary>
+<p><strong>Context:</strong></p>
+<p>Distributed systems need comprehensive observability:</p>
+<ul>
+<li>Trace requests across service boundaries</li>
+<li>Correlate logs with traces(TODO)</li>
+<li>Monitor performance metrics</li>
+<li>Avoid vendor lock-in with proprietary agents</li>
+</ul>
+<p><strong>Decision:</strong></p>
+<p>Use OpenTelemetry SDK for instrumentation with:</p>
+<ul>
+<li>OTLP protocol for traces → Tempo</li>
+<li>Structured JSON logs → Fluent Bit → Loki</li>
+<li>Prometheus metrics exposition</li>
+<li>W3C Trace Context propagation</li>
+</ul>
+<p><strong>Alternatives Considered:</strong></p>
+<ol>
+<li><strong>New Relic APM</strong> - Proprietary, expensive, vendor lock-in</li>
+</ol>
+<p><strong>Consequences:</strong></p>
+<p>✅ <strong>Positive:</strong></p>
+<ul>
+<li>Vendor-neutral (can swap backends without code changes)</li>
+<li>Industry standard (CNCF graduated project)</li>
+<li>Single SDK for traces, metrics, and logs</li>
+<li>W3C standard trace propagation</li>
+<li>Strong community and tooling support</li>
+</ul>
+<p>❌ <strong>Negative:</strong></p>
+<ul>
+<li>Slightly more complex than vendor SDKs</li>
+<li>Performance overhead (mitigated with sampling)</li>
+<li>Need to run backend infrastructure (Tempo, Loki, Prometheus)</li>
+</ul>
+</details>
+<hr />
+<h2 id="adr-004-cloudnativepg-for-postgresql">ADR-004: CloudNativePG for PostgreSQL</h2>
+<p><strong>Status:</strong> Accepted</p>
+<details class="note">
+<summary>Show details</summary>
+<p><strong>Context:</strong></p>
+<p>Application needs a production-grade PostgreSQL database with:</p>
+<ul>
+<li>High availability and automatic failover</li>
+<li>Automated backups and point-in-time recovery</li>
+<li>Declarative Kubernetes-native configuration</li>
+<li>Minimal operational overhead</li>
+</ul>
+<p><strong>Decision:</strong></p>
+<p>Use CloudNativePG operator to manage PostgreSQL clusters:</p>
+<ul>
+<li>Declarative cluster definition</li>
+<li>Automatic failover and self-healing</li>
+<li>Continuous backup to S3 (MinIO)</li>
+<li>Built-in monitoring and metrics</li>
+</ul>
+<p><strong>Alternatives Considered:</strong></p>
+<ol>
+<li><strong>StatefulSet + manual setup</strong> - No automation, complex failover</li>
+</ol>
+<p><strong>Consequences:</strong></p>
+<p>✅ <strong>Positive:</strong></p>
+<ul>
+<li>Fully automated HA with no manual intervention</li>
+<li>Backup automation with retention policies</li>
+<li>Kubernetes-native (CRDs and operators)</li>
+<li>Active CNCF sandbox project</li>
+<li>Great documentation and community</li>
+</ul>
+<p>❌ <strong>Negative:</strong></p>
+<ul>
+<li>Operator adds complexity</li>
+<li>Learning curve for CNPG concepts</li>
+</ul>
+</details>
+<hr />
+<h2 id="adr-005-model-context-protocol-mcp-for-ai-integration">ADR-005: Model Context Protocol (MCP) for AI Integration</h2>
+<p><strong>Status:</strong> Accepted</p>
+<details class="note">
+<summary>Show details</summary>
+<p><strong>Context:</strong></p>
+<p>Platform needs AI-powered natural language interface:</p>
+<ul>
+<li>Allow users to manage todos via conversation</li>
+<li>Integrate with modern LLMs (OpenAI, Claude, etc.)</li>
+<li>Avoid tight coupling to specific AI vendors</li>
+<li>Provide structured tool calling interface</li>
+</ul>
+<p><strong>Decision:</strong></p>
+<p>Implement Model Context Protocol (MCP) server:</p>
+<ul>
+<li>Standardized protocol for AI-application integration</li>
+<li>Tool-based interface for todo operations</li>
+<li>Compatible with any MCP-compliant AI system</li>
+<li>Clean abstraction between AI and business logic</li>
+</ul>
+<p><strong>Alternatives Considered:</strong></p>
+<ol>
+<li><strong>LangChain</strong> - Heavy framework</li>
+</ol>
+<p><strong>Consequences:</strong></p>
+<p>✅ <strong>Positive:</strong></p>
+<ul>
+<li>Future-proof against AI vendor changes</li>
+<li>Industry standard protocol</li>
+<li>Clean separation of concerns</li>
+<li>Reusable across different AI frontends</li>
+<li>Demonstrates modern AI integration patterns</li>
+</ul>
+<p>❌ <strong>Negative:</strong>
+- Emerging standard (not fully mature)
+- Additional service to maintain</p>
+</details>
+<hr />
+<h2 id="adr-006-kustomize-over-helm">ADR-006: Kustomize over Helm</h2>
+<p><strong>Status:</strong> Accepted</p>
+<details class="note">
+<summary>Show details</summary>
+<p><strong>Context:</strong></p>
+<p>Kubernetes manifests need:</p>
+<ul>
+<li>Environment-specific customization (dev, staging, prod)</li>
+<li>Image version management</li>
+<li>No complex templating logic</li>
+<li>Integration with GitOps workflow</li>
+</ul>
+<p><strong>Decision:</strong></p>
+<p>Use Kustomize for manifest management:</p>
+<ul>
+<li>Declarative patches over base manifests</li>
+<li>Built-in image tag management</li>
+<li>Native kubectl integration</li>
+<li>ArgoCD has first-class Kustomize support</li>
+</ul>
+<p><strong>Alternatives Considered:</strong></p>
+<ol>
+<li><strong>Helm</strong> - Template complexity, values.yaml indirection</li>
+<li><strong>Plain YAML</strong> - No reusability, duplication across environments</li>
+</ol>
+<p><strong>Consequences:</strong></p>
+<p>✅ <strong>Positive:</strong>
+- Simple overlay model (easy to understand)
+- No templating language to learn
+- Built into kubectl
+- Clean image version updates via CLI
+- ArgoCD native support</p>
+<p>❌ <strong>Negative:</strong>
+- Less powerful than Helm for complex scenarios
+- No package registry/versioning
+- Cannot conditionally include resources easily</p>
+</details>
+<hr />
+<h2 id="adr-007-minio-for-s3-compatible-storage">ADR-007: MinIO for S3-Compatible Storage</h2>
+<p><strong>Status:</strong> Accepted</p>
+<details class="note">
+<summary>Show details</summary>
+<p><strong>Context:</strong></p>
+<p>Platform needs object storage for:</p>
+<ul>
+<li>PostgreSQL continuous backups (CNPG)</li>
+<li>Log archival (Loki)</li>
+<li>Potential future use cases (file uploads, exports)</li>
+<li>Local development and testing</li>
+<li>Cost control</li>
+</ul>
+<p><strong>Decision:</strong></p>
+<p>Use MinIO as S3-compatible object storage:</p>
+<ul>
+<li>Self-hosted within Kubernetes cluster</li>
+<li>S3 API compatibility</li>
+<li>Integrated with CNPG and Loki</li>
+</ul>
+<p><strong>Alternatives Considered:</strong></p>
+<ol>
+<li><strong>AWS S3</strong> - Vendor lock-in, requires AWS account, egress costs</li>
+<li><strong>Local filesystem</strong> - Not durable, no replication</li>
+</ol>
+<p><strong>Consequences:</strong></p>
+<p>✅ <strong>Positive:</strong></p>
+<ul>
+<li>S3 API compatibility (portable to cloud if needed)</li>
+<li>Self-contained (no external dependencies)</li>
+<li>No egress costs</li>
+<li>Great for local development</li>
+</ul>
+<p>❌ <strong>Negative:</strong></p>
+<ul>
+<li>Additional service to manage</li>
+<li>Need to handle backup/disaster recovery for MinIO itself</li>
+</ul>
+</details>
+<hr />
+<h2 id="future-adrs">Future ADRs</h2>
+<p>As the platform evolves, consider documenting:</p>
+<ul>
+<li><strong>ADR-008</strong>: Monitoring and alerting rules</li>
+</ul>
+<h2 id="adr-template">ADR Template</h2>
+<p>When adding new ADRs, use this structure:</p>
+<div class="language-markdown highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="gu">## ADR-XXX: [Short Title]</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="gs">**Status:**</span> [Proposed | Accepted | Deprecated | Superseded]
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>??? note &quot;Show details&quot;
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="gs">**Context:**</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    What is the issue that we&#39;re seeing that is motivating this decision or change?
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>    <span class="gs">**Decision:**</span>
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
+</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>    What is the change that we&#39;re proposing and/or doing?
+</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>
+</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>    <span class="gs">**Alternatives Considered:**</span>
+</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
+</span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="w">    </span><span class="k">1.</span> <span class="gs">**Option 1**</span> - Why not chosen
+</span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="w">    </span><span class="k">2.</span> <span class="gs">**Option 2**</span> - Why not chosen
+</span><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>
+</span><span id="__span-0-19"><a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>    <span class="gs">**Consequences:**</span>
+</span><span id="__span-0-20"><a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>
+</span><span id="__span-0-21"><a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>    ✅ <span class="gs">**Positive:**</span>
+</span><span id="__span-0-22"><a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>
+</span><span id="__span-0-23"><a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="w">    </span><span class="k">-</span><span class="w"> </span>What becomes easier
+</span><span id="__span-0-24"><a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a><span class="w">    </span><span class="k">-</span><span class="w"> </span>What improves
+</span><span id="__span-0-25"><a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>
+</span><span id="__span-0-26"><a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>    ❌ <span class="gs">**Negative:**</span>
+</span><span id="__span-0-27"><a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>
+</span><span id="__span-0-28"><a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a><span class="w">    </span><span class="k">-</span><span class="w"> </span>What becomes more difficult
+</span><span id="__span-0-29"><a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a><span class="w">    </span><span class="k">-</span><span class="w"> </span>What tradeoffs we&#39;re accepting
+</span></code></pre></div>
+<h2 id="related-documentation">Related Documentation</h2>
+<ul>
+<li><a href="../overview/">Architecture Overview</a></li>
+<li><a href="../../deployment/kubernetes/">Deployment Guide</a></li>
+<li><a href="../../observability/observability/">Observability</a></li>
+</ul>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12Z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        <div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/scottseotech/todo-platform" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.instant", "navigation.tracking", "navigation.tabs", "navigation.sections", "navigation.expand", "navigation.top", "search.suggest", "search.highlight", "content.code.copy", "content.code.annotate"], "search": "../../assets/javascripts/workers/search.f886a092.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.cd18aaf1.min.js"></script>
+      
+    
+  </body>
+</html>
