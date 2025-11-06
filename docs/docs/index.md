@@ -61,10 +61,10 @@ The platform uses the emerging MCP standard instead of proprietary AI APIs. Demo
 Deployments happen through Git commits, not manual kubectl commands. Demonstrates: infrastructure as code, declarative configuration, audit trails, and continuous reconciliation.
 
 **Self-Hosted CI/CD Runners**
-GitHub Actions runners execute inside the Kubernetes cluster using Actions Runner Controller. Demonstrates: cost optimization, security isolation, in-cluster integration, and auto-scaling.
+GitHub Actions runners execute inside the Kubernetes cluster using Actions Runner Controller. Demonstrates: cost optimization, security isolation, in-cluster integration.
 
 **Full-Stack Observability**
-OpenTelemetry traces flow from Slack → MCP → API → Database → Grafana. Demonstrates: distributed tracing, W3C trace propagation, metrics collection, and correlation across signals.
+OpenTelemetry traces flow from Slack(TODO) → MCP → API → Database → Grafana. Demonstrates: distributed tracing, W3C trace propagation, metrics collection, and correlation across signals.
 
 **Automated Database Operations**
 CloudNativePG handles PostgreSQL high availability, backups, and failover automatically. Demonstrates: Kubernetes operator patterns, stateful workloads, and database reliability.
