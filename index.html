@@ -6,10 +6,10 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Documentation for the Todo Platform - A Kubernetes-based todo application with GitOps workflow">
+        <meta name="description" content="Reference implementation demonstrating production-grade infrastructure patterns - GitOps, self-hosted CI/CD, full-stack observability, and ChatOps">
       
       
-        <meta name="author" content="Todo Platform Team">
+        <meta name="author" content="DevOps Reference Platform">
       
       
         <link rel="canonical" href="https://docs.scottseo.tech/">
@@ -24,7 +24,7 @@
     
     
       
-        <title>Todo Platform</title>
+        <title>DevOps Reference Platform</title>
       
     
     
@@ -79,7 +79,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#building-production-grade-systems" class="md-skip">
+        <a href="#devops-reference-platform" class="md-skip">
           Skip to content
         </a>
       
@@ -93,7 +93,7 @@
 
 <header class="md-header" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="." title="Todo Platform" class="md-header__button md-logo" aria-label="Todo Platform" data-md-component="logo">
+    <a href="." title="DevOps Reference Platform" class="md-header__button md-logo" aria-label="DevOps Reference Platform" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
@@ -107,7 +107,7 @@
       <div class="md-header__ellipsis">
         <div class="md-header__topic">
           <span class="md-ellipsis">
-            Todo Platform
+            DevOps Reference Platform
           </span>
         </div>
         <div class="md-header__topic" data-md-component="header-topic">
@@ -362,13 +362,13 @@
 
 <nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="." title="Todo Platform" class="md-nav__button md-logo" aria-label="Todo Platform" data-md-component="logo">
+    <a href="." title="DevOps Reference Platform" class="md-nav__button md-logo" aria-label="DevOps Reference Platform" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
 
     </a>
-    Todo Platform
+    DevOps Reference Platform
   </label>
   
     <div class="md-nav__source">
@@ -438,27 +438,27 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#the-challenge" class="md-nav__link">
+  <a href="#overview" class="md-nav__link">
     <span class="md-ellipsis">
-      The Challenge
+      Overview
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#what-this-platform-demonstrates" class="md-nav__link">
+  <a href="#platform-architecture" class="md-nav__link">
     <span class="md-ellipsis">
-      What This Platform Demonstrates
+      Platform Architecture
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#key-technical-decisions" class="md-nav__link">
+  <a href="#key-demonstrations" class="md-nav__link">
     <span class="md-ellipsis">
-      Key Technical Decisions
+      Key Demonstrations
     </span>
   </a>
   
@@ -474,18 +474,27 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#explore-the-architecture" class="md-nav__link">
+  <a href="#reference-workload-todo-application" class="md-nav__link">
     <span class="md-ellipsis">
-      Explore the Architecture
+      Reference Workload: Todo Application
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#why-this-matters" class="md-nav__link">
+  <a href="#explore-the-platform" class="md-nav__link">
     <span class="md-ellipsis">
-      Why This Matters
+      Explore the Platform
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#why-this-platform-exists" class="md-nav__link">
+    <span class="md-ellipsis">
+      Why This Platform Exists
     </span>
   </a>
   
@@ -980,27 +989,27 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#the-challenge" class="md-nav__link">
+  <a href="#overview" class="md-nav__link">
     <span class="md-ellipsis">
-      The Challenge
+      Overview
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#what-this-platform-demonstrates" class="md-nav__link">
+  <a href="#platform-architecture" class="md-nav__link">
     <span class="md-ellipsis">
-      What This Platform Demonstrates
+      Platform Architecture
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#key-technical-decisions" class="md-nav__link">
+  <a href="#key-demonstrations" class="md-nav__link">
     <span class="md-ellipsis">
-      Key Technical Decisions
+      Key Demonstrations
     </span>
   </a>
   
@@ -1016,18 +1025,27 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#explore-the-architecture" class="md-nav__link">
+  <a href="#reference-workload-todo-application" class="md-nav__link">
     <span class="md-ellipsis">
-      Explore the Architecture
+      Reference Workload: Todo Application
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#why-this-matters" class="md-nav__link">
+  <a href="#explore-the-platform" class="md-nav__link">
     <span class="md-ellipsis">
-      Why This Matters
+      Explore the Platform
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#why-this-platform-exists" class="md-nav__link">
+    <span class="md-ellipsis">
+      Why This Platform Exists
     </span>
   </a>
   
@@ -1051,11 +1069,22 @@
   
 
 
-<h1 id="building-production-grade-systems">Building Production-Grade Systems</h1>
-<h2 id="the-challenge">The Challenge</h2>
-<p>Modern applications need more than just working code—they need <strong>reliability at scale</strong>, <strong>observable behavior</strong>, and <strong>automated operations</strong>. This platform demonstrates how to build a production-ready system that handles the complexity of cloud-native infrastructure while maintaining developer velocity.</p>
-<h2 id="what-this-platform-demonstrates">What This Platform Demonstrates</h2>
-<p>This is a <strong>fully-instrumented Kubernetes application</strong> that shows how different pieces of production infrastructure work together:</p>
+<h1 id="devops-reference-platform">DevOps Reference Platform</h1>
+<h2 id="overview">Overview</h2>
+<p>The <strong>DevOps Reference Platform</strong> is a demonstration of production-grade infrastructure patterns and practices. This is not a tutorial—it's a fully-functional reference implementation that showcases how modern cloud-native systems are built and operated.</p>
+<p><strong>What this demonstrates:</strong>
+- GitOps-driven deployments with ArgoCD
+- Self-hosted CI/CD with GitHub Actions Runner Controller
+- Full-stack observability (traces, logs, metrics)
+- ChatOps for operational workflows
+- Infrastructure as Code with Kubernetes operators
+- AI integration via Model Context Protocol</p>
+<p><strong>What this is NOT:</strong>
+- A step-by-step tutorial
+- A production-ready product to clone
+- A comprehensive guide to DevOps practices</p>
+<p>This platform runs a simple todo application as a reference workload—the value is in the infrastructure, automation, and operational patterns, not the application itself.</p>
+<h2 id="platform-architecture">Platform Architecture</h2>
 <pre class="mermaid"><code>graph TB
     subgraph "Interface Layer"
         AI[AI Assistant&lt;br/&gt;Natural Language]
@@ -1082,18 +1111,18 @@
     Obs -.monitors.-&gt; API
     Obs -.monitors.-&gt; MCP
     Obs -.monitors.-&gt; DB</code></pre>
-<h2 id="key-technical-decisions">Key Technical Decisions</h2>
-<p>Each component was chosen to demonstrate a different production skill:</p>
+<h2 id="key-demonstrations">Key Demonstrations</h2>
+<p>Each component showcases a different production capability:</p>
 <p><strong>AI Integration via Model Context Protocol (MCP)</strong>
-Instead of hard-coding AI features, this uses the emerging MCP standard. Shows understanding of: abstraction layers, protocol design, and future-proofing integrations.</p>
+The platform uses the emerging MCP standard instead of proprietary AI APIs. Demonstrates: abstraction layers, protocol design, and vendor independence for AI integrations.</p>
 <p><strong>GitOps with ArgoCD</strong>
-Deployments happen through Git commits, not manual kubectl commands. Demonstrates: infrastructure as code, declarative configuration, and audit trails.</p>
+Deployments happen through Git commits, not manual kubectl commands. Demonstrates: infrastructure as code, declarative configuration, audit trails, and continuous reconciliation.</p>
 <p><strong>Self-Hosted CI/CD Runners</strong>
-GitHub Actions runners run inside the Kubernetes cluster using Actions Runner Controller. Shows: cost optimization, security isolation, and in-cluster integration.</p>
+GitHub Actions runners execute inside the Kubernetes cluster using Actions Runner Controller. Demonstrates: cost optimization, security isolation, in-cluster integration, and auto-scaling.</p>
 <p><strong>Full-Stack Observability</strong>
-OpenTelemetry traces flow from Slack(TODO) → MCP → API → Database → Grafana. Demonstrates: distributed tracing, correlation IDs(TODO), metrics collection, and debugging production systems.</p>
+OpenTelemetry traces flow from Slack → MCP → API → Database → Grafana. Demonstrates: distributed tracing, W3C trace propagation, metrics collection, and correlation across signals.</p>
 <p><strong>Automated Database Operations</strong>
-CloudNativePG handles PostgreSQL high availability, backups, and failover automatically. Shows: operator patterns, stateful workloads, and database reliability.</p>
+CloudNativePG handles PostgreSQL high availability, backups, and failover automatically. Demonstrates: Kubernetes operator patterns, stateful workloads, and database reliability.</p>
 <h2 id="technology-stack">Technology Stack</h2>
 <table>
 <thead>
@@ -1136,25 +1165,33 @@ CloudNativePG handles PostgreSQL high availability, backups, and failover automa
 </tr>
 </tbody>
 </table>
-<h2 id="explore-the-architecture">Explore the Architecture</h2>
-<p><strong><a href="architecture/overview/">Architecture Overview →</a></strong>
-See the full system design with detailed component descriptions and data flows.</p>
-<p><strong><a href="deployment/kubernetes/">Deployment Guide →</a></strong>
-Learn how GitOps, self-hosted runners, and ArgoCD work together for automated deployments.</p>
-<p><strong><a href="observability/observability/">Observability Stack →</a></strong>
-Understand how distributed tracing connects requests from Slack to the database.</p>
-<p><strong><a href="development/getting-started/">Development Setup →</a></strong>
-Get the platform running locally with hot reloading and development tools.</p>
-<h2 id="why-this-matters">Why This Matters</h2>
-<p>Building a todo app is simple. Building a <strong>production-ready platform</strong> that demonstrates:</p>
+<h2 id="reference-workload-todo-application">Reference Workload: Todo Application</h2>
+<p>The platform runs a simple todo list application to anchor the infrastructure demonstrations:</p>
 <ul>
-<li>How to integrate AI without vendor lock-in</li>
-<li>How to automate deployments with zero downtime</li>
-<li>How to debug distributed systems in production</li>
-<li>How to manage stateful workloads reliably</li>
+<li><strong>Backend</strong>: Go REST API with PostgreSQL (CloudNativePG)</li>
+<li><strong>AI Integration</strong>: MCP server for natural language operations via Slack</li>
+<li><strong>Interface</strong>: Slack ChatOps for operational control and user interaction</li>
 </ul>
-<p>...that's what separates senior engineers from the rest.</p>
-<p>This platform shows those skills in action.</p>
+<p>The application is intentionally minimal—complex enough to demonstrate database operations, API patterns, distributed tracing, and AI integration, but simple enough to keep focus on the platform capabilities rather than application logic.</p>
+<h2 id="explore-the-platform">Explore the Platform</h2>
+<p><strong><a href="architecture/overview/">Architecture Overview →</a></strong>
+Detailed system design with component descriptions and data flows.</p>
+<p><strong><a href="deployment/kubernetes/">Deployment Documentation →</a></strong>
+See how GitOps, self-hosted runners, and ArgoCD work together for automated deployments.</p>
+<p><strong><a href="observability/observability/">Observability Stack →</a></strong>
+Explore how distributed tracing connects requests from Slack to the database.</p>
+<p><strong><a href="development/getting-started/">Development Setup →</a></strong>
+Run the platform locally with hot reloading and development tools.</p>
+<h2 id="why-this-platform-exists">Why This Platform Exists</h2>
+<p>Building a todo app is simple. Building a <strong>reference platform</strong> that demonstrates:</p>
+<ul>
+<li>AI integration without vendor lock-in</li>
+<li>Automated deployments with zero downtime</li>
+<li>Debugging distributed systems in production</li>
+<li>Managing stateful workloads reliably</li>
+</ul>
+<p>...that's what separates platform engineers from application developers.</p>
+<p>This platform demonstrates those skills through working infrastructure, not theoretical explanations.</p>
 
 
 
