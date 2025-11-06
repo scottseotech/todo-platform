@@ -57,12 +57,11 @@ sequenceDiagram
       push:
         branches: [main]
         paths:
-          - 'services/todo-api/**'
-          - '.github/workflows/todo-api.yaml'
+          - 'infra/homer/**'
     ```
 
     **Key workflows:**
-    - `todo-api.yaml`: Build and deploy todo-api service
+    - `homer.yaml`: Build and deploy homer
     - `argocd-update.yaml`: Reusable workflow for GitOps updates
     - `slack-notification.yaml`: Reusable workflow for Slack notifications
 
@@ -99,7 +98,7 @@ sequenceDiagram
     ```
 
     **Examples:**
-    - `curiosinauts/scottseotech-todo-api:abc1234`
+    - `curiosinauts/scottseotech-todo-api:v0.7.10`
     - `curiosinauts/scottseotech-homer:def5678`
 
     **Version tags:**
@@ -148,7 +147,7 @@ sequenceDiagram
     **Image management:**
     Workflows update image versions using:
     ```bash
-    kustomize edit set image todo-api=curiosinauts/scottseotech-todo-api:abc1234
+    kustomize edit set image todo-api=curiosinauts/scottseotech-todo-api:v0.7.10
     ```
 
     This modifies `kustomization.yaml` without touching deployment manifests directly.
@@ -196,10 +195,8 @@ sequenceDiagram
     **Information included:**
     - Service name
     - Version (commit SHA)
-    - Build duration
     - Status (success/failure)
     - Links to GitHub run
-    - Error details (if failed)
 
     **Configuration:**
     - Slack bot token: `SLACK_BOT_TOKEN` (GitHub secret)
@@ -224,8 +221,8 @@ When you push code to main, here's what happens automatically:
 ??? note "Detailed Step-by-Step Process"
     1. **Code Change**
        ```bash
-       git add services/todo-api/
-       git commit -m "Add new feature"
+       git add infra/homer/
+       git commit -m "feat: add new feature"
        git push origin main
        ```
 
@@ -241,32 +238,32 @@ When you push code to main, here's what happens automatically:
 
     4. **Lock Acquisition**
        ```bash
-       LOCK_VALUE="todo-api-123456789"
+       LOCK_VALUE="homer-123456789"
        gh variable set ARGOCD_LOCK --body "$LOCK_VALUE"
        ```
 
     5. **Docker Build**
        ```bash
        VERSION=$(git rev-parse --short HEAD)
-       docker build -t curiosinauts/scottseotech-todo-api:$VERSION .
+       docker build -t curiosinauts/scottseotech-homer:$VERSION .
        ```
 
     6. **Docker Push**
        ```bash
-       docker push curiosinauts/scottseotech-todo-api:$VERSION
+       docker push curiosinauts/scottseotech-homer:$VERSION
        ```
 
     7. **Kustomize Update**
        ```bash
-       cd deploy/applications/todo-api
-       kustomize edit set image todo-api=curiosinauts/scottseotech-todo-api:$VERSION
+       cd deploy/infrastructure/homer
+       kustomize edit set image homer=curiosinauts/scottseotech-homer:$VERSION
        ```
 
     8. **Git Commit**
        ```bash
        git config user.name "github-actions[bot]"
-       git add deploy/applications/todo-api/kustomization.yaml
-       git commit -m "Update todo-api to version $VERSION"
+       git add deploy/infrastructure/homer/kustomization.yaml
+       git commit -m "Update homer to version $VERSION"
        git push origin main
        ```
 
@@ -277,8 +274,8 @@ When you push code to main, here's what happens automatically:
 
     10. **Deployment Verification**
         ```bash
-        kubectl rollout status deployment/todo-api -n default --timeout=5m
-        DEPLOYED_IMAGE=$(kubectl get deployment todo-api -n default -o jsonpath='{.spec.template.spec.containers[0].image}')
+        kubectl rollout status deployment/homer -n default --timeout=5m
+        DEPLOYED_IMAGE=$(kubectl get deployment homer -n default -o jsonpath='{.spec.template.spec.containers[0].image}')
         ```
 
     11. **Lock Release**
@@ -312,7 +309,7 @@ When you push code to main, here's what happens automatically:
     apiVersion: rbac.authorization.k8s.io/v1
     kind: Role
     metadata:
-      name: runner-deploy-verifier
+      name: github-runner-deployment-reader
     rules:
     - apiGroups: ["apps"]
       resources: ["deployments", "statefulsets"]
@@ -558,35 +555,11 @@ When you push code to main, here's what happens automatically:
 
     5. Create GitHub workflow following existing patterns
 
-??? note "Customizing Runner Image"
-    Custom runner image is defined in `infra/runner/`:
-
-    ```dockerfile
-    FROM summerwind/actions-runner:latest
-
-    # Install additional tools
-    RUN apt-get update && apt-get install -y \
-        kubectl \
-        argocd-cli \
-        kustomize \
-        && rm -rf /var/lib/apt/lists/*
-    ```
-
-    Build and push:
-    ```bash
-    cd infra/runner
-    docker build -t curiosinauts/scottseotech-runner:latest .
-    docker push curiosinauts/scottseotech-runner:latest
-    ```
-
-    Update ARC configuration to use new image.
-
 ## Security Considerations
 
 - **Least Privilege**: Runners have minimal RBAC permissions
 - **Secret Management**: Secrets stored in GitHub, injected at runtime
 - **Network Policies**: Runners isolated in dedicated namespace
-- **Image Scanning**: Consider adding Trivy or similar to workflows
 - **Signed Commits**: Consider requiring GPG signatures
 - **Branch Protection**: Protect main branch, require reviews
 - **Audit Logging**: All deployments tracked in Git history
