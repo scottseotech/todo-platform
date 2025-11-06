@@ -82,6 +82,7 @@ nav:
   - Observability: 
       - Overview: observability/observability.md
       - Log Monitoring & Alerting: observability/log-monitoring-and-alerting.md
+  - ChatOps: chatops/chatops.md
   - API Reference:
       - Todo API: api/todo-api.md
       - Todo MCP: api/todo-mcp.md
