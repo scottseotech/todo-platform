@@ -1211,6 +1211,10 @@
 </tr>
 </tbody>
 </table>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>Click the node description to jump to the detailed explanation section.</p>
+</div>
 <h2 id="observability-architecture">Observability Architecture</h2>
 <pre class="mermaid"><code>graph TB
     subgraph "Application Layer"
@@ -1260,6 +1264,11 @@
     LOKI --&gt;|query| GRAFANA
     PROMDB --&gt;|query| GRAFANA
 
+    click OTEL "/observability/observability/#opentelemetry-implementation" "tool tip"
+    click TEMPODB "/observability/observability/#tempo-distributed-tracing" "tool tip"
+    click LOKI "/observability/observability/#loki-log-aggregation" "tool tip"
+    click PROMDB "/observability/observability/#prometheus-metrics" "tool tip"
+    click GRAFANA "/observability/observability/#grafana-unified-dashboard" "tool tip"
 </code></pre>
 <p><strong>Data Flow:</strong></p>
 <ul>
