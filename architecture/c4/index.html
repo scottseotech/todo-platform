@@ -12,13 +12,13 @@
         <meta name="author" content="DevOps Reference Platform">
       
       
-        <link rel="canonical" href="https://docs.scottseo.tech/architecture/overview/">
+        <link rel="canonical" href="https://docs.scottseo.tech/architecture/c4/">
       
       
-        <link rel="prev" href="../..">
+        <link rel="prev" href="../overview/">
       
       
-        <link rel="next" href="../c4/">
+        <link rel="next" href="../adr/">
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
@@ -26,7 +26,7 @@
     
     
       
-        <title>Overview - DevOps Reference Platform</title>
+        <title>C4 Diagrams - DevOps Reference Platform</title>
       
     
     
@@ -81,7 +81,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#architecture-overview" class="md-skip">
+        <a href="#c4-architecture-diagrams" class="md-skip">
           Skip to content
         </a>
       
@@ -115,7 +115,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Overview
+              C4 Diagrams
             
           </span>
         </div>
@@ -242,7 +242,7 @@
     
     
       <li class="md-tabs__item md-tabs__item--active">
-        <a href="./" class="md-tabs__link">
+        <a href="../overview/" class="md-tabs__link">
           
   
   Architecture
@@ -453,6 +453,27 @@
                 
   
   
+  
+  
+    <li class="md-nav__item">
+      <a href="../overview/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Overview
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
     
   
   
@@ -469,7 +490,7 @@
           
   
   <span class="md-ellipsis">
-    Overview
+    C4 Diagrams
   </span>
   
 
@@ -480,7 +501,7 @@
         
   
   <span class="md-ellipsis">
-    Overview
+    C4 Diagrams
   </span>
   
 
@@ -502,155 +523,74 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#system-architecture" class="md-nav__link">
+  <a href="#about-c4-model" class="md-nav__link">
     <span class="md-ellipsis">
-      System Architecture
+      About C4 Model
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#interface-layer" class="md-nav__link">
+  <a href="#level-1-system-context" class="md-nav__link">
     <span class="md-ellipsis">
-      Interface Layer
+      Level 1: System Context
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#application-layer" class="md-nav__link">
+  <a href="#level-2-container-diagram" class="md-nav__link">
     <span class="md-ellipsis">
-      Application Layer
+      Level 2: Container Diagram
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="Application Layer">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#todo-mcp-server" class="md-nav__link">
-    <span class="md-ellipsis">
-      Todo MCP Server
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#todo-rest-api" class="md-nav__link">
-    <span class="md-ellipsis">
-      Todo Rest API
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#data-layer" class="md-nav__link">
+  <a href="#level-3-component-diagram-todo-api" class="md-nav__link">
     <span class="md-ellipsis">
-      Data Layer
+      Level 3: Component Diagram - Todo API
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="Data Layer">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#backup-flow" class="md-nav__link">
-    <span class="md-ellipsis">
-      Backup Flow
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#postgresql-database" class="md-nav__link">
-    <span class="md-ellipsis">
-      PostgreSQL Database
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#minio-s3" class="md-nav__link">
-    <span class="md-ellipsis">
-      MinIO S3
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#observability-layer" class="md-nav__link">
+  <a href="#level-3-component-diagram-mcp-server" class="md-nav__link">
     <span class="md-ellipsis">
-      Observability Layer
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Observability Layer">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#observability-flow" class="md-nav__link">
-    <span class="md-ellipsis">
-      Observability Flow
+      Level 3: Component Diagram - MCP Server
     </span>
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#tempo-traces" class="md-nav__link">
+      
+        <li class="md-nav__item">
+  <a href="#deployment-diagram" class="md-nav__link">
     <span class="md-ellipsis">
-      Tempo - Traces
+      Deployment Diagram
     </span>
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#loki-logs" class="md-nav__link">
+      
+        <li class="md-nav__item">
+  <a href="#benefits-of-c4-diagrams" class="md-nav__link">
     <span class="md-ellipsis">
-      Loki - Logs
+      Benefits of C4 Diagrams
     </span>
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#prometheus-metrics" class="md-nav__link">
+      
+        <li class="md-nav__item">
+  <a href="#related-documentation" class="md-nav__link">
     <span class="md-ellipsis">
-      Prometheus - Metrics
+      Related Documentation
     </span>
   </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#grafana-dashboard" class="md-nav__link">
-    <span class="md-ellipsis">
-      Grafana - Dashboard
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -658,27 +598,6 @@
   
 </nav>
       
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../c4/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    C4 Diagrams
-  </span>
-  
-
-      </a>
     </li>
   
 
@@ -1102,155 +1021,74 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#system-architecture" class="md-nav__link">
+  <a href="#about-c4-model" class="md-nav__link">
     <span class="md-ellipsis">
-      System Architecture
+      About C4 Model
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#interface-layer" class="md-nav__link">
+  <a href="#level-1-system-context" class="md-nav__link">
     <span class="md-ellipsis">
-      Interface Layer
+      Level 1: System Context
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#application-layer" class="md-nav__link">
+  <a href="#level-2-container-diagram" class="md-nav__link">
     <span class="md-ellipsis">
-      Application Layer
+      Level 2: Container Diagram
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="Application Layer">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#todo-mcp-server" class="md-nav__link">
-    <span class="md-ellipsis">
-      Todo MCP Server
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#todo-rest-api" class="md-nav__link">
-    <span class="md-ellipsis">
-      Todo Rest API
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#data-layer" class="md-nav__link">
+  <a href="#level-3-component-diagram-todo-api" class="md-nav__link">
     <span class="md-ellipsis">
-      Data Layer
+      Level 3: Component Diagram - Todo API
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="Data Layer">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#backup-flow" class="md-nav__link">
-    <span class="md-ellipsis">
-      Backup Flow
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#postgresql-database" class="md-nav__link">
-    <span class="md-ellipsis">
-      PostgreSQL Database
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#minio-s3" class="md-nav__link">
-    <span class="md-ellipsis">
-      MinIO S3
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#observability-layer" class="md-nav__link">
+  <a href="#level-3-component-diagram-mcp-server" class="md-nav__link">
     <span class="md-ellipsis">
-      Observability Layer
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Observability Layer">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#observability-flow" class="md-nav__link">
-    <span class="md-ellipsis">
-      Observability Flow
+      Level 3: Component Diagram - MCP Server
     </span>
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#tempo-traces" class="md-nav__link">
+      
+        <li class="md-nav__item">
+  <a href="#deployment-diagram" class="md-nav__link">
     <span class="md-ellipsis">
-      Tempo - Traces
+      Deployment Diagram
     </span>
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#loki-logs" class="md-nav__link">
+      
+        <li class="md-nav__item">
+  <a href="#benefits-of-c4-diagrams" class="md-nav__link">
     <span class="md-ellipsis">
-      Loki - Logs
+      Benefits of C4 Diagrams
     </span>
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#prometheus-metrics" class="md-nav__link">
+      
+        <li class="md-nav__item">
+  <a href="#related-documentation" class="md-nav__link">
     <span class="md-ellipsis">
-      Prometheus - Metrics
+      Related Documentation
     </span>
   </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#grafana-dashboard" class="md-nav__link">
-    <span class="md-ellipsis">
-      Grafana - Dashboard
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -1272,206 +1110,272 @@
   
 
 
-<h1 id="architecture-overview">Architecture Overview</h1>
-<p>The Todo Platform is a cloud-native Kubernetes application demonstrating production-ready DevOps practices including GitOps, comprehensive observability, and automated database operations.</p>
+<h1 id="c4-architecture-diagrams">C4 Architecture Diagrams</h1>
 <div class="admonition tip">
-<p class="admonition-title">Tip</p>
-<p>Click the node description to jump to the detailed explanation section.</p>
+<p class="admonition-title">Best Viewed in Light Mode</p>
+<p>For optimal visibility of diagram labels and relationship text, switch to light mode using the theme toggle in the header (☀️/🌙 icon).</p>
 </div>
-<h2 id="system-architecture">System Architecture</h2>
-<pre class="mermaid"><code>graph TB
-    subgraph "Interface Layer"
-        SU[Slack App]
-        SS[Slack Server]
-        AI[AI Assistant]
-        AM[LLM]
-    end
+<h2 id="about-c4-model">About C4 Model</h2>
+<p>The <strong>C4 model</strong> provides a hierarchical approach to documenting software architecture through four levels of abstraction: Context, Containers, Components, and Code. These diagrams help visualize the system at different zoom levels—from high-level system landscape to detailed component interactions.</p>
+<p>This platform uses C4 diagrams to demonstrate:</p>
+<ul>
+<li>How external systems interact with the platform (Context)</li>
+<li>What containers (deployable units) make up the system (Containers)</li>
+<li>How components within services are organized (Components)</li>
+</ul>
+<hr />
+<h2 id="level-1-system-context">Level 1: System Context</h2>
+<p>The highest level view showing how the DevOps Reference Platform fits into the broader ecosystem.</p>
+<pre class="mermaid"><code>C4Context
+    title System Context - DevOps Reference Platform
 
-    subgraph "Application Layer"
-        MCP[MCP Server]
-        API[REST API]
-    end
+    Person(user, "Platform User", "Developer or operator managing applications")
+    Person(enduser, "End User", "User interacting via Slack")
 
-    subgraph "Data Layer"
-        PG[(PostgreSQL&lt;br/&gt;Database)]
-        MIN[(MinIO/S3)]
-    end
+    System(platform, "DevOps Reference Platform", "Kubernetes-based platform demonstrating GitOps, observability, and ChatOps patterns")
 
-    subgraph "Observability Layer"
-        Tempo[Tempo&lt;br/&gt;Traces]
-        Loki[Loki&lt;br/&gt;Logs]
-        Prom[Prometheus&lt;br/&gt;Metrics]
-        Graf[Grafana&lt;br/&gt;Dashboards]
-    end
+    System_Ext(github, "GitHub", "Source control and CI/CD automation")
+    System_Ext(dockerhub, "Docker Hub", "Container image registry")
+    System_Ext(slack, "Slack", "Chat interface for operations")
+    System_Ext(openai, "OpenAI", "LLM provider for AI features")
 
-    SU --&gt; SS
+    Rel(user, platform, "Deploys code, monitors", "Git, kubectl, Grafana")
+    Rel(enduser, slack, "Manages todos", "Slack messages")
+    Rel(slack, platform, "Sends commands", "MCP protocol")
+    Rel(platform, openai, "Processes natural language", "OpenAI API")
+    Rel(platform, github, "Triggers workflows, fetches code", "GitHub API")
+    Rel(platform, dockerhub, "Pulls images", "Docker Registry API")
+    Rel(github, dockerhub, "Pushes built images", "Docker Registry API")
 
-    SS --&gt; AI
-    AI --&gt; MCP
-    MCP --&gt; API
-    API --&gt; PG
+    UpdateLayoutConfig($c4ShapeInRow="3", $c4BoundaryInRow="1")</code></pre>
+<p><strong>Key Interactions:</strong></p>
+<ul>
+<li>Users deploy via Git → GitHub Actions → ArgoCD → Kubernetes</li>
+<li>End users interact via Slack → MCP Server → REST API</li>
+<li>Platform pulls images from Docker Hub for deployments</li>
+<li>LLM processes natural language commands through OpenAI</li>
+</ul>
+<hr />
+<h2 id="level-2-container-diagram">Level 2: Container Diagram</h2>
+<p>Shows the high-level technical building blocks (containers) that make up the platform.</p>
+<pre class="mermaid"><code>C4Container
+    title Container Diagram - DevOps Reference Platform
 
-    API -.traces.-&gt; Tempo
-    MCP -.traces.-&gt; Tempo
-    API -.logs.-&gt; Loki
-    MCP -.logs.-&gt; Loki
-    API -.metrics.-&gt; Prom
+    Person(user, "End User", "Manages todos via Slack")
+    Person(operator, "Operator", "Manages platform")
 
-    Tempo --&gt; Graf
-    Loki --&gt; Graf
-    Prom --&gt; Graf
+    System_Boundary(platform, "DevOps Reference Platform") {
+        Container(slackbot, "Slack Bot", "Python, Bolt SDK", "Handles Slack events and commands")
+        Container(mcp, "MCP Server", "Go", "Model Context Protocol server for AI tool calling")
+        Container(api, "Todo API", "Go, Gin", "REST API for todo operations")
+        ContainerDb(db, "Database", "PostgreSQL, CNPG", "Stores todo data with HA")
 
-    click MCP "/architecture/overview/#todo-mcp-server" "tool tip"
-    click API "/architecture/overview/#todo-rest-api" "tool tip"
+        Container(argocd, "ArgoCD", "Kubernetes Operator", "GitOps continuous deployment")
+        Container(arc, "ARC Runners", "Kubernetes, GitHub Actions", "Self-hosted CI/CD runners")
 
-    click SU "/architecture/overview/#interface-layer" "tool tip"
-    click SS "/architecture/overview/#interface-layer" "tool tip"
-    click AI "/architecture/overview/#interface-layer" "tool tip"
-    click AM "/architecture/overview/#interface-layer" "tool tip"
+        Container(tempo, "Tempo", "Grafana Tempo", "Distributed tracing storage")
+        Container(loki, "Loki", "Grafana Loki", "Log aggregation and storage")
+        Container(prometheus, "Prometheus", "Prometheus", "Metrics collection")
+        Container(grafana, "Grafana", "Grafana", "Unified observability dashboard")
 
-    click PG "/architecture/overview/#postgresql-database" "tool tip"
-    click MIN "/architecture/overview/#minio-s3" "tool tip"
+        Container(minio, "MinIO", "S3-compatible storage", "Backup storage for DB and logs")
+    }
 
-    click Tempo "/architecture/overview/#tempo-traces" "tool tip"
-    click Loki "/architecture/overview/#loki-logs" "tool tip"
-    click Prom "/architecture/overview/#prometheus-metrics" "tool tip"
-    click Graf "/architecture/overview/#grafana-dashboard" "tool tip"</code></pre>
-<h2 id="interface-layer">Interface Layer</h2>
-<p>The interface layer provides user-facing access to the todo platform through AI-powered natural language interaction via Slack.</p>
-<details class="note">
-<summary>Show more details</summary>
-<p><strong>Components:</strong></p>
+    System_Ext(github, "GitHub", "Source control and workflows")
+    System_Ext(dockerhub, "Docker Hub", "Container registry")
+    System_Ext(openai, "OpenAI API", "LLM provider")
+
+    Rel(user, slackbot, "Sends commands", "Slack API")
+    Rel(slackbot, openai, "Processes NL", "HTTPS")
+    Rel(slackbot, mcp, "Invokes tools", "HTTP/MCP")
+    Rel(mcp, api, "CRUD operations", "HTTP/REST")
+    Rel(api, db, "Reads/writes", "PostgreSQL")
+
+    Rel(operator, grafana, "Views metrics/traces", "HTTPS")
+    Rel(api, tempo, "Sends traces", "OTLP/gRPC")
+    Rel(api, prometheus, "Exposes metrics", "/metrics")
+    Rel(mcp, tempo, "Sends traces", "OTLP/gRPC")
+    Rel(mcp, prometheus, "Exposes metrics", "/metrics")
+
+    Rel(grafana, tempo, "Queries traces", "HTTP")
+    Rel(grafana, loki, "Queries logs", "HTTP")
+    Rel(grafana, prometheus, "Queries metrics", "PromQL")
+
+    Rel(db, minio, "Continuous backup", "S3 API")
+    Rel(loki, minio, "Stores logs", "S3 API")
+
+    Rel(github, arc, "Dispatches jobs", "GitHub API")
+    Rel(arc, dockerhub, "Pushes images", "Docker API")
+    Rel(argocd, github, "Syncs manifests", "Git")
+
+    UpdateLayoutConfig($c4ShapeInRow="4", $c4BoundaryInRow="2")</code></pre>
+<p><strong>Key Containers:</strong></p>
 <ul>
-<li><strong>Slack App</strong> - User-facing Slack application where users send natural language commands and receive responses</li>
-<li><strong>Slack Server</strong> - Slack's infrastructure that receives events and routes messages between users and the AI assistant</li>
-<li><strong>AI Assistant</strong> - Intelligent agent that interprets user intent, invokes MCP tools, and formats responses in natural language</li>
-<li><strong>LLM</strong> - Large language model that powers the AI assistant's natural language understanding and generation capabilities</li>
+<li><strong>Application Services</strong>: Slack Bot, MCP Server, Todo API</li>
+<li><strong>Data Storage</strong>: PostgreSQL (CNPG), MinIO</li>
+<li><strong>Platform Services</strong>: ArgoCD, ARC Runners</li>
+<li><strong>Observability</strong>: Tempo, Loki, Prometheus, Grafana</li>
 </ul>
-<p><strong>User Flow:</strong></p>
-<ol>
-<li>User sends a message in Slack (e.g., "Add buy groceries to my todo list")</li>
-<li>Slack Server forwards the event to the AI Assistant</li>
-<li>AI Assistant uses the LLM to interpret the user's intent</li>
-<li>LLM determines which MCP tool to invoke (e.g., <code>todos-add</code>)</li>
-<li>AI Assistant calls the MCP Server with structured parameters</li>
-<li>Response flows back through the AI Assistant, which formats a natural language reply</li>
-<li>User receives the result in Slack</li>
-</ol>
-<p>This architecture enables users to manage todos through conversational AI without needing to learn commands or syntax.</p>
-</details>
-<h2 id="application-layer">Application Layer</h2>
-<h3 id="todo-mcp-server">Todo MCP Server</h3>
-<details class="note">
-<summary>Show more details</summary>
-<p>MCP server providing AI-friendly tool interfaces for todo operations. Implements the full MCP specification including:</p>
-<p><strong>Tools</strong> - Four core operations:</p>
+<hr />
+<h2 id="level-3-component-diagram-todo-api">Level 3: Component Diagram - Todo API</h2>
+<p>Detailed view of components within the Todo API service.</p>
+<pre class="mermaid"><code>C4Component
+    title Component Diagram - Todo API Service
+
+    Person(client, "API Client", "MCP Server or direct HTTP client")
+
+    Container_Boundary(api, "Todo API") {
+        Component(router, "HTTP Router", "Gin", "Routes HTTP requests to handlers")
+        Component(handler, "Todo Handlers", "Go", "HTTP request handlers for CRUD operations")
+        Component(service, "Todo Service", "Go", "Business logic for todo operations")
+        Component(repository, "Todo Repository", "Go, GORM", "Data access layer")
+        Component(otel, "OpenTelemetry", "OTEL SDK", "Trace instrumentation")
+        Component(metrics, "Metrics Exporter", "Prometheus", "Exposes /metrics endpoint")
+    }
+
+    ContainerDb(db, "PostgreSQL", "CloudNativePG", "Todo data storage")
+    Container(tempo, "Tempo", "Trace collector", "Receives traces")
+    Container(prometheus, "Prometheus", "Metrics scraper", "Scrapes /metrics")
+
+    Rel(client, router, "HTTP requests", "REST/JSON")
+    Rel(router, handler, "Dispatch", "Function call")
+    Rel(handler, service, "Business operations", "Function call")
+    Rel(service, repository, "Data operations", "Function call")
+    Rel(repository, db, "SQL queries", "PostgreSQL protocol")
+
+    Rel(handler, otel, "Create spans", "OTEL SDK")
+    Rel(service, otel, "Create spans", "OTEL SDK")
+    Rel(otel, tempo, "Export traces", "OTLP/gRPC :4317")
+
+    Rel(metrics, prometheus, "Scraped by", "HTTP :8080/metrics")
+
+    UpdateLayoutConfig($c4ShapeInRow="3", $c4BoundaryInRow="1")</code></pre>
+<p><strong>Component Responsibilities:</strong></p>
 <ul>
-<li><code>todos-add</code> - Create new todos</li>
-<li><code>todos-list</code> - Query existing todos</li>
-<li><code>todos-update</code> - Modify todo status/details</li>
-<li><code>todos-delete</code> - Remove todos</li>
+<li><strong>Router</strong>: Request routing with middleware (CORS, logging, recovery)</li>
+<li><strong>Handlers</strong>: HTTP-specific logic, request validation, response serialization</li>
+<li><strong>Service</strong>: Business rules, transaction management, error handling</li>
+<li><strong>Repository</strong>: Database queries, ORM mapping, connection pooling</li>
+<li><strong>OpenTelemetry</strong>: Span creation, context propagation, trace export</li>
+<li><strong>Metrics</strong>: Prometheus metrics (request counts, latencies, errors)</li>
 </ul>
-<p><strong>Resources</strong> - Dynamic todo data exposure:</p>
+<hr />
+<h2 id="level-3-component-diagram-mcp-server">Level 3: Component Diagram - MCP Server</h2>
+<p>Detailed view of components within the MCP Server.</p>
+<pre class="mermaid"><code>C4Component
+    title Component Diagram - MCP Server
+
+    Person(ai, "AI Assistant", "OpenAI or compatible LLM")
+
+    Container_Boundary(mcp, "MCP Server") {
+        Component(server, "MCP Server", "Go, MCP SDK", "Handles MCP protocol requests")
+        Component(tools, "Tool Registry", "Go", "Registers and dispatches tool calls")
+        Component(todotool, "Todo Tools", "Go", "MCP tools for todo operations")
+        Component(client, "API Client", "Go, HTTP client", "Communicates with Todo API")
+        Component(otel, "OpenTelemetry", "OTEL SDK", "Trace instrumentation")
+    }
+
+    Container(api, "Todo API", "REST API", "Backend service")
+    Container(tempo, "Tempo", "Trace collector", "Receives traces")
+
+    Rel(ai, server, "Tool invocations", "MCP/JSON-RPC")
+    Rel(server, tools, "Dispatch tool", "Function call")
+    Rel(tools, todotool, "Execute", "Function call")
+    Rel(todotool, client, "HTTP requests", "REST/JSON")
+    Rel(client, api, "API calls", "HTTP")
+
+    Rel(server, otel, "Create spans", "OTEL SDK")
+    Rel(todotool, otel, "Create spans", "OTEL SDK")
+    Rel(otel, tempo, "Export traces", "OTLP/gRPC :4317")
+
+    UpdateLayoutConfig($c4ShapeInRow="3", $c4BoundaryInRow="1")</code></pre>
+<p><strong>Component Responsibilities:</strong></p>
 <ul>
-<li><code>todos://with-due-date</code> - Real-time todo list with due date as structured resource</li>
+<li><strong>MCP Server</strong>: Protocol handling, JSON-RPC transport, tool discovery</li>
+<li><strong>Tool Registry</strong>: Tool registration, validation, dispatch</li>
+<li><strong>Todo Tools</strong>: MCP tool implementations (add, list, complete, delete todos)</li>
+<li><strong>API Client</strong>: HTTP client with retry logic, timeout handling</li>
+<li><strong>OpenTelemetry</strong>: Trace context extraction/injection, span lifecycle</li>
 </ul>
-<p><strong>Prompts</strong> - Pre-configured interaction templates for AI assistants:</p>
+<hr />
+<h2 id="deployment-diagram">Deployment Diagram</h2>
+<p>Shows how containers are deployed to infrastructure.</p>
+<pre class="mermaid"><code>C4Deployment
+    title Deployment Diagram - Kubernetes Cluster
+
+    Deployment_Node(k8s, "Kubernetes Cluster", "K3s") {
+        Deployment_Node(default_ns, "Namespace: default") {
+            Container(slackbot, "Slack Bot", "Deployment")
+            Container(mcp, "MCP Server", "Deployment")
+            Container(api, "Todo API", "Deployment")
+        }
+
+        Deployment_Node(cnpg_ns, "Namespace: cnpg") {
+            ContainerDb(db, "PostgreSQL Cluster", "StatefulSet, 2 replicas")
+        }
+
+        Deployment_Node(argocd_ns, "Namespace: argocd") {
+            Container(argocd, "ArgoCD", "Deployment")
+        }
+
+        Deployment_Node(arc_ns, "Namespace: arc-runners") {
+            Container(arc, "GitHub Runners", "ScaleSet, 2-5 replicas")
+        }
+
+        Deployment_Node(monitoring_ns, "Namespace: monitoring") {
+            Container(grafana, "Grafana", "Deployment")
+            Container(prometheus, "Prometheus", "StatefulSet")
+            Container(tempo, "Tempo", "Deployment")
+            Container(loki, "Loki", "StatefulSet")
+        }
+
+        Deployment_Node(minio_ns, "Namespace: minio") {
+            Container(minio, "MinIO", "StatefulSet, 4 replicas")
+        }
+    }
+
+    Deployment_Node(external, "External Services") {
+        System_Ext(github, "GitHub")
+        System_Ext(dockerhub, "Docker Hub")
+        System_Ext(slack, "Slack")
+    }
+
+    Rel(argocd, github, "Git sync")
+    Rel(arc, github, "Job execution")
+    Rel(arc, dockerhub, "Image push")
+    Rel(slackbot, slack, "Events")
+
+    UpdateLayoutConfig($c4ShapeInRow="2", $c4BoundaryInRow="1")</code></pre>
+<p><strong>Deployment Characteristics:</strong></p>
 <ul>
-<li><code>todos-add</code> - Guided prompt for creating new todos with proper context</li>
-<li><code>todos-update</code> - Guided prompt for updating existing todos</li>
+<li><strong>High Availability</strong>: Database with 2 replicas, auto-failover</li>
+<li><strong>Auto-Scaling</strong>: ARC runners scale 2-5 based on job queue</li>
+<li><strong>Resource Isolation</strong>: Separate namespaces for different concerns</li>
+<li><strong>StatefulSets</strong>: Used for databases and storage requiring persistent volumes</li>
+<li><strong>Deployments</strong>: Used for stateless application services</li>
 </ul>
-<p>Prompts demonstrate full MCP specification compliance and can be tested directly in VS Code with GitHub Copilot's MCP integration.</p>
-<p>Built with Go, supports both HTTP and SSE transports, and instrumented with OpenTelemetry for distributed tracing.</p>
-</details>
-<h3 id="todo-rest-api">Todo Rest API</h3>
-<details class="note">
-<summary>Show more details</summary>
-<p>RESTful API service built with Go and the Gin framework. Provides CRUD endpoints for todo management with:</p>
+<h2 id="benefits-of-c4-diagrams">Benefits of C4 Diagrams</h2>
+<p><strong>For this platform:</strong></p>
 <ul>
-<li>GORM ORM for database operations</li>
-<li>OpenTelemetry instrumentation for traces</li>
-<li>Automatic Prometheus metrics exposure</li>
-<li>Database connection pooling</li>
+<li><strong>Context</strong>: Shows how external systems integrate (GitHub, Slack, OpenAI)</li>
+<li><strong>Containers</strong>: Reveals the microservices architecture and infrastructure services</li>
+<li><strong>Components</strong>: Demonstrates internal service organization and patterns</li>
+<li><strong>Deployment</strong>: Illustrates Kubernetes topology and scaling characteristics</li>
 </ul>
-</details>
-<h2 id="data-layer">Data Layer</h2>
-<h3 id="backup-flow">Backup Flow</h3>
+<p><strong>For recruiters/engineers:</strong></p>
 <ul>
-<li>CNPG operator performs daily PostgreSQL backups</li>
-<li>Point-in-time recovery available from backup archives</li>
+<li>Hierarchical views from business context to technical detail</li>
+<li>Clear separation of concerns across namespaces</li>
+<li>Observable patterns: tracing, metrics, logging flows</li>
+<li>Production patterns: HA databases, auto-scaling, GitOps</li>
 </ul>
-<h3 id="postgresql-database">PostgreSQL Database</h3>
-<details class="note">
-<summary>Show more details</summary>
-<p>High-availability PostgreSQL cluster managed by the CloudNativePG operator:</p>
+<h2 id="related-documentation">Related Documentation</h2>
 <ul>
-<li>2-instance cluster for redundancy</li>
-<li>Automated daily backups to MinIO S3 (2 AM UTC)</li>
-<li>Point-in-time recovery capability</li>
-<li>Read-write service: <code>todo-db-rw.cnpg.svc.cluster.local</code></li>
+<li><a href="../overview/">Architecture Overview</a></li>
+<li><a href="../adr/">Architecture Decision Records</a></li>
+<li><a href="../../deployment/kubernetes/">Deployment Documentation</a></li>
+<li><a href="../../observability/observability/">Observability Stack</a></li>
 </ul>
-</details>
-<h3 id="minio-s3">MinIO S3</h3>
-<details class="note">
-<summary>Show more details</summary>
-<p>S3-compatible object storage serving dual purposes:</p>
-<ul>
-<li><strong>PostgreSQL Backups</strong>: Daily CNPG automated backups with retention policies</li>
-<li><strong>Log Storage</strong>: Loki long-term log retention</li>
-</ul>
-</details>
-<h2 id="observability-layer">Observability Layer</h2>
-<h3 id="observability-flow">Observability Flow</h3>
-<ul>
-<li><strong>Traces</strong>: Each request generates spans across MCP → API → Database, collected by Tempo</li>
-<li><strong>Metrics</strong>: Prometheus scrapes all services, storing time-series data</li>
-<li><strong>Logs</strong>: Fluent Bit ships logs to Loki, which stores in MinIO</li>
-<li><strong>Alerts</strong>: Grafana evaluates alert rules and notifies Slack on threshold violations(TODO)</li>
-</ul>
-<h3 id="tempo-traces">Tempo - Traces</h3>
-<details class="note">
-<summary>Show more details</summary>
-<p>Collects distributed traces via OpenTelemetry:</p>
-<ul>
-<li>End-to-end request tracing from SlackBot(TODO) → MCP → API → Database</li>
-<li>W3C Trace Context propagation</li>
-<li>OTLP gRPC ingestion (port 4317)</li>
-<li>Trace correlation with logs and metrics (TODO)</li>
-</ul>
-</details>
-<h3 id="loki-logs">Loki - Logs</h3>
-<details class="note">
-<summary>Show more details</summary>
-<p>Centralized log aggregation with S3 storage:</p>
-<ul>
-<li>Collects structured logs from all services</li>
-<li>Fluent Bit agents for log shipping</li>
-<li>MinIO S3 backend for long-term retention</li>
-<li>Full-text search and filtering in Grafana</li>
-</ul>
-</details>
-<h3 id="prometheus-metrics">Prometheus - Metrics</h3>
-<details class="note">
-<summary>Show more details</summary>
-<p>Scrapes metrics from all services every 15 seconds:</p>
-<ul>
-<li><strong>Todo MCP Server</strong>: General golang runtime metrics</li>
-<li><strong>Todo API</strong>: General golang runtime metrics</li>
-<li><strong>PostgreSQL</strong>: Database performance, replication lag, operational stats</li>
-</ul>
-</details>
-<h3 id="grafana-dashboard">Grafana - Dashboard</h3>
-<details class="note">
-<summary>Show more details</summary>
-<p>Unified observability dashboard:</p>
-<ul>
-<li>Queries Prometheus for metrics visualization</li>
-<li>Queries Tempo for trace exploration</li>
-<li>Queries Loki for log analysis</li>
-<li>Alert routing to Slack for critical events(TODO)</li>
-<li>Correlation between traces, metrics, and logs(TODO)</li>
-</ul>
-</details>
 
 
 
