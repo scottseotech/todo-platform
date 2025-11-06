@@ -22,6 +22,9 @@ All telemetry flows to Grafana for unified visualization and correlation.
 | **Prometheus** | Metrics collection | Time-series monitoring, alerting rules |
 | **Grafana** | Visualization | Unified dashboards, trace/log/metric correlation |
 
+!!! tip "Tip"
+    Click the node description to jump to the detailed explanation section.
+
 ## Observability Architecture
 
 ```mermaid
@@ -73,6 +76,11 @@ graph TB
     LOKI -->|query| GRAFANA
     PROMDB -->|query| GRAFANA
 
+    click OTEL "/observability/observability/#opentelemetry-implementation" "tool tip"
+    click TEMPODB "/observability/observability/#tempo-distributed-tracing" "tool tip"
+    click LOKI "/observability/observability/#loki-log-aggregation" "tool tip"
+    click PROMDB "/observability/observability/#prometheus-metrics" "tool tip"
+    click GRAFANA "/observability/observability/#grafana-unified-dashboard" "tool tip"
 
 ```
 
