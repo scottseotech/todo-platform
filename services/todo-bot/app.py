@@ -19,6 +19,7 @@ from backends import OpenAIBackend
 from handlers.todos import todo_slash_command
 from handlers.events import app_mention
 from handlers.deploy import deploy_slash_command, handle_deploy_submission
+from otel_config import init_telemetry
 
 # Load environment variables
 load_dotenv()
@@ -32,6 +33,10 @@ logger = logging.getLogger(__name__)
 
 # Initialize Flask web server for health checks
 web_app = Flask(__name__)
+
+# Initialize OpenTelemetry (must happen before Flask routes)
+# This sets up the global TracerProvider via trace.set_tracer_provider(provider)
+tracer = init_telemetry(app=web_app)
 
 log = logging.getLogger('werkzeug')
 log.setLevel(logging.WARNING)

@@ -4,6 +4,7 @@ import (
 	"context"
 	_ "embed"
 	"log"
+	"net/http"
 	"os"
 	"os/signal"
 	"syscall"
@@ -69,8 +70,13 @@ func main() {
 	// Initialize Gin router
 	router := gin.Default()
 
-	// Add OpenTelemetry middleware
-	router.Use(otelgin.Middleware("todo-api"))
+	// Add OpenTelemetry middleware with filter to exclude health/metrics
+	router.Use(otelgin.Middleware("todo-api",
+		otelgin.WithFilter(func(r *http.Request) bool {
+			// Exclude health and metrics endpoints from tracing
+			return r.URL.Path != "/health" && r.URL.Path != "/metrics"
+		}),
+	))
 
 	router.Use(cors.New(cors.Config{
 		AllowOrigins: []string{

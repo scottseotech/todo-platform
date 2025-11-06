@@ -45,8 +45,13 @@ func main() {
 	router.Use(gin.Recovery())
 	router.Use(gin.Logger())
 
-	// Add OpenTelemetry middleware
-	router.Use(otelgin.Middleware("todo-mcp"))
+	// Add OpenTelemetry middleware with filter to exclude health/metrics
+	router.Use(otelgin.Middleware("todo-mcp",
+		otelgin.WithFilter(func(r *http.Request) bool {
+			// Exclude health and metrics endpoints from tracing
+			return r.URL.Path != "/health" && r.URL.Path != "/metrics"
+		}),
+	))
 
 	router.Use(cors.New(cors.Config{
 		AllowOrigins: []string{

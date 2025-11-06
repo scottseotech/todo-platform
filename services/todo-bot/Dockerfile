@@ -39,6 +39,13 @@ EOF
 
 USER botuser
 
+# OpenTelemetry configuration
+ENV OTEL_ENABLED=true
+ENV OTEL_SERVICE_NAME=todo-bot
+ENV OTEL_EXPORTER_OTLP_ENDPOINT=tempo:4317
+ENV OTEL_EXPORTER_OTLP_INSECURE=true
+ENV OTEL_ENABLE_STDOUT=false
+
 # Expose health check port
 EXPOSE 8082
 

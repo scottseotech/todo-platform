@@ -40,6 +40,16 @@ spec:
                 secretKeyRef:
                   name: todo-bot-secret
                   key: OPENAI_API_KEY
+            - name: OTEL_ENABLED
+              value: "true"
+            - name: OTEL_SERVICE_NAME
+              value: "todo-bot"
+            - name: OTEL_EXPORTER_OTLP_ENDPOINT
+              value: "tempo.observability.svc.cluster.local:4317"
+            - name: OTEL_EXPORTER_OTLP_INSECURE
+              value: "true"
+            - name: OTEL_ENABLE_STDOUT
+              value: "false"
           livenessProbe:
             httpGet:
               path: /health

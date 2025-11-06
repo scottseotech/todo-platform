@@ -164,7 +164,7 @@ The interface layer provides user-facing access to the todo platform through AI-
 ??? note "Show more details"
     Collects distributed traces via OpenTelemetry:
 
-    - End-to-end request tracing from SlackBot(TODO) → MCP → API → Database
+    - End-to-end request tracing from SlackBot → MCP → API → Database
     - W3C Trace Context propagation
     - OTLP gRPC ingestion (port 4317)
     - Trace correlation with logs and metrics (TODO)

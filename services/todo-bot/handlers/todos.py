@@ -6,8 +6,10 @@ import logging
 import os
 from datetime import datetime
 from todoclient import TodoClient
+from opentelemetry import trace
 
 logger = logging.getLogger(__name__)
+tracer = trace.get_tracer(__name__)
 
 # Configuration
 TODO_API_URL = os.environ.get("TODO_API_URL", "http://localhost:8080")
@@ -29,42 +31,58 @@ def todo_slash_command(ack, command, respond):
     # Acknowledge the command request immediately
     ack()
 
-    try:
-        # Extract command text
-        text = command["text"].strip()
-        user_id = command.get("user_id", "unknown")
-        user_name = command.get("user_name", "unknown")
+    with tracer.start_as_current_span(
+        "todo_slash_command",
+        attributes={
+            "slack.command": "/todo",
+            "slack.user_id": command.get("user_id"),
+            "slack.user_name": command.get("user_name"),
+        }
+    ) as span:
+        try:
+            # Extract command text
+            text = command["text"].strip()
+            user_id = command.get("user_id", "unknown")
+            user_name = command.get("user_name", "unknown")
 
-        # Parse subcommand
-        parts = text.split(maxsplit=1) if text else []
+            # Parse subcommand
+            parts = text.split(maxsplit=1) if text else []
 
-        if not parts:
-            # No subcommand - show help
-            _show_help(respond)
-            return
+            if not parts:
+                # No subcommand - show help
+                span.set_attribute("todo.subcommand", "help")
+                _show_help(respond)
+                return
 
-        subcommand = parts[0].lower()
-        args = parts[1] if len(parts) > 1 else ""
+            subcommand = parts[0].lower()
+            args = parts[1] if len(parts) > 1 else ""
 
-        # Route to appropriate handler
-        if subcommand == "add":
-            _handle_add(args, user_id, user_name, respond)
-        elif subcommand == "list":
-            _handle_list(user_id, respond)
-        elif subcommand == "update":
-            _handle_update(args, user_id, user_name, respond)
-        elif subcommand == "delete":
-            _handle_delete(args, user_id, user_name, respond)
-        else:
-            # Backward compatibility: if no subcommand, treat as "add"
-            _handle_add(text, user_id, user_name, respond)
+            span.set_attribute("todo.subcommand", subcommand)
+            span.set_attribute("todo.args", args)
 
-    except Exception as e:
-        logger.error(f"[/todo] Error: {e}", exc_info=True)
-        respond(
-            text="❌ Sorry, something went wrong. Please try again.",
-            response_type="in_channel"
-        )
+            # Route to appropriate handler
+            if subcommand == "add":
+                _handle_add(args, user_id, user_name, respond)
+            elif subcommand == "list":
+                _handle_list(user_id, respond)
+            elif subcommand == "update":
+                _handle_update(args, user_id, user_name, respond)
+            elif subcommand == "delete":
+                _handle_delete(args, user_id, user_name, respond)
+            else:
+                # Backward compatibility: if no subcommand, treat as "add"
+                _handle_add(text, user_id, user_name, respond)
+
+            span.set_status(trace.Status(trace.StatusCode.OK))
+
+        except Exception as e:
+            logger.error(f"[/todo] Error: {e}", exc_info=True)
+            span.record_exception(e)
+            span.set_status(trace.Status(trace.StatusCode.ERROR, str(e)))
+            respond(
+                text="❌ Sorry, something went wrong. Please try again.",
+                response_type="in_channel"
+            )
 
 
 def _show_help(respond):
