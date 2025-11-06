@@ -1433,10 +1433,11 @@
 <summary>Show more details</summary>
 <p>Collects distributed traces via OpenTelemetry:</p>
 <ul>
-<li>End-to-end request tracing from SlackBot → MCP → API → Database</li>
-<li>W3C Trace Context propagation</li>
+<li>Two distributed trace flows: (1) Slack Bot → MCP Server via HTTP/SSE, (2) MCP Server → API → Database via HTTP/REST</li>
+<li>MCP protocol creates a natural trace boundary between flows</li>
+<li>W3C Trace Context propagation within each flow</li>
 <li>OTLP gRPC ingestion (port 4317)</li>
-<li>Trace correlation with logs and metrics (TODO)</li>
+<li>Complete trace-to-log correlation: logs include trace_id and span_id for all services (todo-bot, todo-mcp, todo-api)</li>
 </ul>
 </details>
 <h3 id="loki-logs">Loki - Logs</h3>
@@ -1469,7 +1470,7 @@
 <li>Queries Tempo for trace exploration</li>
 <li>Queries Loki for log analysis</li>
 <li>Alert routing to Slack for critical events(TODO)</li>
-<li>Correlation between traces, metrics, and logs(TODO)</li>
+<li>Correlation between traces, metrics, and logs</li>
 </ul>
 </details>
 

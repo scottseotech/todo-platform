@@ -1276,17 +1276,24 @@
 <li><strong>Logs</strong>: Applications write JSON logs → Fluent Bit → Loki → Grafana</li>
 <li><strong>Metrics</strong>: Applications expose <code>/metrics</code> → Prometheus scrapes → Grafana</li>
 </ul>
-<p>All three signals are correlated(TODO) in Grafana by trace ID for unified debugging.</p>
+<p>All three signals are correlated in Grafana by trace ID for unified debugging.</p>
 <h2 id="opentelemetry-implementation">OpenTelemetry Implementation</h2>
 <p>OpenTelemetry provides vendor-neutral instrumentation for traces, logs, and metrics.</p>
 <details class="note">
 <summary>Trace Propagation</summary>
 <p><strong>W3C Trace Context</strong> propagates trace IDs across service boundaries:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>SlackBot → MCP Server → API → Database
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>   ↓           ↓         ↓ 
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>TraceID: abc123 (same across all services) (TODO)
+<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Trace Flow 1: Slack Bot → MCP Server (HTTP/SSE)
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>              TraceID: abc123
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>Trace Flow 2: MCP Server → API → Database (HTTP/REST)
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>              TraceID: def456 (new trace, MCP protocol boundary)
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>Trace-to-Log Correlation:
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>- All logs include trace_id and span_id
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>- Search Loki by trace_id to see all logs for a request
 </span></code></pre></div>
-<p>Each service extracts the trace context from incoming requests and injects it into outgoing requests.</p>
+<p><strong>Why two trace flows?</strong> The MCP protocol runs JSON-RPC over Server-Sent Events (SSE), which is a long-lived streaming connection. Trace context is not propagated through the JSON-RPC message payloads, creating a natural boundary. However, each flow is fully traced and correlated with logs.</p>
+<p>Each service extracts the trace context from incoming HTTP requests and injects it into outgoing HTTP requests.</p>
 <p><strong>Implementation:</strong></p>
 <div class="language-go highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1">// In todo-api and todo-mcp</span>
 </span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="kn">import</span><span class="w"> </span><span class="s">&quot;go.opentelemetry.io/otel&quot;</span>
@@ -1465,7 +1472,7 @@ For high-traffic production, reduce sampling:
 </ul>
 </details>
 <details class="note">
-<summary>Trace-to-Log Correlation(TODO)</summary>
+<summary>Trace-to-Log Correlation</summary>
 <p>Click on a trace span in Grafana to see associated logs:</p>
 <ol>
 <li>View trace in Tempo</li>
