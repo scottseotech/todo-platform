@@ -1,12 +1,25 @@
-# Building Production-Grade Systems
+# DevOps Reference Platform
 
-## The Challenge
+## Overview
 
-Modern applications need more than just working code—they need **reliability at scale**, **observable behavior**, and **automated operations**. This platform demonstrates how to build a production-ready system that handles the complexity of cloud-native infrastructure while maintaining developer velocity.
+The **DevOps Reference Platform** is a demonstration of production-grade infrastructure patterns and practices. This is not a tutorial—it's a fully-functional reference implementation that showcases how modern cloud-native systems are built and operated.
 
-## What This Platform Demonstrates
+**What this demonstrates:**
+- GitOps-driven deployments with ArgoCD
+- Self-hosted CI/CD with GitHub Actions Runner Controller
+- Full-stack observability (traces, logs, metrics)
+- ChatOps for operational workflows
+- Infrastructure as Code with Kubernetes operators
+- AI integration via Model Context Protocol
 
-This is a **fully-instrumented Kubernetes application** that shows how different pieces of production infrastructure work together:
+**What this is NOT:**
+- A step-by-step tutorial
+- A production-ready product to clone
+- A comprehensive guide to DevOps practices
+
+This platform runs a simple todo application as a reference workload—the value is in the infrastructure, automation, and operational patterns, not the application itself.
+
+## Platform Architecture
 
 ```mermaid
 graph TB
@@ -37,24 +50,24 @@ graph TB
     Obs -.monitors.-> DB
 ```
 
-## Key Technical Decisions
+## Key Demonstrations
 
-Each component was chosen to demonstrate a different production skill:
+Each component showcases a different production capability:
 
 **AI Integration via Model Context Protocol (MCP)**
-Instead of hard-coding AI features, this uses the emerging MCP standard. Shows understanding of: abstraction layers, protocol design, and future-proofing integrations.
+The platform uses the emerging MCP standard instead of proprietary AI APIs. Demonstrates: abstraction layers, protocol design, and vendor independence for AI integrations.
 
 **GitOps with ArgoCD**
-Deployments happen through Git commits, not manual kubectl commands. Demonstrates: infrastructure as code, declarative configuration, and audit trails.
+Deployments happen through Git commits, not manual kubectl commands. Demonstrates: infrastructure as code, declarative configuration, audit trails, and continuous reconciliation.
 
 **Self-Hosted CI/CD Runners**
-GitHub Actions runners run inside the Kubernetes cluster using Actions Runner Controller. Shows: cost optimization, security isolation, and in-cluster integration.
+GitHub Actions runners execute inside the Kubernetes cluster using Actions Runner Controller. Demonstrates: cost optimization, security isolation, in-cluster integration, and auto-scaling.
 
 **Full-Stack Observability**
-OpenTelemetry traces flow from Slack(TODO) → MCP → API → Database → Grafana. Demonstrates: distributed tracing, correlation IDs(TODO), metrics collection, and debugging production systems.
+OpenTelemetry traces flow from Slack → MCP → API → Database → Grafana. Demonstrates: distributed tracing, W3C trace propagation, metrics collection, and correlation across signals.
 
 **Automated Database Operations**
-CloudNativePG handles PostgreSQL high availability, backups, and failover automatically. Shows: operator patterns, stateful workloads, and database reliability.
+CloudNativePG handles PostgreSQL high availability, backups, and failover automatically. Demonstrates: Kubernetes operator patterns, stateful workloads, and database reliability.
 
 
 
@@ -69,29 +82,39 @@ CloudNativePG handles PostgreSQL high availability, backups, and failover automa
 | **CI/CD** | GitHub Actions (ARC) | Self-hosted runners, cost control, in-cluster access |
 | **Observability** | OpenTelemetry, Tempo, Loki, Prometheus | End-to-end tracing, full telemetry stack |
 
-## Explore the Architecture
+## Reference Workload: Todo Application
+
+The platform runs a simple todo list application to anchor the infrastructure demonstrations:
+
+- **Backend**: Go REST API with PostgreSQL (CloudNativePG)
+- **AI Integration**: MCP server for natural language operations via Slack
+- **Interface**: Slack ChatOps for operational control and user interaction
+
+The application is intentionally minimal—complex enough to demonstrate database operations, API patterns, distributed tracing, and AI integration, but simple enough to keep focus on the platform capabilities rather than application logic.
+
+## Explore the Platform
 
 **[Architecture Overview →](architecture/overview.md)**
-See the full system design with detailed component descriptions and data flows.
+Detailed system design with component descriptions and data flows.
 
-**[Deployment Guide →](deployment/kubernetes.md)**
-Learn how GitOps, self-hosted runners, and ArgoCD work together for automated deployments.
+**[Deployment Documentation →](deployment/kubernetes.md)**
+See how GitOps, self-hosted runners, and ArgoCD work together for automated deployments.
 
 **[Observability Stack →](observability/observability.md)**
-Understand how distributed tracing connects requests from Slack to the database.
+Explore how distributed tracing connects requests from Slack to the database.
 
 **[Development Setup →](development/getting-started.md)**
-Get the platform running locally with hot reloading and development tools.
+Run the platform locally with hot reloading and development tools.
 
-## Why This Matters
+## Why This Platform Exists
 
-Building a todo app is simple. Building a **production-ready platform** that demonstrates:
+Building a todo app is simple. Building a **reference platform** that demonstrates:
 
-- How to integrate AI without vendor lock-in
-- How to automate deployments with zero downtime
-- How to debug distributed systems in production
-- How to manage stateful workloads reliably
+- AI integration without vendor lock-in
+- Automated deployments with zero downtime
+- Debugging distributed systems in production
+- Managing stateful workloads reliably
 
-...that's what separates senior engineers from the rest.
+...that's what separates platform engineers from application developers.
 
-This platform shows those skills in action.
+This platform demonstrates those skills through working infrastructure, not theoretical explanations.

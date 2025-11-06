@@ -1,6 +1,6 @@
-site_name: Todo Platform
-site_description: Documentation for the Todo Platform - A Kubernetes-based todo application with GitOps workflow
-site_author: Todo Platform Team
+site_name: DevOps Reference Platform
+site_description: Reference implementation demonstrating production-grade infrastructure patterns - GitOps, self-hosted CI/CD, full-stack observability, and ChatOps
+site_author: DevOps Reference Platform
 site_url: https://docs.scottseo.tech
 
 repo_name: scottseotech/todo-platform
