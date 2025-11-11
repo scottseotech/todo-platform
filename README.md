@@ -34,9 +34,9 @@ See [Deployment Documentation](docs/docs/deployment/kubernetes.md) for detailed 
 
 - **Shipping with rollback strategies**: Blue-green deployments(TODO).
 
-- **ChatOps for safe, auditable deployments**: Slack commands (`/deploy`, `/rollout status`) provide visibility and control(TODO). All deployment actions are logged to the #builds channel with full context: version, status, and links to workflow runs.
+- **ChatOps for safe, auditable deployments**: Slack commands (`/deploy`) provide visibility and control. All deployment actions are logged to the #builds channel with full context: version, status, and links to workflow runs.
 
-- **Operability first**: Traces, metrics, and logs are correlated by service and version. Alerts include context (traces, runbooks) so responders can act quickly. Every service exports Prometheus metrics and OTEL traces. (TODO)
+- **Operability first**: Traces, metrics, and logs are correlated by service and version. Alerts include context (traces, runbooks) so responders can act quickly. Every service exports Prometheus metrics and OTEL traces.
 
 - **Data safety**: Automated daily backups to S3-compatible storage (MinIO), point-in-time recovery tested and documented. Database schema changes are tracked and reversible.(TODO)
 
@@ -58,7 +58,7 @@ A practical view of key operations:
 |-----------|---------------|
 | **Build** | `cd services/todo-api && go build` |
 | **Release (CI)** | Push to `main` -> GitHub Actions builds image -> pushes to DockerHub -> updates Kustomize -> ArgoCD syncs |
-| **Deploy (ChatOps)** | In Slack: `/deploy todo-api v1.2.3` -> triggers rollout -> posts status link to #builds |
+| **Deploy (ChatOps)** | In Slack: `/deploy` -> triggers rollout -> posts status link to #builds |
 | **Observe** | Grafana dashboards (service health, metrics) -> Tempo/New Relic for distributed traces -> Loki for log aggregation |
 | **Backup/Restore** | Scheduled CNPG backups to S3/MinIO (daily 2 AM) -> PITR via recovery cluster |
 | **Load test** | `k6 run k6/todo-api/todo-api-load-test.js` |
@@ -102,7 +102,7 @@ What this repository demonstrates about my approach to production systems:
 ├── services/
 │   ├── todo-api/           # Go REST API with OTEL, /metrics, PostgreSQL
 │   ├── todo-mcp/           # Go MCP server (Model Context Protocol)
-│   └── todo-bot/           # Python Slack bot (/deploy, /rollout, /todo commands) - (TODO)
+│   └── todo-bot/           # Python Slack bot (/deploy)
 ├── clients/
 │   └── todo-client-go/     # Generated Go client from OpenAPI spec
 ├── deploy/
@@ -208,4 +208,4 @@ This project is built for demonstration and learning purposes. Major OSS compone
 
 ## Contact
 
-Built by [scottseo.tech](https://docs.scottseo.tech) (TODO-update link) to demonstrate production-ready platform engineering practices.
+Built by [scottseo.tech](https://docs.scottseo.tech) to demonstrate production-ready platform engineering practices.
