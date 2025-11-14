@@ -113,7 +113,7 @@
         }
       }
     },
-    "/tools/add_todo/invoke": {
+    "/tools/todos-add/invoke": {
       "post": {
         "summary": "Add a new todo item",
         "description": "Creates a new todo item in the todo list",
@@ -183,7 +183,7 @@
         }
       }
     },
-    "/tools/get_todos/invoke": {
+    "/tools/todos-list/invoke": {
       "post": {
         "summary": "Get all todo items",
         "description": "Retrieves all todo items from the todo list",
@@ -241,7 +241,7 @@
         }
       }
     },
-    "/tools/update_todo/invoke": {
+    "/tools/todos-update/invoke": {
       "post": {
         "summary": "Update a todo item",
         "description": "Updates an existing todo item by ID",
@@ -327,7 +327,7 @@
         }
       }
     },
-    "/tools/delete_todo/invoke": {
+    "/tools/todos-delete/invoke": {
       "post": {
         "summary": "Delete a todo item",
         "description": "Deletes a todo item by ID",

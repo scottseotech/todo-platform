@@ -150,26 +150,26 @@ func Tools() gin.HandlerFunc {
 		log.Printf("Received tools request")
 		tools := []gin.H{
 			{
-				"id":          "add_todo",
-				"name":        "add_todo",
+				"id":          "todos-add",
+				"name":        "todos-add",
 				"description": "A tool to add a new todo item",
 				"inputSchema": AddTodoInputSchema,
 			},
 			{
-				"id":          "get_todos",
-				"name":        "get_todos",
+				"id":          "todos-list",
+				"name":        "todos-list",
 				"description": "A tool to retrieve all todo items",
 				"inputSchema": GetTodosInputSchema,
 			},
 			{
-				"id":          "update_todo",
-				"name":        "update_todo",
+				"id":          "todos-update",
+				"name":        "todos-update",
 				"description": "A tool to update an existing todo item by ID",
 				"inputSchema": UpdateTodoInputSchema,
 			},
 			{
-				"id":          "delete_todo",
-				"name":        "delete_todo",
+				"id":          "todos-delete",
+				"name":        "todos-delete",
 				"description": "A tool to delete a todo item by ID",
 				"inputSchema": DeleteTodoInputSchema,
 			},
