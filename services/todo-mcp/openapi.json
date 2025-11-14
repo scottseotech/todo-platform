@@ -12,6 +12,10 @@
     {
       "url": "http://localhost:8081",
       "description": "Local development server"
+    },
+    {
+      "url": "https://todo-mcp.scottseo.tech",
+      "description": "Production server"
     }
   ],
   "paths": {
