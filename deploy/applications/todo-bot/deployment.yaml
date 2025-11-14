@@ -40,6 +40,11 @@ spec:
                 secretKeyRef:
                   name: todo-bot-secret
                   key: OPENAI_API_KEY
+            - name: GH_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: todo-bot-secret
+                  key: GH_ACCESS_TOKEN
             - name: OTEL_ENABLED
               value: "true"
             - name: OTEL_SERVICE_NAME
