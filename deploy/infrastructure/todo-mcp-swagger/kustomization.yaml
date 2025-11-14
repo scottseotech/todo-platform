@@ -22,4 +22,4 @@ kind: Kustomization
 images:
 - name: todo-mcp-swagger
   newName: curiosinauts/scottseotech-todo-mcp-swagger
-  newTag: d62e757
+  newTag: 6b5fff7
