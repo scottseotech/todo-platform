@@ -22,4 +22,4 @@ kind: Kustomization
 images:
 - name: todo-api-swagger
   newName: curiosinauts/scottseotech-todo-api-swagger
-  newTag: 50a196a
+  newTag: 68abc66
