@@ -1,8 +1,8 @@
-# DevOps Reference Platform
+# Reference Platform
 
 ## Overview
 
-The **DevOps Reference Platform** is a demonstration of production-grade infrastructure patterns and practices. This is not a tutorial—it's a fully-functional reference implementation that showcases how modern cloud-native systems are built and operated.
+The **Reference Platform** is a demonstration of production-grade infrastructure patterns and practices. This is not a tutorial—it's a fully-functional reference implementation that showcases how modern cloud-native systems are built and operated.
 
 **What this demonstrates:**
 - GitOps-driven deployments with ArgoCD
