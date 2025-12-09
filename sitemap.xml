@@ -2,67 +2,67 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://docs.scottseo.tech/</loc>
-         <lastmod>2025-11-11</lastmod>
+         <lastmod>2025-12-09</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://docs.scottseo.tech/api/todo-api/</loc>
-         <lastmod>2025-11-11</lastmod>
+         <lastmod>2025-12-09</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://docs.scottseo.tech/api/todo-mcp/</loc>
-         <lastmod>2025-11-11</lastmod>
+         <lastmod>2025-12-09</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://docs.scottseo.tech/architecture/adr/</loc>
-         <lastmod>2025-11-11</lastmod>
+         <lastmod>2025-12-09</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://docs.scottseo.tech/architecture/c4/</loc>
-         <lastmod>2025-11-11</lastmod>
+         <lastmod>2025-12-09</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://docs.scottseo.tech/architecture/hr/</loc>
-         <lastmod>2025-11-11</lastmod>
+         <lastmod>2025-12-09</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://docs.scottseo.tech/architecture/overview/</loc>
-         <lastmod>2025-11-11</lastmod>
+         <lastmod>2025-12-09</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://docs.scottseo.tech/chatops/chatops/</loc>
-         <lastmod>2025-11-11</lastmod>
+         <lastmod>2025-12-09</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://docs.scottseo.tech/deployment/kubernetes/</loc>
-         <lastmod>2025-11-11</lastmod>
+         <lastmod>2025-12-09</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://docs.scottseo.tech/deployment/slack-driven-release/</loc>
-         <lastmod>2025-11-11</lastmod>
+         <lastmod>2025-12-09</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://docs.scottseo.tech/development/getting-started/</loc>
-         <lastmod>2025-11-11</lastmod>
+         <lastmod>2025-12-09</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://docs.scottseo.tech/observability/log-monitoring-and-alerting/</loc>
-         <lastmod>2025-11-11</lastmod>
+         <lastmod>2025-12-09</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://docs.scottseo.tech/observability/observability/</loc>
-         <lastmod>2025-11-11</lastmod>
+         <lastmod>2025-12-09</lastmod>
          <changefreq>daily</changefreq>
     </url>
 </urlset>
