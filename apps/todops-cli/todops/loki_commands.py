@@ -57,6 +57,8 @@ def search(search_term: str, since: str, limit: int, namespace: Optional[str],
     url = get_loki_url()
 
     ignore_list = load_ignore_list(output_format) if not no_ignore else None
+    if debug:
+        click.echo(f"ignore_list: {ignore_list}\n")
 
     # Search logs
     try:

@@ -14,7 +14,7 @@ dependencies = [
     "requests>=2.25.0",
     "python-dateutil==2.9.0.post0",
     "python-dotenv>=0.19.0",
-    "slack-sdk==3.36.0"
+    "slack-sdk==3.37.0"
 ]
 
 [project.scripts]
@@ -24,4 +24,8 @@ todops = "todops.cli:main"
 dev = [
     "pytest>=7.0.0",
     "black>=22.0.0",
+    "coverage>=7.13.0",
+    "pytest-cov>=7.0.0",
+    "selenium>=4.39.0",
+    "webdriver-manager>=4.0.2"
 ]

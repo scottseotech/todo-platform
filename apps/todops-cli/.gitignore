@@ -24,3 +24,17 @@ ENV/
 # OS files
 .DS_Store
 Thumbs.db
+
+.coverage
+htmlcov
+
+.idea
+# But un-ignore specific necessary files/directories:
+!.idea/runConfigurations/
+!.idea/codeStyles/
+!.idea/inspectionProfiles/
+!.idea/encodings.xml
+!.idea/misc.xml
+!.idea/modules.xml
+!.idea/vcs.xml
+!.idea/*.iml

@@ -4,7 +4,7 @@ import json
 import logging
 import re
 import uuid
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from io import BytesIO
 from typing import Dict, List
 
@@ -93,7 +93,7 @@ class LokiIgnoreManager:
                 else:
                     raise ValueError(f"Unknown time unit: {unit}")
 
-                return datetime.utcnow() + delta
+                return datetime.now(timezone.utc) + delta
 
         raise ValueError(f"Unable to parse duration: {duration_str}")
 
@@ -159,8 +159,8 @@ class LokiIgnoreManager:
             'log_signature': log_signature,
             'expire_date': expire_date.isoformat(),
             'status': 'active',
-            'created_at': datetime.utcnow().isoformat(),
-            'updated_at': datetime.utcnow().isoformat()
+            'created_at': datetime.now().isoformat(),
+            'updated_at': datetime.now().isoformat()
         }
 
         # Check if signature already exists
@@ -237,7 +237,7 @@ class LokiIgnoreManager:
         ignore_list = self._load_ignore_list()
 
         # Clean up expired entries
-        now = datetime.utcnow()
+        now = datetime.now()
         cleaned_list = []
 
         for entry in ignore_list:
