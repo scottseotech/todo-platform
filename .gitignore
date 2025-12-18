@@ -5,3 +5,4 @@ tmp
 apps/todops-cli/dist/**
 apps/todops-cli/build/**
 .env
+to-organize
