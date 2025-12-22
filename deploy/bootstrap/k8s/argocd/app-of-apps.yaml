@@ -9,7 +9,7 @@ spec:
     server: https://kubernetes.default.svc
   project: default
   source:
-    path: deploy/argocd-apps
+    path: deploy/argocd/apps
     repoURL: git@github.com:scottseotech/todo-platform.git
     targetRevision: main
   syncPolicy:
