@@ -1,9 +1,11 @@
 #!/bin/bash -e
 
 # K3s node configuration
-K3S_NODE_IP=$(gum input --placeholder="Enter k8s node ip address" --value="192.168.30.100")
-
 setup_node() {
+    K3S_NODE_IP=$(gum input --placeholder="Enter k8s node ip" --value="192.168.30.10")
+    K3S_CONTEXT=$(gum input --placeholder="Enter k8s context" --value="k3s")
+    K3S_USER=$(gum input --placeholder="Enter k8s node user" --value="root")
+
     gum style --foreground 99 --border-foreground 99 --border double --align center --width 50 --margin "1 2" --padding "2 4" "Setting Up K3s Node Configuration"
 
     echo "Configuring Docker Hub registry settings..."
@@ -14,17 +16,25 @@ setup_node() {
     
     echo "Waiting for K3s to be ready..."
     sleep 5
-    
-    echo "Copying kubeconfig from K3s node..."
-    mkdir -p ~/.kube
-    scp root@$K3S_NODE_IP:/root/.kube/config ~/.kube/config
-    
+
+    scp $K3S_USER@$K3S_NODE_IP:/etc/rancher/k3s/k3s.yaml ~/.kube/$K3S_NODE_IP.k3s
+
+    echo "Renaming default to $K3S_CONTEXT"
+    sed -i.bak "s/default/$K3S_CONTEXT/g" ~/.kube/$K3S_NODE_IP.k3s
+
     echo "Updating kubeconfig server IP..."
-    sed -i.bak "s/127.0.0.1/$K3S_NODE_IP/g" ~/.kube/config
+    sed -i.bak "s/127.0.0.1/$K3S_NODE_IP/g" ~/.kube/$K3S_NODE_IP.k3s
+
+    export KUBECONFIG=~/.kube/config:~/.kube/$K3S_NODE_IP.k3s
+    kubectl config view --merge --flatten > ~/.kube/merged-config
+    mv ~/.kube/merged-config ~/.kube/config
+    chmod 600 ~/.kube/config
     
     echo "Testing kubectl connection..."
     if kubectl get nodes &>/dev/null; then
         gum style --foreground 46 --bold "✓ K3s node configuration and kubectl access completed!"
+        rm ~/.kube/$K3S_NODE_IP.k3s
+        rm ~/.kube/$K3S_NODE_IP.k3s.bak
     else
         gum style --foreground 196 --bold "❌ kubectl connection test failed"
     fi
@@ -60,6 +70,7 @@ deploy_metallb() {
 
     helm repo add metallb https://metallb.github.io/metallb || true
 
+    # Create MetalLB namespace with special previleges
     kubectl apply -f k8s/metallb/metallb-namespace.yaml
 
     kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.14.9/config/manifests/metallb-native.yaml
