@@ -11,10 +11,6 @@ spec:
     server: https://kubernetes.default.svc
   project: default
   source:
-    path: deploy/applications/todo-bot
+    path: deploy/argocd/applications/infrastructure/todo-bot
     repoURL: git@github.com:scottseotech/todo-platform.git
     targetRevision: main 
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true

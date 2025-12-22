@@ -1,0 +1,22 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    kubernetes.io/ingress.class: traefik
+  labels:
+    app.kubernetes.io/name: todo-mcp-swagger
+  name: todo-mcp-swagger
+  namespace: tools
+spec:
+  ingressClassName: traefik
+  rules:
+  - host: todo-mcp-swagger.scottseo.tech
+    http:
+      paths:
+      - backend:
+          service:
+            name: todo-mcp-swagger 
+            port:
+              number: 8080 
+        path: /
+        pathType: Prefix

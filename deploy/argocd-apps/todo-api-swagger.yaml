@@ -11,10 +11,6 @@ spec:
     server: https://kubernetes.default.svc
   project: default
   source:
-    path: deploy/infrastructure/todo-api-swagger
+    path: deploy/argocd/manifests/infrastructure/todo-api-swagger
     repoURL: git@github.com:scottseotech/todo-platform.git
     targetRevision: main 
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true

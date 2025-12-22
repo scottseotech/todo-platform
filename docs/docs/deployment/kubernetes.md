@@ -117,7 +117,7 @@ sequenceDiagram
     - Applications: Defined in `deploy/argocd-apps/`
     - Sync policy: Automatic with self-heal
     - Source: This repository (`main` branch)
-    - Manifests: `deploy/applications/` and `deploy/infrastructure/`
+    - Manifests: `deploy/argocd/applications/infrastructure/` and `deploy/argocd/manifests/infrastructure/`
 
     **App-of-Apps Pattern:**
     ArgoCD uses an "app-of-apps" pattern where a root application (`argocd-apps`) manages all other applications.
@@ -137,7 +137,7 @@ sequenceDiagram
 
     **Structure per application:**
     ```
-    deploy/applications/todo-api/
+    deploy/argocd/applications/infrastructure/todo-api/
     ├── kustomization.yaml    # Kustomize config with image reference
     ├── deployment.yaml        # Base deployment manifest
     ├── service.yaml           # Service definition
@@ -255,14 +255,14 @@ When you push code to main, here's what happens automatically:
 
     7. **Kustomize Update**
        ```bash
-       cd deploy/infrastructure/homer
+       cd deploy/argocd/manifests/infrastructure/homer
        kustomize edit set image homer=curiosinauts/scottseotech-homer:$VERSION
        ```
 
     8. **Git Commit**
        ```bash
        git config user.name "github-actions[bot]"
-       git add deploy/infrastructure/homer/kustomization.yaml
+       git add deploy/argocd/manifests/infrastructure/homer/kustomization.yaml
        git commit -m "Update homer to version $VERSION"
        git push origin main
        ```
@@ -479,7 +479,7 @@ When you push code to main, here's what happens automatically:
 ??? note "Option 1: Revert Git Commit"
     ```bash
     # Find the commit to revert to
-    git log deploy/applications/todo-api/kustomization.yaml
+    git log deploy/argocd/applications/infrastructure/todo-api/kustomization.yaml
 
     # Revert to previous version
     git revert <commit-sha>
@@ -491,7 +491,7 @@ When you push code to main, here's what happens automatically:
 ??? note "Option 2: Manual Kustomize Update"
     ```bash
     # Update to previous version
-    cd deploy/applications/todo-api
+    cd deploy/argocd/applications/infrastructure/todo-api
     kustomize edit set image todo-api=curiosinauts/scottseotech-todo-api:<previous-version>
 
     git add kustomization.yaml
@@ -513,7 +513,7 @@ When you push code to main, here's what happens automatically:
 ??? note "Adding New Services"
     1. Create service directory structure:
        ```bash
-       mkdir -p deploy/applications/new-service
+       mkdir -p deploy/argocd/applications/infrastructure/new-service
        ```
 
     2. Add Kubernetes manifests (deployment, service, etc.)
@@ -543,7 +543,7 @@ When you push code to main, here's what happens automatically:
          source:
            repoURL: https://github.com/scottseotech/todo-platform
            targetRevision: main
-           path: deploy/applications/new-service
+           path: deploy/argocd/applications/infrastructure/new-service
          destination:
            server: https://kubernetes.default.svc
            namespace: default

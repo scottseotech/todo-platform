@@ -72,7 +72,7 @@ jobs:
     uses: scottseotech/todo-platform/.github/workflows/argocd-update.yaml@main
     with:
       namespace: tools
-      app_path: deploy/infrastructure
+      app_path: deploy/argocd/manifests/infrastructure
       app: todo-mcp-swagger
       version: ${{ needs.build.outputs.image_version }}
     secrets: inherit

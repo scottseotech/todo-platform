@@ -9,14 +9,8 @@ spec:
   project: default
   source:
     repoURL: git@github.com:scottseotech/todo-platform.git
-    path: deploy/infrastructure/kube-prometheus-stack
+    path: deploy/argocd/manifests/infrastructure/kube-prometheus-stack
     targetRevision: main
   destination:
     server: https://kubernetes.default.svc
     namespace: monitoring 
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
-    syncOptions:
-      - CreateNamespace=true

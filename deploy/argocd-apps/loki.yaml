@@ -9,14 +9,8 @@ spec:
   project: default
   source:
     repoURL: git@github.com:scottseotech/todo-platform.git
-    path: deploy/infrastructure/loki
+    path: deploy/argocd/manifests/infrastructure/loki
     targetRevision: main
   destination:
     server: https://kubernetes.default.svc
     namespace: logging 
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
-    syncOptions:
-      - CreateNamespace=true

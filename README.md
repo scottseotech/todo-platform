@@ -72,7 +72,7 @@ For hiring managers and technical reviewers, start here:
 1. **[Architecture & Deployment Flow](docs/docs/deployment/kubernetes.md)** - Detailed mermaid diagrams showing GitOps workflow
 2. **[Development Setup Guide](docs/docs/development/getting-started.md)** - How to run services locally, hot reloading with Air, Python venv setup
 3. **[GitHub Actions Workflows](.github/workflows/)** - CI/CD pipelines for building, testing, and deploying services
-4. **[Kubernetes Manifests](deploy/applications/)** - Kustomize overlays , resource limits
+4. **[Kubernetes Manifests](deploy/argocd/applications/infrastructure/)** - Kustomize overlays , resource limits
 5. **[MCP Server Implementation](services/todo-mcp/)** - Model Context Protocol server enabling AI assistant integration
 
 ---

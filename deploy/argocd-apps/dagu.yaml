@@ -11,10 +11,6 @@ spec:
     server: https://kubernetes.default.svc
   project: default
   source:
-    path: deploy/infrastructure/dagu
+    path: deploy/argocd/manifests/infrastructure/dagu
     repoURL: git@github.com:scottseotech/todo-platform.git
     targetRevision: main 
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true

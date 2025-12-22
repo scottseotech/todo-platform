@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: todo-db-primary-service
+  labels:
+    app.kubernetes.io/instance: todo-db
+    app.kubernetes.io/name: postgresql
+    app.kubernetes.io/component: primary
+spec:
+  type: LoadBalancer
+  externalTrafficPolicy: "Cluster"
+  ports:
+    - name: postgresql
+      protocol: TCP
+      port: 5432
+      targetPort: 5432
+  selector:
+    cnpg.io/cluster: todo-db
+    cnpg.io/instanceRole: primary

@@ -75,7 +75,7 @@ jobs:
     uses: ./.github/workflows/argocd-update.yaml
     with:
       namespace: default
-      app_path: deploy/applications
+      app_path: deploy/argocd/applications/infrastructure
       app: ${{ inputs.service }} 
       version: ${{ needs.build.outputs.image_version }}
     secrets: inherit
