@@ -1333,7 +1333,7 @@
 - Applications: Defined in <code>deploy/argocd-apps/</code>
 - Sync policy: Automatic with self-heal
 - Source: This repository (<code>main</code> branch)
-- Manifests: <code>deploy/argocd/applications/infrastructure/</code> and <code>deploy/argocd/manifests/infrastructure/</code></p>
+- Manifests: <code>deploy/argocd/manifests/applications/</code> and <code>deploy/argocd/manifests/infrastructure/</code></p>
 <p><strong>App-of-Apps Pattern:</strong>
 ArgoCD uses an "app-of-apps" pattern where a root application (<code>argocd-apps</code>) manages all other applications.</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>argocd-apps (root)
@@ -1349,7 +1349,7 @@ ArgoCD uses an "app-of-apps" pattern where a root application (<code>argocd-apps
 <summary>Kustomize</summary>
 <p><strong>Kustomize</strong> manages Kubernetes manifests and image versions without templating.</p>
 <p><strong>Structure per application:</strong>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>deploy/argocd/applications/infrastructure/todo-api/
+<div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>deploy/argocd/manifests/applications/todo-api/
 </span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>├── kustomization.yaml    # Kustomize config with image reference
 </span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>├── deployment.yaml        # Base deployment manifest
 </span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>├── service.yaml           # Service definition
@@ -1685,7 +1685,7 @@ Workflows update image versions using:
 <details class="note">
 <summary>Option 1: Revert Git Commit</summary>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-26-1"><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a><span class="c1"># Find the commit to revert to</span>
-</span><span id="__span-26-2"><a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a>git<span class="w"> </span>log<span class="w"> </span>deploy/argocd/applications/infrastructure/todo-api/kustomization.yaml
+</span><span id="__span-26-2"><a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a>git<span class="w"> </span>log<span class="w"> </span>deploy/argocd/manifests/applications/todo-api/kustomization.yaml
 </span><span id="__span-26-3"><a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a>
 </span><span id="__span-26-4"><a id="__codelineno-26-4" name="__codelineno-26-4" href="#__codelineno-26-4"></a><span class="c1"># Revert to previous version</span>
 </span><span id="__span-26-5"><a id="__codelineno-26-5" name="__codelineno-26-5" href="#__codelineno-26-5"></a>git<span class="w"> </span>revert<span class="w"> </span>&lt;commit-sha&gt;
@@ -1697,7 +1697,7 @@ Workflows update image versions using:
 <details class="note">
 <summary>Option 2: Manual Kustomize Update</summary>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-27-1"><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a><span class="c1"># Update to previous version</span>
-</span><span id="__span-27-2"><a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a><span class="nb">cd</span><span class="w"> </span>deploy/argocd/applications/infrastructure/todo-api
+</span><span id="__span-27-2"><a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a><span class="nb">cd</span><span class="w"> </span>deploy/argocd/manifests/applications/todo-api
 </span><span id="__span-27-3"><a id="__codelineno-27-3" name="__codelineno-27-3" href="#__codelineno-27-3"></a>kustomize<span class="w"> </span>edit<span class="w"> </span><span class="nb">set</span><span class="w"> </span>image<span class="w"> </span>todo-api<span class="o">=</span>curiosinauts/scottseotech-todo-api:&lt;previous-version&gt;
 </span><span id="__span-27-4"><a id="__codelineno-27-4" name="__codelineno-27-4" href="#__codelineno-27-4"></a>
 </span><span id="__span-27-5"><a id="__codelineno-27-5" name="__codelineno-27-5" href="#__codelineno-27-5"></a>git<span class="w"> </span>add<span class="w"> </span>kustomization.yaml
@@ -1720,7 +1720,7 @@ Workflows update image versions using:
 <ol>
 <li>
 <p>Create service directory structure:
-   <div class="language-bash highlight"><pre><span></span><code><span id="__span-29-1"><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a>mkdir<span class="w"> </span>-p<span class="w"> </span>deploy/argocd/applications/infrastructure/new-service
+   <div class="language-bash highlight"><pre><span></span><code><span id="__span-29-1"><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a>mkdir<span class="w"> </span>-p<span class="w"> </span>deploy/argocd/manifests/applications/new-service
 </span></code></pre></div></p>
 </li>
 <li>
@@ -1751,7 +1751,7 @@ Workflows update image versions using:
 </span><span id="__span-31-8"><a id="__codelineno-31-8" name="__codelineno-31-8" href="#__codelineno-31-8"></a><span class="w">  </span><span class="nt">source</span><span class="p">:</span>
 </span><span id="__span-31-9"><a id="__codelineno-31-9" name="__codelineno-31-9" href="#__codelineno-31-9"></a><span class="w">    </span><span class="nt">repoURL</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/scottseotech/todo-platform</span>
 </span><span id="__span-31-10"><a id="__codelineno-31-10" name="__codelineno-31-10" href="#__codelineno-31-10"></a><span class="w">    </span><span class="nt">targetRevision</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">main</span>
-</span><span id="__span-31-11"><a id="__codelineno-31-11" name="__codelineno-31-11" href="#__codelineno-31-11"></a><span class="w">    </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">deploy/argocd/applications/infrastructure/new-service</span>
+</span><span id="__span-31-11"><a id="__codelineno-31-11" name="__codelineno-31-11" href="#__codelineno-31-11"></a><span class="w">    </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">deploy/argocd/manifests/applications/new-service</span>
 </span><span id="__span-31-12"><a id="__codelineno-31-12" name="__codelineno-31-12" href="#__codelineno-31-12"></a><span class="w">  </span><span class="nt">destination</span><span class="p">:</span>
 </span><span id="__span-31-13"><a id="__codelineno-31-13" name="__codelineno-31-13" href="#__codelineno-31-13"></a><span class="w">    </span><span class="nt">server</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://kubernetes.default.svc</span>
 </span><span id="__span-31-14"><a id="__codelineno-31-14" name="__codelineno-31-14" href="#__codelineno-31-14"></a><span class="w">    </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">default</span>
