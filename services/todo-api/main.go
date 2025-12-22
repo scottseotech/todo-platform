@@ -140,5 +140,6 @@ func main() {
 	}()
 
 	<-quit
+
 	log.Println("Shutting down server...")
 }
