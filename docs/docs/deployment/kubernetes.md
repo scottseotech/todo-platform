@@ -117,7 +117,7 @@ sequenceDiagram
     - Applications: Defined in `deploy/argocd-apps/`
     - Sync policy: Automatic with self-heal
     - Source: This repository (`main` branch)
-    - Manifests: `deploy/argocd/applications/infrastructure/` and `deploy/argocd/manifests/infrastructure/`
+    - Manifests: `deploy/argocd/manifests/applications/` and `deploy/argocd/manifests/infrastructure/`
 
     **App-of-Apps Pattern:**
     ArgoCD uses an "app-of-apps" pattern where a root application (`argocd-apps`) manages all other applications.
@@ -137,7 +137,7 @@ sequenceDiagram
 
     **Structure per application:**
     ```
-    deploy/argocd/applications/infrastructure/todo-api/
+    deploy/argocd/manifests/applications/todo-api/
     ├── kustomization.yaml    # Kustomize config with image reference
     ├── deployment.yaml        # Base deployment manifest
     ├── service.yaml           # Service definition
@@ -479,7 +479,7 @@ When you push code to main, here's what happens automatically:
 ??? note "Option 1: Revert Git Commit"
     ```bash
     # Find the commit to revert to
-    git log deploy/argocd/applications/infrastructure/todo-api/kustomization.yaml
+    git log deploy/argocd/manifests/applications/todo-api/kustomization.yaml
 
     # Revert to previous version
     git revert <commit-sha>
@@ -491,7 +491,7 @@ When you push code to main, here's what happens automatically:
 ??? note "Option 2: Manual Kustomize Update"
     ```bash
     # Update to previous version
-    cd deploy/argocd/applications/infrastructure/todo-api
+    cd deploy/argocd/manifests/applications/todo-api
     kustomize edit set image todo-api=curiosinauts/scottseotech-todo-api:<previous-version>
 
     git add kustomization.yaml
@@ -513,7 +513,7 @@ When you push code to main, here's what happens automatically:
 ??? note "Adding New Services"
     1. Create service directory structure:
        ```bash
-       mkdir -p deploy/argocd/applications/infrastructure/new-service
+       mkdir -p deploy/argocd/manifests/applications/new-service
        ```
 
     2. Add Kubernetes manifests (deployment, service, etc.)
@@ -543,7 +543,7 @@ When you push code to main, here's what happens automatically:
          source:
            repoURL: https://github.com/scottseotech/todo-platform
            targetRevision: main
-           path: deploy/argocd/applications/infrastructure/new-service
+           path: deploy/argocd/manifests/applications/new-service
          destination:
            server: https://kubernetes.default.svc
            namespace: default

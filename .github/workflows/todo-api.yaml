@@ -73,7 +73,7 @@ jobs:
     uses: scottseotech/todo-platform/.github/workflows/argocd-update.yaml@main
     with:
       namespace: default
-      app_path: deploy/argocd/applications/infrastructure
+      app_path: deploy/argocd/manifests/applications
       app: todo-api
       version: ${{ needs.build.outputs.image_version }}
     secrets: inherit
