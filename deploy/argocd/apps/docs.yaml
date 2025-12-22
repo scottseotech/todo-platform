@@ -14,7 +14,3 @@ spec:
     path: deploy/argocd/manifests/applications/docs
     repoURL: git@github.com:scottseotech/todo-platform.git
     targetRevision: main 
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true

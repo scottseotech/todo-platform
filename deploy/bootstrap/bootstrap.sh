@@ -43,6 +43,8 @@ setup_node() {
 }
 
 deploy_democratic_csi() {
+    K3S_CONTEXT=$(gum input --placeholder="Enter k8s context" --value="k3s")
+    kubectl ctx $K3S_CONTEXT
     kubectl create namespace democratic-csi || true
 
     # democratic-csi requires snapshot CRDs

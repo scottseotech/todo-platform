@@ -11,7 +11,7 @@ spec:
     server: https://kubernetes.default.svc
   project: default
   source:
-    path: deploy/argocd/applications/infrastructure/todo-api
+    path: deploy/argocd/manifests/applications/todo-api
     repoURL: git@github.com:scottseotech/todo-platform.git
     targetRevision: main 
   syncPolicy:

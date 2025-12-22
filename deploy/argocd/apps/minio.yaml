@@ -14,9 +14,3 @@ spec:
     path: deploy/argocd/manifests/infrastructure/minio
     repoURL: git@github.com:scottseotech/todo-platform.git
     targetRevision: main 
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
-    syncOptions:
-      - CreateNamespace=true
