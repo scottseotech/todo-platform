@@ -1,9 +1,10 @@
 #!/bin/bash -e
 
+K3S_CONTEXT=$(gum input --placeholder="Enter k8s context" --value="k3s")
+
 # K3s node configuration
 setup_node() {
     K3S_NODE_IP=$(gum input --placeholder="Enter k8s node ip" --value="192.168.30.10")
-    K3S_CONTEXT=$(gum input --placeholder="Enter k8s context" --value="k3s")
     K3S_USER=$(gum input --placeholder="Enter k8s node user" --value="root")
 
     gum style --foreground 99 --border-foreground 99 --border double --align center --width 50 --margin "1 2" --padding "2 4" "Setting Up K3s Node Configuration"
@@ -43,7 +44,6 @@ setup_node() {
 }
 
 deploy_democratic_csi() {
-    K3S_CONTEXT=$(gum input --placeholder="Enter k8s context" --value="k3s")
     kubectl ctx $K3S_CONTEXT
     kubectl create namespace democratic-csi || true
 
@@ -68,7 +68,6 @@ deploy_democratic_csi() {
 }
 
 deploy_metallb() {
-    K3S_CONTEXT=$(gum input --placeholder="Enter k8s context" --value="k3s")
     kubectl ctx $K3S_CONTEXT
 
     IP_RANGE=$(gum input --placeholder="Enter IP range (e.g., 192.168.30.80-192.168.30.90)" --value="192.168.30.xx-192.168.30.yy")
@@ -95,6 +94,8 @@ deploy_metallb() {
 }
 
 deploy_argocd() {
+    kubectl ctx $K3S_CONTEXT
+
     gum style --foreground 75 --border-foreground 75 --border double --align center --width 50 --margin "1 2" --padding "2 4" "Deploying ArgoCD K8s Resources"
 
     kubectl create namespace argocd || true
@@ -160,6 +161,8 @@ deploy_argocd() {
 }
 
 deploy_prometheus_operator() {
+    kubectl ctx $K3S_CONTEXT
+
     gum style --foreground 220 --border-foreground 220 --border double --align center --width 50 --margin "1 2" --padding "2 4" "Deploying Prometheus Operator CRDs"
 
     echo "Installing Prometheus Operator CRDs (including ServiceMonitor)..."
@@ -177,6 +180,8 @@ deploy_prometheus_operator() {
 }
 
 deploy_cnpg_operator() {
+    kubectl ctx $K3S_CONTEXT
+
     gum style --foreground 33 --border-foreground 33 --border double --align center --width 50 --margin "1 2" --padding "2 4" "Deploying CloudNativePG Operator"
 
     echo "Installing CloudNativePG Operator..."
