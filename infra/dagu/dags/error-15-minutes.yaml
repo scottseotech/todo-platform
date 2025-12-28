@@ -11,4 +11,4 @@ steps:
     script: |
       #!/bin/bash
 
-      todops loki search error -l 500 --namespace default | logmine -dhp | tr '\n' '\0' | xargs -0 -n1 -I{} todops slack post-message alerts --code "{}"
+      todops loki search error -l 500 --namespace default --since "15 minutes ago" | logmine -dhp | tr '\n' '\0' | xargs -0 -n1 -I{} todops slack post-message alerts --code "{}"
