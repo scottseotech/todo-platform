@@ -20,6 +20,11 @@ on:
         description: 'version'
         required: true
         type: string
+      repository:
+        description: 'Repository containing the application manifests'
+        required: false
+        type: string
+        default: 'scottseotech/todo-platform'
       
 jobs:
   argocd-update:
