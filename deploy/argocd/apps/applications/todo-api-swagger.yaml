@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: todo-mcp-swagger
+  name: todo-api-swagger
   namespace: argocd
   finalizers:
   - resources-finalizer.argocd.argoproj.io
@@ -11,7 +11,7 @@ spec:
     server: https://kubernetes.default.svc
   project: default
   source:
-    path: deploy/argocd/manifests/infrastructure/todo-mcp-swagger
+    path: deploy/argocd/manifests/applications/todo-api-swagger
     repoURL: git@github.com:scottseotech/todo-platform.git
     targetRevision: main 
   syncPolicy:

@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: dagu
+  name: todo-mcp-swagger
   namespace: argocd
   finalizers:
   - resources-finalizer.argocd.argoproj.io
@@ -11,6 +11,10 @@ spec:
     server: https://kubernetes.default.svc
   project: default
   source:
-    path: deploy/argocd/manifests/infrastructure/dagu
+    path: deploy/argocd/manifests/applications/todo-mcp-swagger
     repoURL: git@github.com:scottseotech/todo-platform.git
     targetRevision: main 
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

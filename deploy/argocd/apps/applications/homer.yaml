@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: todo-api-swagger
+  name: homer
   namespace: argocd
   finalizers:
   - resources-finalizer.argocd.argoproj.io
@@ -11,10 +11,12 @@ spec:
     server: https://kubernetes.default.svc
   project: default
   source:
-    path: deploy/argocd/manifests/infrastructure/todo-api-swagger
+    path: deploy/argocd/manifests/applications/homer
     repoURL: git@github.com:scottseotech/todo-platform.git
     targetRevision: main 
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
