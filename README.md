@@ -106,10 +106,9 @@ What this repository demonstrates about my approach to production systems:
 ├── clients/
 │   └── todo-client-go/     # Generated Go client from OpenAPI spec
 ├── deploy/
-│   ├── applications/       # Kustomize overlays per service
-│   ├── argocd-apps/        # ArgoCD Application manifests (app-of-apps)
-│   ├── bootstrap/          # Cluster bootstrap automation scripts
-│   └── infrastructure/     # Infrastructure services (CNPG, Prometheus, Loki, MinIO)
+│   ├── manifests/applications/       # Kustomize overlays per service
+│   ├── manifests/infrastructure/     # Infrastructure services (CNPG, Prometheus, Loki, MinIO)
+│   └── argocd/apps/                  # ArgoCD Application manifests (app-of-apps)
 ├── docs/                   # MkDocs documentation site
 │   ├── docs/
 │   │   ├── development/    # Getting started
