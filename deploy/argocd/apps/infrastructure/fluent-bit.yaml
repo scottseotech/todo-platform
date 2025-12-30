@@ -14,9 +14,4 @@ spec:
   destination:
     server: https://kubernetes.default.svc
     namespace: logging 
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
-    syncOptions:
-      - CreateNamespace=true
+
