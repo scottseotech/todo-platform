@@ -6,7 +6,7 @@ metadata:
   labels:
     app.kubernetes.io/name: dagu 
   name: dagu
-  namespace: tools
+  namespace: todo
 spec:
   ingressClassName: traefik
   rules:
