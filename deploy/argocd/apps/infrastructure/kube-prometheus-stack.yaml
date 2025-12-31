@@ -6,11 +6,11 @@ metadata:
   finalizers:
   - resources-finalizer.argocd.argoproj.io
 spec:
-  project: todo
+  project: default
   source:
     repoURL: git@github.com:scottseotech/todo-platform.git
     path: deploy/argocd/manifests/infrastructure/kube-prometheus-stack
     targetRevision: main
   destination:
     server: https://kubernetes.default.svc
-    namespace: monitoring 
+    namespace: monitoring
