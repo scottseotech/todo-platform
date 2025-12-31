@@ -6,7 +6,7 @@ metadata:
   labels:
     app.kubernetes.io/name: docs
   name: docs
-  namespace: default
+  namespace: todo
 spec:
   ingressClassName: traefik
   rules:
