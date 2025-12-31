@@ -6,7 +6,7 @@ metadata:
     app.kubernetes.io/name: dagu
     app.kubernetes.io/instance: dagu
     app.kubernetes.io/component: svc
-    namespace: todo
+  namespace: todo
 spec:
   selector:
     matchLabels:
