@@ -23,7 +23,7 @@ spec:
           image: todo-mcp
           env:
             - name: TODO_API_URL
-              value: http://todo-api.default.svc.cluster.local:8080
+              value: http://todo-api.todo.svc.cluster.local:8080
             - name: OTEL_EXPORTER_OTLP_ENDPOINT
               value: "tempo.observability.svc.cluster.local:4317"
             - name: ENVIRONMENT
