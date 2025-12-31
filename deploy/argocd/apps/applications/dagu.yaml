@@ -14,3 +14,7 @@ spec:
     path: deploy/argocd/manifests/applications/dagu
     repoURL: git@github.com:scottseotech/todo-platform.git
     targetRevision: main 
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
