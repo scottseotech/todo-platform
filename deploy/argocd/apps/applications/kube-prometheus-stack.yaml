@@ -6,7 +6,7 @@ metadata:
   finalizers:
   - resources-finalizer.argocd.argoproj.io
 spec:
-  project: default
+  project: todo
   source:
     repoURL: git@github.com:scottseotech/todo-platform.git
     path: deploy/argocd/manifests/infrastructure/kube-prometheus-stack

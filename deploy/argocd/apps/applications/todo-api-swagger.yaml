@@ -9,7 +9,7 @@ spec:
   destination:
     namespace: tools
     server: https://kubernetes.default.svc
-  project: default
+  project: todo
   source:
     path: deploy/argocd/manifests/applications/todo-api-swagger
     repoURL: git@github.com:scottseotech/todo-platform.git
