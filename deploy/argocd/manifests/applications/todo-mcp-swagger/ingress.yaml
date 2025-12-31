@@ -6,7 +6,7 @@ metadata:
   labels:
     app.kubernetes.io/name: todo-mcp-swagger
   name: todo-mcp-swagger
-  namespace: tools
+  namespace: todo
 spec:
   ingressClassName: traefik
   rules:

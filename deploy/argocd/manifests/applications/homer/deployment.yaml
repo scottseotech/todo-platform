@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: homer
-  namespace: tools
+  namespace: todo
 spec:
   replicas: 1
   revisionHistoryLimit: 1

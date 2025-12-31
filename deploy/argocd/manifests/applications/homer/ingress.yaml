@@ -6,7 +6,7 @@ metadata:
   labels:
     app.kubernetes.io/name: homer
   name: homer
-  namespace: tools
+  namespace: todo
 spec:
   ingressClassName: traefik
   rules:

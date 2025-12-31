@@ -6,7 +6,7 @@ metadata:
   labels:
     app.kubernetes.io/name: todo-api
   name: todo-api
-  namespace: default
+  namespace: todo
 spec:
   ingressClassName: traefik
   rules:

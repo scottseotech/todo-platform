@@ -6,7 +6,7 @@ metadata:
   labels:
     app.kubernetes.io/name: todo-mcp
   name: todo-mcp
-  namespace: default
+  namespace: todo
 spec:
   ingressClassName: traefik
   rules:

@@ -5,6 +5,7 @@ metadata:
   labels:
     app: todo-mcp
     release: kube-prometheus-stack
+  namespace: todo
 spec:
   selector:
     matchLabels:
