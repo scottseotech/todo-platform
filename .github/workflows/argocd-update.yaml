@@ -25,6 +25,11 @@ on:
         required: false
         type: string
         default: 'scottseotech/todo-platform'
+      domain:
+        description: 'Domain name alias for the application'
+        required: false
+        type: string
+        default: 'scottseotech'
       
 jobs:
   argocd-update:
@@ -41,11 +46,11 @@ jobs:
           
           while [ $elapsed -lt $TIMEOUT ]; do
             # Try to get current lock value
-            current_value=$(gh variable get ARGOCD_LOCK --repo scottseotech/todo-platform 2>/dev/null || echo "")
+            current_value=$(gh variable get ARGOCD_LOCK -o scottseotech 2>/dev/null || echo "")
             
             if [ -z "$current_value" ] || [ "$current_value" = "null" ]; then
               # Lock is available, try to acquire it
-              if gh variable set ARGOCD_LOCK --body "$current_lock" --repo scottseotech/todo-platform; then
+              if gh variable set ARGOCD_LOCK --body "$current_lock" -o scottseotech; then
                 echo "Lock acquired successfully: $current_lock"
                 break
               else
@@ -81,7 +86,7 @@ jobs:
         run: |
           cd ${{ inputs.app_path }}/${{ inputs.app }}
 
-          kustomize edit set image ${{ inputs.app }}=curiosinauts/scottseotech-${{ inputs.app }}:${{ inputs.version }}
+          kustomize edit set image ${{ inputs.app }}=curiosinauts/${{ inputs.domain }}-${{ inputs.app }}:${{ inputs.version }}
 
           kustomize build . --enable-helm
 
@@ -171,7 +176,7 @@ jobs:
       - name: Verify Image Version
         run: |
           echo "Verifying deployed image version for ${{ inputs.app }}..."
-          expected_image="curiosinauts/scottseotech-${{ inputs.app }}:${{ inputs.version }}"
+          expected_image="curiosinauts/${{ inputs.domain }}-${{ inputs.app }}:${{ inputs.version }}"
           
           # Check if it's a deployment
           if kubectl get deployment/${{ inputs.app }} --namespace=${{ inputs.namespace }} >/dev/null 2>&1; then
@@ -198,7 +203,7 @@ jobs:
         if: always()
         run: |
           echo "Releasing ArgoCD lock..."
-          if gh variable set ARGOCD_LOCK --body "null" --repo scottseotech/todo-platform; then
+          if gh variable set ARGOCD_LOCK --body "null" -o scottseotech; then
             echo "Lock released successfully"
           else
             echo "Warning: Failed to release lock"
