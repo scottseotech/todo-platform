@@ -68,7 +68,7 @@ jobs:
 
       - uses: actions/checkout@v4
         with:
-          repository: 'scottseotech/todo-platform'
+          repository: ${{ inputs.repository }}
           ref: main
           token: '${{ secrets.GH_ACCESS_TOKEN }}'
 
