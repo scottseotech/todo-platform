@@ -26,17 +26,17 @@ spec:
   backup:
     barmanObjectStore:
       destinationPath: "s3://cnpg-backups/"
-      endpointURL: "http://minio.minio.svc.cluster.local:9000"
+      endpointURL: "https://rustfs.codingworks.me"
       s3Credentials:
         accessKeyId:
-          name: minio-secret
-          key: MINIO_ACCESS_KEY
+          name: rustfs-secret
+          key: RUSTFS_ACCESS_KEY
         secretAccessKey:
-          name: minio-secret
-          key: MINIO_SECRET_KEY
+          name: rustfs-secret
+          key: RUSTFS_SECRET_KEY
         region:
-          name: minio-secret
-          key: MINIO_REGION
+          name: rustfs-secret
+          key: RUSTFS_REGION
       wal:
         compression: bzip2
       data:
