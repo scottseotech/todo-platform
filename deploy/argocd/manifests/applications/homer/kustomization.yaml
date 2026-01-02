@@ -22,4 +22,4 @@ kind: Kustomization
 images:
 - name: homer
   newName: curiosinauts/scottseotech-homer
-  newTag: d18461c
+  newTag: d45af6c
