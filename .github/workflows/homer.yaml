@@ -42,7 +42,7 @@ jobs:
 
   call:
     needs: build
-    uses: ./.github/workflows/argocd-update.yaml@main
+    uses: ./.github/workflows/argocd-update.yaml
     with:
       namespace: todo
       app_path: deploy/argocd/manifests/applications
