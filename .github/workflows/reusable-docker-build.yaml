@@ -11,6 +11,10 @@ on:
         required: true
         type: string
         description: "Build context path"
+      file:
+        required: false
+        type: string
+        description: "Build context file"
       push:
         required: false
         type: boolean
@@ -55,6 +59,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: ${{ inputs.context }}
+          file: ${{ inputs.file }}
           push: ${{ inputs.push }}
           tags: ${{ steps.metadata.outputs.tags }}
           labels: ${{ steps.metadata.outputs.labels }}

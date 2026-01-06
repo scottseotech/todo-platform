@@ -48,8 +48,8 @@ RUN DAGU_VERSION=v1.23.4 && \
 WORKDIR /root
 
 # Copy static config files first (change less frequently)
-COPY config.yaml /root/
-COPY dags        /dags
+COPY infra/dagu/config.yaml /root/
+COPY infra/dagu/dags /dags
 
 # Copy and install todops-cli wheel from builder stage
 COPY --from=builder /build/todops-cli/dist/*.whl /tmp/
@@ -57,7 +57,7 @@ RUN pip install /tmp/*.whl && rm -rf /tmp/*.whl
 RUN pip install logmine
 
 # Copy entrypoint (changes most frequently)
-COPY ./entrypoint.sh /
+COPY infra/dagu/entrypoint.sh /
 
 # Set permissions
 RUN chmod +x /entrypoint.sh
