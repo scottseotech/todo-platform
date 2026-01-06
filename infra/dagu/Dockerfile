@@ -57,7 +57,7 @@ RUN pip install /tmp/*.whl && rm -rf /tmp/*.whl
 RUN pip install logmine
 
 # Copy entrypoint (changes most frequently)
-COPY infra/dagu/entrypoint.sh /
+COPY ./entrypoint.sh /
 
 # Set permissions
 RUN chmod +x /entrypoint.sh
