@@ -26,4 +26,4 @@ ui:
     sortField: "name"        # Default sort field (name/status/lastRun/schedule/suspended)
     sortOrder: "asc"         # Default sort order (asc/desc)
 
-# rev 2
+# rev 3
