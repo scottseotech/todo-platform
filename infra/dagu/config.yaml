@@ -25,3 +25,5 @@ ui:
   dags:
     sortField: "name"        # Default sort field (name/status/lastRun/schedule/suspended)
     sortOrder: "asc"         # Default sort order (asc/desc)
+
+# rev 1
