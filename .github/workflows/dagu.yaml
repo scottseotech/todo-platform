@@ -47,7 +47,7 @@ jobs:
     uses: ./.github/workflows/argocd-update.yaml
     with:
       namespace: tools
-      app_path: deploy/argocd/manifests/infrastructure
+      app_path: deploy/argocd/manifests/applications
       app: dagu
       version: ${{ needs.build.outputs.image_version }}
     secrets: inherit
