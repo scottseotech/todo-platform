@@ -42,10 +42,10 @@ jobs:
 
   call:
     needs: build
-    uses: scottseotech/todo-platform/.github/workflows/argocd-update.yaml@main
+    uses: ./.github/workflows/argocd-update.yaml@main
     with:
       namespace: tools
-      app_path: deploy/argocd/manifests/infrastructure
+      app_path: deploy/argocd/apps/manifests/infrastructure
       app: homer
       version: ${{ needs.build.outputs.image_version }}
     secrets: inherit
