@@ -48,8 +48,8 @@ RUN DAGU_VERSION=v1.23.4 && \
 WORKDIR /root
 
 # Copy static config files first (change less frequently)
-COPY infra/dagu/config.yaml /root/
-COPY infra/dagu/dags /dags
+COPY config.yaml /root/
+COPY dags        /dags
 
 # Copy and install todops-cli wheel from builder stage
 COPY --from=builder /build/todops-cli/dist/*.whl /tmp/
