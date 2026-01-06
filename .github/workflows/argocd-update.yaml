@@ -165,7 +165,7 @@ jobs:
           else
             echo "No deployment or statefulset found for ${{ inputs.app }}"
             echo "Available resources:"
-            kubectl get all --namespace=${{ inputs.namespace }} | grep ${{ inputs.app }}
+            kubectl get deployments,statefulsets,pods,services --namespace=${{ inputs.namespace }} 2>/dev/null | grep ${{ inputs.app }} || echo "No matching resources found"
             exit 1
           fi
         timeout-minutes: 6
