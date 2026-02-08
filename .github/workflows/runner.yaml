@@ -20,19 +20,8 @@ env:
 run-name: "Runner Image Build - ${{ github.run_id }}"
 
 jobs:
-  start:
-    uses: ./.github/workflows/slack-notification.yaml
-    with:
-      status: 'starting'
-      workflow_name: 'Runner Image Build'
-      message: 'Starting runner image build'
-      branch: ${{ github.ref_name }}
-      actor: ${{ github.actor }}
-      channel: '#builds'
-    secrets: inherit
 
   build:
-    needs: start
     runs-on: ubuntu-latest
     outputs:
       version: ${{ steps.metadata.outputs.version }}
@@ -73,29 +62,3 @@ jobs:
   #   with:
   #     version: ${{ needs.build.outputs.version }}
   #   secrets: inherit
-
-  success:
-    needs: [build]
-    if: success()
-    uses: ./.github/workflows/slack-notification.yaml
-    with:
-      status: 'success'
-      workflow_name: 'Runner Image Build'
-      message: 'Runner image build completed successfully!'
-      branch: ${{ github.ref_name }}
-      actor: ${{ github.actor }}
-      channel: '#builds'
-    secrets: inherit
-
-  failure:
-    needs: [build]
-    if: failure()
-    uses: ./.github/workflows/slack-notification.yaml
-    with:
-      status: 'failure'
-      workflow_name: 'Runner Image Build'
-      message: 'Runner image build pipeline failed - check logs for details'
-      branch: ${{ github.ref_name }}
-      actor: ${{ github.actor }}
-      channel: '#builds'
-    secrets: inherit
