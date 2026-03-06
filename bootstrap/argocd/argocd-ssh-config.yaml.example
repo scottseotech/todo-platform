@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: argocd-ssh-config
+type: Opaque
+data:
+  config: SG9zdCBnaXRodWIuY29tCiAgSG9zdG5hbWUgc3NoLmdpdGh1Yi5jb20KICBQb3J0IDQ0Mwo=
+
+---
+
+# ArgoCD Repository Secret Template
+# Copy this file to argocd-repo-secret.yaml and update with your values
+# The actual argocd-repo-secret.yaml is gitignored for security
+
+apiVersion: v1
+kind: Secret
+metadata:
+  name: repo-<org>-<repo-name>  # Change this to match your repository
+  namespace: argocd
+  labels:
+    argocd.argoproj.io/secret-type: repository
+stringData:
+  type: git
+  url: git@github.com:<org>/<repo-name>.git  # Change to your repository URL
+  sshPrivateKey: |
+    -----BEGIN OPENSSH PRIVATE KEY-----
+    <paste your ~/.ssh/id_ed25519 contents here>
+    -----END OPENSSH PRIVATE KEY-----

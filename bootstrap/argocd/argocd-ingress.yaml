@@ -1,0 +1,26 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    spec.ingressClassName: traefik
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+  labels:
+    app.kubernetes.io/managed-by: Helm
+  name: argocd-server
+  namespace: argocd
+spec:
+  rules:
+  - host: argocd.scottseo.tech
+    http:
+      paths:
+      - backend:
+          service:
+            name: argocd-server
+            port:
+              name: http
+        path: /
+        pathType: Prefix
+  tls:
+  - hosts:
+    - argocd.scottseo.tech
+    secretName: scottseo-tech-tls-argocd

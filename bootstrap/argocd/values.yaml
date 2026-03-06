@@ -1,0 +1,91 @@
+# ArgoCD Helm Values
+# Converted from Kustomize patches for helmfile deployment
+
+# CRD Configuration
+# CRDs are installed via helmfile presync hook using kubectl apply -k
+crds:
+  install: false
+  keep: true
+
+# Global Configuration
+global:
+  domain: argocd.scottseo.tech  # Domain name via Cloudflare tunnel
+
+# Server Configuration
+server:
+  # Run in insecure mode (TLS termination at Cloudflare/Traefik)
+  insecure: true
+
+  # Service type - ClusterIP (using Traefik ingress for external access)
+  service:
+    type: ClusterIP
+
+
+  # RBAC Configuration
+  rbacConfig:
+    policy.default: role:readonly
+    policy.csv: |
+      # Allow API tokens to perform sync operations
+      p, role:apikey, applications, sync, *, allow
+      p, role:apikey, applications, action/*, *, allow
+      p, role:apikey, applications, get, *, allow
+      p, role:apikey, applications, update, *, allow
+
+      # Allow admin to use terminal/exec functionality
+      p, role:admin, exec, create, *, allow
+
+      # Grant the apikey role to all authenticated users using API tokens
+      g, argocd:apikey, role:apikey
+
+# Repo Server Configuration
+repoServer:
+  # Mount SSH config for GitHub access over port 443
+  volumes:
+    - name: ssh-config
+      secret:
+        secretName: argocd-ssh-config
+        defaultMode: 0444  # Read-only for all users (argocd user needs to read it)
+
+  volumeMounts:
+    - name: ssh-config
+      mountPath: /home/argocd/.ssh
+      readOnly: true
+
+# Controller Configuration
+controller:
+  # Default settings - can be customized as needed
+  replicas: 1
+
+# Redis Configuration
+redis:
+  # Use built-in Redis
+  enabled: true
+
+# Dex (SSO) - disabled by default
+dex:
+  enabled: false
+
+# Notifications Controller
+notifications:
+  enabled: true
+
+# ApplicationSet Controller
+applicationSet:
+  enabled: true
+
+# ArgoCD ConfigMaps Configuration
+configs:
+  # Command-line parameters configmap (argocd-cmd-params-cm)
+  params:
+    # Server URL - must match how users access ArgoCD
+    server.url: https://argocd.scottseo.tech
+    # Enable insecure mode
+    server.insecure: "true"
+
+  # Main configmap (argocd-cm)
+  cm:
+    # Enable API key capability for admin account
+    accounts.admin: apiKey
+    accounts.admin.enabled: "true"
+    # Enable web-based terminal UI for applications
+    exec.enabled: "true"

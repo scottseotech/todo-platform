@@ -1,0 +1,225 @@
+helmDefaults:
+  kubeContext: scottseo-tech
+
+repositories:
+  - name: argo
+    url: https://argoproj.github.io/argo-helm
+  - name: prometheus-community
+    url: https://prometheus-community.github.io/helm-charts
+  - name: democratic-csi
+    url: https://democratic-csi.github.io/charts/
+  - name: jetstack
+    url: https://charts.jetstack.io
+  - name: curiosinauts
+    url: https://curiosinauts.github.io/charts
+  - name: bedag
+    url: https://bedag.github.io/helm-charts
+  - name: jupyterhub-repo
+    url: https://hub.jupyter.org/helm-chart
+  - name: community-charts
+    url: https://community-charts.github.io/helm-charts
+  - name: external-dns-repo
+    url: https://kubernetes-sigs.github.io/external-dns
+  - name: emberstack
+    url: https://emberstack.github.io/helm-charts
+  - name: go-skynet
+    url: https://go-skynet.github.io/helm-charts/
+
+releases:
+  - name: democratic-csi
+    namespace: democratic-csi
+    createNamespace: true
+    chart: democratic-csi/democratic-csi
+    version: 0.15.0
+    values:
+      - ./csi/values.yaml
+    hooks:
+      - events: ["presync"]
+        showlogs: true
+        command: "bash"
+        args:
+          - "./scripts/install-snapshot-crds.sh"
+
+  - name: cert-manager
+    namespace: cert-manager
+    createNamespace: true
+    chart: jetstack/cert-manager
+    version: v1.19.2
+    set:
+      - name: crds.enabled
+        value: true
+
+  - name: letsencrypt-issuer
+    namespace: cert-manager
+    createNamespace: true
+    chart: curiosinauts/letsencrypt-issuer
+    values:
+      - ./letsencrypt-issuer/values.yaml.gotmpl
+    needs:
+      - cert-manager/cert-manager
+
+  - name: reflector
+    namespace: kube-system
+    chart: emberstack/reflector
+    version: 9.1.45
+
+  - name: argocd
+    namespace: argocd
+    createNamespace: true
+    chart: argo/argo-cd
+    version: 9.2.2
+    values:
+      - ./argocd/values.yaml
+    needs:
+      - democratic-csi/democratic-csi  # Ensure CSI is installed before ArgoCD 
+    hooks:
+      - events: ["presync"]
+        showlogs: true
+        command: "bash"
+        args:
+          - "./scripts/create-ns.sh"
+      - events: ["presync"]
+        showlogs: true
+        command: "bash"
+        args:
+          - "./scripts/install-argocd-crds.sh"
+      - events: ["presync"]
+        showlogs: true
+        command: "kubectl"
+        args:
+          - "apply"
+          - "-f"
+          - "./argocd/argocd-ssh-config.yaml"
+          - "-n"
+          - "argocd"
+      - events: ["presync"]
+        showlogs: true
+        command: "bash"
+        args:
+          - "./scripts/install-prometheus-crds.sh"
+      - events: ["presync"]
+        showlogs: true
+        command: "bash"
+        args:
+          - "./scripts/install-cnpg-operator.sh"
+      - events: ["postsync"]
+        showlogs: true
+        command: "kubectl"
+        args:
+          - "apply"
+          - "-f"
+          - "./argocd/argocd-ingress.yaml"
+          - "-n"
+          - "argocd"
+      - events: ["postsync"]
+        showlogs: true
+        command: "kubectl"
+        args:
+          - "apply"
+          - "-f"
+          - "./argocd/app-of-apps-infra.yaml"
+          - "-n"
+          - "argocd"
+
+  - name: argocd-projects
+    namespace: argocd
+    chart: bedag/raw
+    version: 2.0.0
+    values:
+      - resources:
+          - apiVersion: argoproj.io/v1alpha1
+            kind: AppProject
+            metadata:
+              name: todo
+              namespace: argocd
+              finalizers:
+                - resources-finalizer.argocd.argoproj.io
+            spec:
+              description: Todo platform applications and services
+              sourceRepos:
+                - 'git@github.com:scottseotech/todo-platform.git'
+                - 'https://github.com/scottseotech/todo-platform.git'
+              destinations:
+                - namespace: argocd
+                  server: https://kubernetes.default.svc
+                - namespace: todo
+                  server: https://kubernetes.default.svc
+              clusterResourceWhitelist:
+                - group: '*'
+                  kind: '*'
+    needs:
+      - argocd/argocd
+
+  - name: app-of-apps-todo
+    namespace: argocd
+    chart: bedag/raw
+    version: 2.0.0
+    values:
+      - resources:
+          - apiVersion: argoproj.io/v1alpha1
+            kind: Application
+            metadata:
+              name: app-of-apps-todo
+              namespace: argocd
+            spec:
+              destination:
+                namespace: argocd
+                server: https://kubernetes.default.svc
+              project: todo
+              source:
+                path: deploy/argocd/apps/applications
+                repoURL: git@github.com:scottseotech/todo-platform.git
+                targetRevision: main
+              syncPolicy:
+                automated:
+                  prune: true
+                  selfHeal: true
+    needs:
+      - argocd/argocd
+      - argocd/argocd-projects
+
+  - name: arc
+    namespace: arc-systems
+    createNamespace: true
+    chart: oci://ghcr.io/actions/actions-runner-controller-charts/gha-runner-scale-set-controller
+
+  - name: arc-runner-set
+    namespace: arc-runners
+    createNamespace: true
+    chart: oci://ghcr.io/actions/actions-runner-controller-charts/gha-runner-scale-set
+    values:
+      - ./arc/gha-runner-scale-set/custom-values.yaml
+    needs:
+      - arc-systems/arc
+    hooks:
+      - events: ["postsync"]
+        showlogs: true
+        command: "kubectl"
+        args:
+          - "apply"
+          - "-f"
+          - "./arc/gha-runner-scale-set/github-runner-role.yaml"
+
+  - name: traefik-config
+    namespace: kube-system
+    chart: bedag/raw
+    version: 2.0.0
+    values:
+      - resources:
+          - apiVersion: helm.cattle.io/v1
+            kind: HelmChartConfig
+            metadata:
+              name: traefik
+              namespace: kube-system
+            spec:
+              valuesContent: |-
+                additionalArguments:
+                  - "--serversTransport.insecureSkipVerify=true"
+
+  - name: external-dns
+    namespace: kube-system
+    createNamespace: true
+    chart: external-dns-repo/external-dns
+    values:
+      - ./external-dns/values.yaml
+
