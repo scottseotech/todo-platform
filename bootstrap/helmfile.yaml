@@ -24,6 +24,10 @@ repositories:
     url: https://emberstack.github.io/helm-charts
   - name: go-skynet
     url: https://go-skynet.github.io/helm-charts/
+  - name: fluent
+    url: https://fluent.github.io/helm-charts/
+  - name: grafana
+    url: https://grafana.github.io/helm-charts
 
 releases:
   - name: democratic-csi
@@ -223,3 +227,18 @@ releases:
     values:
       - ./external-dns/values.yaml
 
+  - name: loki
+    namespace: logging
+    createNamespace: true
+    chart: grafana/loki
+    values:
+      - ./loki/custom-values.yaml
+
+  - name: fluent-bit
+    namespace: logging
+    createNamespace: true
+    chart: fluent/fluent-bit
+    values:
+      - ./fluent-bit/custom-values.yaml
+    needs:
+      - logging/loki
