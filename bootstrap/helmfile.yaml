@@ -268,3 +268,31 @@ releases:
           - "./kube-prometheus-stack/grafana-ingress.yaml"
           - "-n"
           - "monitoring"
+
+  - name: minio
+    namespace: minio
+    chart: bedag/raw
+    version: 2.0.0
+    values:
+      - resources: []
+    needs:
+      - argocd/argocd
+    hooks:
+      - events: ["postsync"]
+        showlogs: true
+        command: "kubectl"
+        args:
+          - "apply"
+          - "-k"
+          - "./minio/"
+          - "-n"
+          - "minio"
+
+  - name: tempo
+    namespace: observability
+    createNamespace: true
+    chart: grafana/tempo
+    values:
+      - ./tempo/custom-values.yaml
+    needs:
+      - minio/minio
