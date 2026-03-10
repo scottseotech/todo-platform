@@ -1,8 +1,8 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  # annotations:
-  #   kubernetes.io/ingress.class: traefik
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
   labels:
     app.kubernetes.io/name: homer
   name: homer
@@ -15,8 +15,12 @@ spec:
       paths:
       - backend:
           service:
-            name: homer 
+            name: homer
             port:
-              number: 8080 
+              number: 8080
         path: /
         pathType: Prefix
+  tls:
+  - hosts:
+    - homer.scottseo.tech
+    secretName: scottseo-tech-tls-homer
