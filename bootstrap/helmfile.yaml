@@ -242,3 +242,29 @@ releases:
       - ./fluent-bit/custom-values.yaml
     needs:
       - logging/loki
+
+  - name: kube-prometheus-stack
+    namespace: monitoring
+    createNamespace: true
+    chart: prometheus-community/kube-prometheus-stack
+    values:
+      - ./kube-prometheus-stack/custom-values.yaml
+    hooks:
+      - events: ["postsync"]
+        showlogs: true
+        command: "kubectl"
+        args:
+          - "apply"
+          - "-f"
+          - "./kube-prometheus-stack/ingress.yaml"
+          - "-n"
+          - "monitoring"
+      - events: ["postsync"]
+        showlogs: true
+        command: "kubectl"
+        args:
+          - "apply"
+          - "-f"
+          - "./kube-prometheus-stack/grafana-ingress.yaml"
+          - "-n"
+          - "monitoring"
