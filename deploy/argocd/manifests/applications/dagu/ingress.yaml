@@ -2,9 +2,9 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   annotations:
-    kubernetes.io/ingress.class: traefik
+    cert-manager.io/cluster-issuer: letsencrypt-prod
   labels:
-    app.kubernetes.io/name: dagu 
+    app.kubernetes.io/name: dagu
   name: dagu
   namespace: todo
 spec:
@@ -17,6 +17,10 @@ spec:
           service:
             name: dagu
             port:
-              number: 8080 
+              number: 8080
         path: /
         pathType: Prefix
+  tls:
+  - hosts:
+    - dagu.scottseo.tech
+    secretName: scottseo-tech-tls-dagu

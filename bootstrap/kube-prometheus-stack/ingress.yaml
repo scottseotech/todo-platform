@@ -2,11 +2,11 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   annotations:
-    kubernetes.io/ingress.class: traefik
+    cert-manager.io/cluster-issuer: letsencrypt-prod
   labels:
-    app.kubernetes.io/name: kube-prometheus-stack-prometheus 
+    app.kubernetes.io/name: kube-prometheus-stack-prometheus
   name: kube-prometheus-stack-prometheus
-  namespace: monitoring 
+  namespace: monitoring
 spec:
   ingressClassName: traefik
   rules:
@@ -20,3 +20,7 @@ spec:
               name: http-web
         path: /
         pathType: Prefix
+  tls:
+  - hosts:
+    - prometheus.scottseo.tech
+    secretName: scottseo-tech-tls-prometheus

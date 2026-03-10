@@ -2,21 +2,25 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   annotations:
-    spec.ingressClassName: traefik
+    cert-manager.io/cluster-issuer: letsencrypt-prod
   labels:
     app.kubernetes.io/managed-by: Helm
   name: kube-prometheus-stack-grafana-ingress
-  namespace: monitoring 
+  namespace: monitoring
 spec:
+  ingressClassName: traefik
   rules:
   - host: grafana.scottseo.tech
     http:
       paths:
       - backend:
           service:
-            name: kube-prometheus-stack-grafana 
+            name: kube-prometheus-stack-grafana
             port:
-              name: http-web 
+              name: http-web
         path: /
         pathType: Prefix
-
+  tls:
+  - hosts:
+    - grafana.scottseo.tech
+    secretName: scottseo-tech-tls-grafana
